@@ -1,23 +1,10 @@
-import logo from "./logo.svg"
 import "./App.css"
+import NavBar from "./components/NavBar"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className={"text-rose-400"}>
-          Edit <code className={"text-emerald-400"}>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className={"text-sky-500"}
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="root" className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]">
+      <NavBar />
     </div>
   )
 }
