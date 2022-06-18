@@ -53,7 +53,7 @@ const Singleplayer = () => {
   }
   function onEnter(e) {
     // user can only submit if answer is truthy and guesses are above 0
-    if (e.key === "Enter" && answer && guesses > 0) {
+    if (e.key === "Enter" && answer && guesses > 0 && !isCorrect) {
       const remainingGuesses = guesses - 1;
       setGuesses(remainingGuesses);
       // when the user has guessed the user's remaining guesses is stored in localStorage
@@ -101,7 +101,7 @@ const Singleplayer = () => {
       <div>
         {/* User can only submit when answer is truthy */}
         {/* User can submit using the Enter key (handled by the onEnter function) */}
-        <input type="text" onChange={answerHandler} onKeyPress={onEnter} />
+        <input type="text" onChange={answerHandler} onKeyPress={onEnter} className="border-2"/>
       </div>
       <div>
         {localStorage.getItem("pastAnswers") &&
