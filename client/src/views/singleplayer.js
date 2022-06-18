@@ -1,40 +1,6 @@
 import React from "react";
-import {} from "../store/actions/singlePlayerActions";
-// import { useDispatch, useSelector } from "react-redux";
-const mockData = [
-  {
-    name: "test1",
-    location: "mars",
-    color: "white",
-    ingredients: "santan",
-    taste: "salty",
-    clue: "food",
-  },
-  {
-    name: "test2",
-    location: "saturn",
-    color: "yellow",
-    ingredients: "beras",
-    taste: "umami",
-    clue: "food",
-  },
-  {
-    name: "test3",
-    location: "paret",
-    color: "brown",
-    ingredients: "cocconut",
-    taste: "bitter",
-    clue: "food",
-  },
-  {
-    name: "test4",
-    location: "bumi la",
-    color: "peach",
-    ingredients: "milk",
-    taste: "sweet",
-    clue: "food",
-  },
-];
+import { fetchWords } from "../store/actions/singlePlayerActions";
+import { useDispatch, useSelector } from "react-redux";
 const food = {
   name: "test3",
   location: "paret",
@@ -44,10 +10,13 @@ const food = {
   clue: "food",
 };
 const Singleplayer = () => {
+  const dispatch = useDispatch();
+  const { words } = useSelector((state) => state.singleplayerReducer);
   const [answer, setAnswer] = React.useState("");
   const [guesses, setGuesses] = React.useState(6);
   const [pastAnswers, setPastAnswers] = React.useState([]);
   const [isCorrect, setIsCorrect] = React.useState(false);
+  const [localWords, setLocalWords] = React.useState([]);
   function answerHandler(e) {
     setAnswer(e.target.value);
   }
@@ -59,24 +28,32 @@ const Singleplayer = () => {
       // when the user has guessed the user's remaining guesses is stored in localStorage
       // if user reloads the page, he/she will still have the same number of remaining guesses
       localStorage.setItem("user_guesses", remainingGuesses);
-      const userGuess = mockData.find((el) => el.name === answer);
+      const userGuess = localWords.find(
+        (el) => el.name.toLowerCase() === answer.toLowerCase()
+      );
       if (userGuess) {
         const keys = Object.keys(userGuess);
         const obj = {};
         let allCorrect = true;
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
-          if (userGuess[key] !== food[key]) {
+          if (userGuess.name.toLowerCase() !== food.name.toLowerCase()) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
             };
-            allCorrect = false;
-          } else {
-            obj[key] = {
-              value: userGuess[key],
-              isCorrect: true,
-            };
+            if (userGuess[key] !== food[key]) {
+              obj[key] = {
+                value: userGuess[key],
+                isCorrect: false,
+              };
+              allCorrect = false;
+            } else {
+              obj[key] = {
+                value: userGuess[key],
+                isCorrect: true,
+              };
+            }
           }
         }
         const temp = [...pastAnswers, obj];
@@ -95,6 +72,12 @@ const Singleplayer = () => {
       console.log("food is correct");
     }
   }, [isCorrect]);
+  React.useEffect(() => {
+    dispatch(fetchWords());
+  }, []);
+  React.useEffect(() => {
+    setLocalWords(words);
+  }, [words]);
   return (
     <>
       {/*User Input */}
@@ -114,7 +97,7 @@ const Singleplayer = () => {
                 <span>From {el.location.value}</span>
                 <span>Color {el.color.value}</span>
                 <span>Taste {el.taste.value}</span>
-                <span>Clue {el.taste.clue}</span>
+                <span>Clue {el.clue.value}</span>
               </div>
             );
           })}
