@@ -1,24 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+import { Routes, Route } from "react-router-dom"
+import LandingPage from './view/LandingPage';
+import MultiPlayerPage from './view/MultiPlayerPage';
+import MultiPlayerRoom from './view/MultiPlayerRoom';
+
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path='/' element={<LandingPage></LandingPage>}></Route>
+      <Route path='/multiplayer' element={<MultiPlayerPage ></MultiPlayerPage>}></Route>
+      <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom></MultiPlayerRoom>}></Route>
+    </Routes>
+    
   );
 }
 
