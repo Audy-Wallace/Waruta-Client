@@ -1,22 +1,18 @@
 import React from "react";
 import { fetchWords } from "../store/actions/singlePlayerActions";
 import { useDispatch, useSelector } from "react-redux";
-const food = {
-  name: "test3",
-  location: "paret",
-  color: "brown",
-  ingredients: "cocconut",
-  taste: "bitter",
-  clue: "food",
-};
+import Timer from "../components/timer";
 const Singleplayer = () => {
   const dispatch = useDispatch();
-  const { words } = useSelector((state) => state.singleplayerReducer);
+  const { words, solution } = useSelector((state) => state.singleplayerReducer);
   const [answer, setAnswer] = React.useState("");
   const [guesses, setGuesses] = React.useState(6);
   const [pastAnswers, setPastAnswers] = React.useState([]);
   const [isCorrect, setIsCorrect] = React.useState(false);
   const [localWords, setLocalWords] = React.useState([]);
+  const [localSolution, setLocalSolution] = React.useState("");
+  const [remainSeconds, setRemainSeconds] = React.useState(0);
+  const [userScore, setUserScore] = React.useState(0);
   function answerHandler(e) {
     setAnswer(e.target.value);
   }
@@ -37,24 +33,29 @@ const Singleplayer = () => {
         let allCorrect = true;
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
-          if (userGuess.name.toLowerCase() !== food.name.toLowerCase()) {
+          if (key === "id") continue;
+          if (
+            userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
+          ) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
             };
-            if (userGuess[key] !== food[key]) {
-              obj[key] = {
-                value: userGuess[key],
-                isCorrect: false,
-              };
-              allCorrect = false;
-            } else {
-              obj[key] = {
-                value: userGuess[key],
-                isCorrect: true,
-              };
-            }
+            allCorrect = false;
+            continue;
           }
+          if (userGuess[key] !== localSolution[key]) {
+            obj[key] = {
+              value: userGuess[key],
+              isCorrect: false,
+            };
+            allCorrect = false;
+            continue;
+          }
+          obj[key] = {
+            value: userGuess[key],
+            isCorrect: true,
+          };
         }
         const temp = [...pastAnswers, obj];
         setPastAnswers(temp);
@@ -64,29 +65,96 @@ const Singleplayer = () => {
         // if the user's answer does not exist do something
         console.log("food does not exist");
       }
+      setAnswer("");
     }
   }
-  React.useEffect(() => {
-    // If user is correct do something
-    if (isCorrect) {
-      console.log("food is correct");
-    }
-  }, [isCorrect]);
   React.useEffect(() => {
     dispatch(fetchWords());
   }, []);
   React.useEffect(() => {
+    // If user is correct do something
+    if (isCorrect) {
+      console.log("food is correct");
+      localStorage.setItem("win", true);
+      localStorage.setItem("remainingTime", remainSeconds);
+      const totalGuesses = +localStorage.getItem("user_guesses");
+      let guessScore;
+      switch (totalGuesses) {
+        case 5:
+          guessScore = 60;
+          break;
+        case 4:
+          guessScore = 50;
+          break;
+        case 3:
+          guessScore = 40;
+          break;
+        case 2:
+          guessScore = 30;
+          break;
+        case 1:
+          guessScore = 20;
+          break;
+        default:
+          guessScore = 10;
+          break;
+      }
+      let timeScore;
+      const secondsLeft = +localStorage.getItem("remainingTime");
+      console.log(secondsLeft);
+      if (secondsLeft >= 240 && secondsLeft <= 300) {
+        timeScore = 60;
+      } else if (secondsLeft >= 180) {
+        timeScore = 50;
+      } else if (secondsLeft >= 120) {
+        timeScore = 40;
+      } else if (secondsLeft >= 60) {
+        timeScore = 30;
+      } else if (secondsLeft >= 30) {
+        timeScore = 20;
+      } else if (secondsLeft >= 0) {
+        timeScore = 10;
+      }
+      console.log(timeScore);
+      const score = guessScore + timeScore;
+      localStorage.setItem("score", score);
+    }
+    if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
+      localStorage.setItem("score", 0);
+    }
+    if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
+      localStorage.setItem("score", 0);
+    }
+    console.log(localStorage.getItem("score"));
+  }, [isCorrect]);
+  React.useEffect(() => {
     setLocalWords(words);
   }, [words]);
+  React.useEffect(() => {
+    setLocalSolution(solution);
+  }, [solution]);
   return (
     <>
-      {/*User Input */}
       <div>
+        <Timer
+          isCorrect={isCorrect}
+          remainSeconds={remainSeconds}
+          setRemainSeconds={setRemainSeconds}
+        />
+      </div>
+      {/*User Input */}
+      <div className="flex w-[100%] justify-center items-center">
         {/* User can only submit when answer is truthy */}
         {/* User can submit using the Enter key (handled by the onEnter function) */}
-        <input type="text" onChange={answerHandler} onKeyPress={onEnter} />
+        <input
+          type="text"
+          onChange={answerHandler}
+          onKeyPress={onEnter}
+          className="w-[60%] h-12"
+          value={answer}
+        />
       </div>
-      <div>
+      <div className="flex flex-col w-[100%] justify-center items-center">
         {localStorage.getItem("pastAnswers") &&
           JSON.parse(localStorage.getItem("pastAnswers")).map((el) => {
             return (
