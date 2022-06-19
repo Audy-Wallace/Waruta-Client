@@ -9,7 +9,6 @@ import MultiPlayerRoom from './views/MultiPlayerRoom';
 import Singleplayer from "./views/SinglePlayer";
 import { Helmet } from 'react-helmet';
 function App() {
-
   return (
     <div
       id="root"
@@ -28,8 +27,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
-        <Route path='/multiplayer' element={<MultiPlayerPage ></MultiPlayerPage>}></Route>
-        <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom></MultiPlayerRoom>}></Route>
+        <Route
+          path="/multiplayer"
+          element={<MultiPlayerPage></MultiPlayerPage>}
+        ></Route>
+        <Route
+          path="/multiplayer/:roomId"
+          element={<MultiPlayerRoom></MultiPlayerRoom>}
+        ></Route>
       </Routes>
     </div>
   );

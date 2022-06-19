@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { signupFields } from "../constants/formFields";
 import FormAction from "./FormAction";
+import Header from "./Header";
 import Input from "./Input";
 
 const fields = signupFields;
@@ -9,6 +10,7 @@ let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
+  console.log(fields);
   const [signupState, setSignupState] = useState(fieldsState);
 
   const handleChange = (e) =>
@@ -24,8 +26,11 @@ export default function Signup() {
   const createAccount = () => {};
 
   return (
-    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-      <div className="">
+    <>
+      <form
+        className="mt-8 space-y-6 flex flex-col content-center items-center h-full"
+        onSubmit={handleSubmit}
+      >
         {fields.map((field) => (
           <Input
             key={field.id}
@@ -41,7 +46,7 @@ export default function Signup() {
           />
         ))}
         <FormAction handleSubmit={handleSubmit} text="Signup" />
-      </div>
-    </form>
+      </form>
+    </>
   );
 }
