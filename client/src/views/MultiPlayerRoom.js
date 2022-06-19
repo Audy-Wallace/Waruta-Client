@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom';
 import { connectSocket } from "../hooks/connectSocket.js"
+import Timer from "../components/timer.js";
 
 const mockData = [
   {
@@ -57,6 +58,11 @@ function MultiPlayerRoom() {
   const [message, setMessage] = useState("")
   const [pastAnswers, setPastAnswers] = useState([]);
   const mainKeys = Object.keys(food)
+
+  // timer
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [remainSeconds, setRemainSeconds] = useState(0);
+
   socket.emit("connecting",
     {
       roomId: roomId,
@@ -111,6 +117,7 @@ function MultiPlayerRoom() {
           payload.remainingGuess = currentGuess
           setCorrect(inputAnswer + " is correct")
           setGameEnd(true)
+          setIsCorrect(true);
         }
 
         payload.pastAnswers = [...payload.pastAnswers, obj]
@@ -162,6 +169,7 @@ function MultiPlayerRoom() {
       } else {
         setCorrect(payload.wordGuess + " is correct")
         setGameEnd(true)
+        setIsCorrect(true);
       }
       if(!gameEnd) {
         localStorage.setItem("rooms", JSON.stringify({
@@ -177,6 +185,11 @@ function MultiPlayerRoom() {
   return (
     <>
       <div>
+        <Timer
+          isCorrect={isCorrect}
+          remainSeconds={remainSeconds}
+          setRemainSeconds={setRemainSeconds}
+        ></Timer>
         <p>Room Id : {roomId}</p>
         <label>Answer : {answer}</label>
         <span id="answer"></span>

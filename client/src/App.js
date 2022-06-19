@@ -1,13 +1,11 @@
 import './App.css';
 import SignupPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import NavBar from "./components/NavBar";
 import { Routes, Route } from "react-router-dom"
-import LandingPage from './view/LandingPage';
-import MultiPlayerPage from './view/MultiPlayerPage';
-import MultiPlayerRoom from './view/MultiPlayerRoom';
+import LandingPage from './views/LandingPage';
+import MultiPlayerPage from './views/MultiPlayerPage';
+import MultiPlayerRoom from './views/MultiPlayerRoom';
 import NavBar from "./components/NavBar";
-import { Route, Routes } from "react-router-dom";
 import Singleplayer from "./views/singleplayer";
 function App() {
 
