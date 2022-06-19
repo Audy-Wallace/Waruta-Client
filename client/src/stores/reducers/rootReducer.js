@@ -1,6 +1,9 @@
 import { combineReducers } from "redux";
-import singleplayerReducer from "./singleplayerReducer";
+import wordReducer from "./wordReducer";
+import leaderboardReducer from "./leaderboardReducer";
+
 const rootReducer = combineReducers({
-  singleplayerReducer,
+  words: wordReducer,
+  leaderboards: leaderboardReducer,
 });
 export default rootReducer;
