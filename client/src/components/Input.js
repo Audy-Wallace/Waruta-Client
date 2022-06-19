@@ -14,10 +14,8 @@ export default function Input({
   customClass,
 }) {
   return (
-    <div className="my-5">
-      <label htmlFor={labelFor} className="sr-only">
-        {labelText}
-      </label>
+    <div className="w-5/6 ">
+      <p htmlFor={labelFor}>{labelText}</p>
       <input
         onChange={handleChange}
         value={value}
