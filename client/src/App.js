@@ -1,13 +1,16 @@
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './App.css';
 import SignupPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import NavBar from "./components/NavBar";
+import { Routes, Route } from "react-router-dom"
+import LandingPage from './view/LandingPage';
+import MultiPlayerPage from './view/MultiPlayerPage';
+import MultiPlayerRoom from './view/MultiPlayerRoom';
+import NavBar from "./components/NavBar";
 import { Route, Routes } from "react-router-dom";
 import Singleplayer from "./views/singleplayer";
-import Home from "./views/home";
-
 function App() {
+
   return (
     <div
       id="root"
@@ -15,10 +18,12 @@ function App() {
     >
       <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
+        <Route path='/multiplayer' element={<MultiPlayerPage ></MultiPlayerPage>}></Route>
+      <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom></MultiPlayerRoom>}></Route>
       </Routes>
     </div>
   );
