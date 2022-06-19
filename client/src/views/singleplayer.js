@@ -1,7 +1,7 @@
 import React from "react";
 import { fetchWords } from "../store/actions/singlePlayerActions";
 import { useDispatch, useSelector } from "react-redux";
-import Timer from "../components/timer";
+import Timer from "../components/Timer";
 const Singleplayer = () => {
   const dispatch = useDispatch();
   const { words, solution } = useSelector((state) => state.singleplayerReducer);
