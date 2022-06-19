@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchWords } from "../store/actions/singlePlayerActions";
+import { fetchWords } from "../stores/actions/wordAction";
 import { useDispatch, useSelector } from "react-redux";
 import Timer from "../components/Timer";
 const Singleplayer = () => {
