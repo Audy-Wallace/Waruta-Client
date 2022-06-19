@@ -58,11 +58,8 @@ function MultiPlayerRoom() {
   const [message, setMessage] = useState("")
   const [pastAnswers, setPastAnswers] = useState([]);
   const mainKeys = Object.keys(food)
-
-  // timer
   const [isCorrect, setIsCorrect] = useState(false);
   const [remainSeconds, setRemainSeconds] = useState(0);
-
   socket.emit("connecting",
     {
       roomId: roomId,
