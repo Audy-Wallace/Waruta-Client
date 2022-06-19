@@ -1,141 +1,138 @@
-import React from "react";
-import { fetchWords } from "../store/actions/singlePlayerActions";
-import { useDispatch, useSelector } from "react-redux";
-import Timer from "../components/timer";
+import React from "react"
+import { fetchWords } from "../store/actions/singlePlayerActions"
+import { useDispatch, useSelector } from "react-redux"
+import Timer from "../components/timer"
 const Singleplayer = () => {
-  const dispatch = useDispatch();
-  const { words, solution } = useSelector((state) => state.singleplayerReducer);
-  const [answer, setAnswer] = React.useState("");
-  const [guesses, setGuesses] = React.useState(6);
-  const [pastAnswers, setPastAnswers] = React.useState([]);
-  const [isCorrect, setIsCorrect] = React.useState(false);
-  const [localWords, setLocalWords] = React.useState([]);
-  const [localSolution, setLocalSolution] = React.useState("");
-  const [remainSeconds, setRemainSeconds] = React.useState(0);
-  const [userScore, setUserScore] = React.useState(0);
+  const dispatch = useDispatch()
+  const { words, solution } = useSelector((state) => state.singleplayerReducer)
+  const [answer, setAnswer] = React.useState("")
+  const [guesses, setGuesses] = React.useState(6)
+  const [pastAnswers, setPastAnswers] = React.useState([])
+  const [isCorrect, setIsCorrect] = React.useState(false)
+  const [localWords, setLocalWords] = React.useState([])
+  const [localSolution, setLocalSolution] = React.useState("")
+  const [remainSeconds, setRemainSeconds] = React.useState(0)
+  const [userScore, setUserScore] = React.useState(0)
   function answerHandler(e) {
-    setAnswer(e.target.value);
+    setAnswer(e.target.value)
   }
   function onEnter(e) {
     // user can only submit if answer is truthy and guesses are above 0
     if (e.key === "Enter" && answer && guesses > 0) {
-      const remainingGuesses = guesses - 1;
-      setGuesses(remainingGuesses);
+      console.log(solution)
+      const remainingGuesses = guesses - 1
+      setGuesses(remainingGuesses)
       // when the user has guessed the user's remaining guesses is stored in localStorage
       // if user reloads the page, he/she will still have the same number of remaining guesses
-      localStorage.setItem("user_guesses", remainingGuesses);
-      const userGuess = localWords.find(
-        (el) => el.name.toLowerCase() === answer.toLowerCase()
-      );
+      localStorage.setItem("user_guesses", remainingGuesses)
+      const userGuess = localWords.find((el) => el.name.toLowerCase() === answer.toLowerCase())
       if (userGuess) {
-        const keys = Object.keys(userGuess);
-        const obj = {};
-        let allCorrect = true;
+        const keys = Object.keys(userGuess)
+        const obj = {}
+        let allCorrect = true
         for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
-          if (key === "id") continue;
-          if (
-            userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
-          ) {
+          const key = keys[i]
+          if (key === "id") continue
+          if (userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           if (userGuess[key] !== localSolution[key]) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           obj[key] = {
             value: userGuess[key],
             isCorrect: true,
-          };
+          }
         }
-        const temp = [...pastAnswers, obj];
-        setPastAnswers(temp);
-        localStorage.setItem("pastAnswers", JSON.stringify(temp));
-        if (allCorrect) setIsCorrect(true);
+        const temp = [...pastAnswers, obj]
+        setPastAnswers(temp)
+        localStorage.setItem("pastAnswers", JSON.stringify(temp))
+        if (allCorrect) setIsCorrect(true)
       } else {
         // if the user's answer does not exist do something
-        console.log("food does not exist");
+        console.log("food does not exist")
       }
-      setAnswer("");
+      setAnswer("")
     }
   }
   React.useEffect(() => {
-    dispatch(fetchWords());
-  }, []);
+    dispatch(fetchWords())
+  }, [])
   React.useEffect(() => {
     // If user is correct do something
     if (isCorrect) {
-      console.log("food is correct");
-      localStorage.setItem("win", true);
-      localStorage.setItem("remainingTime", remainSeconds);
-      const totalGuesses = +localStorage.getItem("user_guesses");
-      let guessScore;
+      console.log("food is correct")
+      localStorage.setItem("win", true)
+      localStorage.setItem("remainingTime", remainSeconds)
+      const totalGuesses = +localStorage.getItem("user_guesses")
+      let guessScore
       switch (totalGuesses) {
         case 5:
-          guessScore = 60;
-          break;
+          guessScore = 60
+          break
         case 4:
-          guessScore = 50;
-          break;
+          guessScore = 50
+          break
         case 3:
-          guessScore = 40;
-          break;
+          guessScore = 40
+          break
         case 2:
-          guessScore = 30;
-          break;
+          guessScore = 30
+          break
         case 1:
-          guessScore = 20;
-          break;
+          guessScore = 20
+          break
         default:
-          guessScore = 10;
-          break;
+          guessScore = 10
+          break
       }
-      let timeScore;
-      const secondsLeft = +localStorage.getItem("remainingTime");
-      console.log(secondsLeft);
+      let timeScore
+      const secondsLeft = +localStorage.getItem("remainingTime")
+      console.log(secondsLeft)
       if (secondsLeft >= 240 && secondsLeft <= 300) {
-        timeScore = 60;
+        timeScore = 60
       } else if (secondsLeft >= 180) {
-        timeScore = 50;
+        timeScore = 50
       } else if (secondsLeft >= 120) {
-        timeScore = 40;
+        timeScore = 40
       } else if (secondsLeft >= 60) {
-        timeScore = 30;
+        timeScore = 30
       } else if (secondsLeft >= 30) {
-        timeScore = 20;
+        timeScore = 20
       } else if (secondsLeft >= 0) {
-        timeScore = 10;
+        timeScore = 10
       }
-      console.log(timeScore);
-      const score = guessScore + timeScore;
-      localStorage.setItem("score", score);
+      console.log(timeScore)
+      const score = guessScore + timeScore
+      localStorage.setItem("score", score)
     }
     if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
-      localStorage.setItem("score", 0);
+      localStorage.setItem("score", 0)
     }
     if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
-      localStorage.setItem("score", 0);
+      localStorage.setItem("score", 0)
     }
-    console.log(localStorage.getItem("score"));
-  }, [isCorrect]);
+    console.log(localStorage.getItem("score"))
+  }, [isCorrect])
   React.useEffect(() => {
-    setLocalWords(words);
-  }, [words]);
+    setLocalWords(words)
+  }, [words])
   React.useEffect(() => {
-    setLocalSolution(solution);
-  }, [solution]);
+    setLocalSolution(solution)
+  }, [solution])
   return (
     <>
-      <div>
+      <div className="flex justify-center mb-12">
         <Timer
           isCorrect={isCorrect}
           remainSeconds={remainSeconds}
@@ -167,10 +164,10 @@ const Singleplayer = () => {
                 <span>Taste {el.taste.value}</span>
                 <span>Clue {el.clue.value}</span>
               </div>
-            );
+            )
           })}
       </div>
     </>
-  );
-};
-export default Singleplayer;
+  )
+}
+export default Singleplayer
