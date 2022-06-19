@@ -1,28 +1,27 @@
-import Button from "@mui/material/Button"
-import { finishOrder, updatePremium } from "../store/actions/orderMidtrans";
+import Button from "@mui/material/Button";
+import { finishOrder, updatePremium } from "../stores/actions/midtransAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function NavBar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  
   async function snapMidtrans() {
     dispatch(finishOrder())
       .then(async (res) => {
-        await window.snap.pay(res.payload.token, {
+        await window.snap.pay(res.token, {
           onSuccess: async (result) => {
-            dispatch(updatePremium())
-            navigate("/")
+            dispatch(updatePremium());
+            navigate("/");
           },
           onError: async (err) => {
-            console.log(err)
+            console.log(err);
           },
         });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -40,10 +39,13 @@ export default function NavBar() {
         <button className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300">
           signin
         </button>
-        <button onClick={() => snapMidtrans()} className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300">
+        <button
+          onClick={() => snapMidtrans()}
+          className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
+        >
           Become Premium
         </button>
       </div>
     </div>
-  )
+  );
 }

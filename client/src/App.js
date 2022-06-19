@@ -1,15 +1,14 @@
-import './App.css';
+import "./App.css";
 import NavBar from "./components/NavBar";
-import SignupPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import { Routes, Route } from "react-router-dom"
-import LandingPage from './views/LandingPage';
-import MultiPlayerPage from './views/MultiPlayerPage';
-import MultiPlayerRoom from './views/MultiPlayerRoom';
-import Singleplayer from "./views/SinglePlayer";
-import { Helmet } from 'react-helmet';
+import SignupPage from "./views/RegisterPage";
+import LoginPage from "./views/LoginPage";
+import { Routes, Route } from "react-router-dom";
+import LandingPage from "./views/LandingPage";
+import MultiPlayerPage from "./views/MultiPlayerPage";
+import MultiPlayerRoom from "./views/MultiPlayerRoom";
+import Singleplayer from "./views/Singleplayer";
+import { Helmet } from "react-helmet";
 function App() {
-
   return (
     <div
       id="root"
@@ -28,8 +27,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
-        <Route path='/multiplayer' element={<MultiPlayerPage ></MultiPlayerPage>}></Route>
-        <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom></MultiPlayerRoom>}></Route>
+        <Route
+          path="/multiplayer"
+          element={<MultiPlayerPage></MultiPlayerPage>}
+        ></Route>
+        <Route
+          path="/multiplayer/:roomId"
+          element={<MultiPlayerRoom></MultiPlayerRoom>}
+        ></Route>
       </Routes>
     </div>
   );
