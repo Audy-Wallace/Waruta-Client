@@ -1,12 +1,35 @@
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Login from "./Login";
 import Signup from "./Signup";
-
+import Button from "@mui/material/Button"
+import { finishOrder, updatePremium } from "../store/actions/orderMidtrans";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export default function NavBar() {
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  async function snapMidtrans() {
+    dispatch(finishOrder())
+      .then(async (res) => {
+        await window.snap.pay(res.payload.token, {
+          onSuccess: async (result) => {
+            dispatch(updatePremium())
+            navigate("/")
+          },
+          onError: async (err) => {
+            console.log(err)
+          },
+        });
+      })
+      .catch((err) => console.log(err))
+  }
   return (
     <div className="bg transparent h-16 flex justify-between items-center space-x-2 mr-4">
       <Button
@@ -102,6 +125,9 @@ export default function NavBar() {
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
           </>
         ) : null}
+        <button onClick={() => snapMidtrans()} className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300">
+          Become Premium
+        </button>
       </div>
     </div>
   );
