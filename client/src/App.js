@@ -1,7 +1,7 @@
 import './App.css';
-import SignupPage from "./views/RegisterPage";
-import LoginPage from "./views/LoginPage";
 import NavBar from "./components/NavBar";
+import SignupPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 import { Routes, Route } from "react-router-dom"
 import LandingPage from './views/LandingPage';
 import MultiPlayerPage from './views/MultiPlayerPage';
