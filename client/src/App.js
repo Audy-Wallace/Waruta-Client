@@ -2,18 +2,24 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignupPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import NavBar from "./components/NavBar";
+import { Route, Routes } from "react-router-dom";
+import Singleplayer from "./views/singleplayer";
+import Home from "./views/home";
 
 function App() {
   return (
-    <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+    <div
+      id="root"
+      className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]"
+    >
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignupPage />} />
+        <Route path="/singleplayer" element={<Singleplayer />} />
+      </Routes>
     </div>
   );
 }
