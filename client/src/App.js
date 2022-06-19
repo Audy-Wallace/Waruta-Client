@@ -1,8 +1,8 @@
-
 import "./App.css";
 import NavBar from "./components/NavBar";
 import { Route, Routes } from "react-router-dom";
 import Singleplayer from "./views/singleplayer";
+import Home from "./views/home";
 function App() {
   return (
     <div
@@ -11,6 +11,7 @@ function App() {
     >
       <NavBar />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
       </Routes>
     </div>
