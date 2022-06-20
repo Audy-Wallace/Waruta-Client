@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/scope */
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Login from "./Login";
@@ -10,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function NavBar() {
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
+  const [showLeaderboard, setShowLeaderboard] = React.useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   async function snapMidtrans() {
@@ -45,6 +47,13 @@ export default function NavBar() {
           onClick={() => setShowModal(true)}
         >
           SignUp
+        </button>
+        <button
+          className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
+          type="button"
+          onClick={() => setShowLeaderboard(true)}
+        >
+          LeaderBoard
         </button>
         <button
           onClick={() => snapMidtrans()}
@@ -120,6 +129,122 @@ export default function NavBar() {
                       Close
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </>
+        ) : null}
+        {showLeaderboard ? (
+          <>
+            <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none w-full h-full">
+              <div className="w-1/2 ">
+                {" "}
+                <button
+                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2  text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={() => setShowLeaderboard(false)}
+                >
+                  X Close
+                </button>
+                <div className="border-1 rounded-lg shadow-lg flex flex-col bg-white">
+                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-transparent dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            No
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Profile Pict.
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Username
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Time
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Guess
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Score
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b dark:bg-purple-800 dark:border-gray-700">
+                          <td class="px-6 py-4">1</td>
+                          <td class="px-6 py-4">
+                            {" "}
+                            <img
+                              src="https://mdbootstrap.com/img/new/standard/city/042.jpg"
+                              class="w-20 h-auto shadow-lg "
+                              alt=""
+                            />
+                          </td>
+                          <th
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                          >
+                            Pro_Player_1
+                          </th>
+                          <td class="px-6 py-4">5:31</td>
+                          <td class="px-6 py-4">7</td>
+                          <td class="px-6 py-4">180</td>
+                        </tr>
+                        <tr class="border-b dark:bg-purple-800 dark:border-gray-700">
+                          <td class="px-6 py-4">2</td>
+                          <td class="px-6 py-4">
+                            {" "}
+                            <img
+                              src="https://mdbootstrap.com/img/new/standard/city/042.jpg"
+                              class="w-20 h-auto shadow-lg "
+                              alt=""
+                            />
+                          </td>
+                          <th
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                          >
+                            Amazing_Cheese08
+                          </th>
+                          <td class="px-6 py-4">5:31</td>
+                          <td class="px-6 py-4">7</td>
+                          <td class="px-6 py-4">180</td>
+                        </tr>
+                        <tr class="border-b dark:bg-purple-800 dark:border-gray-700">
+                          <td class="px-6 py-4">3</td>
+                          <td class="px-6 py-4">
+                            {" "}
+                            <img
+                              src="https://mdbootstrap.com/img/new/standard/city/042.jpg"
+                              class="w-20 h-auto shadow-lg "
+                              alt=""
+                            />
+                          </td>
+                          <th
+                            scope="row"
+                            class="px-6 py-4 font-medium text-purple-900 dark:text-white whitespace-nowrap"
+                          >
+                            Magic_Mouse_22
+                          </th>
+                          <td class="px-6 py-4">5:31</td>
+                          <td class="px-6 py-4">7</td>
+                          <td class="px-6 py-4">180</td>
+                        </tr>
+                        <tr class="px-4 py-4 w-full dark:bg-gray-800 dark:text-gray-400">
+                          <td className="py-4"></td>
+                          <td className="py-4"></td>
+                          <td className="py-4"></td>
+                          <td className="py-4"></td>
+                          <td className="py-4"></td>
+                          <td className="py-4"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className=""></div>
                 </div>
               </div>
             </div>
