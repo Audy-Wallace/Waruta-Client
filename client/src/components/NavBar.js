@@ -6,10 +6,10 @@ import { finishOrder, updatePremium } from "../stores/actions/midtransAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 export default function NavBar() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   async function snapMidtrans() {
     dispatch(finishOrder())
       .then(async (res) => {
