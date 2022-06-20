@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { connectSocket } from "../hooks/connectSocket.js";
-import Timer from "../components/timer.js";
+import Timer from "../components/Timer.js";
 
 const mockData = [
   {
