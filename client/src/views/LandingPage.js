@@ -29,12 +29,12 @@ function LandingPage() {
               Waruta, a wordle game you have never seen before!{" "}
             </p>
             <p className="text-white">
-              Comes with singleplayer and Multiplayer mode,
+              Comes with Singleplayer and Multiplayer mode
             </p>
             <p className="text-white">
-              and you can now compete make a team to solve
+              and you can now compete or make a team to solve
             </p>
-            <p className="text-white">a wordle game</p>
+            <p className="text-white">a wordle game!</p>
             <br />
             <div className="flex">
               <NavLink to="/multiplayer">
