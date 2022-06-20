@@ -22,9 +22,9 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<SignupPage />} />
-        <Route path="/singleplayer" element={<Singleplayer />} />
+        {/* <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignupPage />} /> */}
+        {/* <Route path="/singleplayer" element={<Singleplayer />} /> */}
         <Route
           path="/multiplayer"
           element={<MultiPlayerPage></MultiPlayerPage>}

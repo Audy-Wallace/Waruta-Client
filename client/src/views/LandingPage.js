@@ -16,11 +16,40 @@ function LandingPage() {
 
   return (
     <>
-      <div>
-        <p>Landing Page</p>
-        <NavLink to="/multiplayer">
-          <button>Multiplayer</button>
-        </NavLink>
+      <div className="grid place-items-center">
+        <div className="outer-container flex flex-row mt-16 ">
+          <div className="inner-container">
+            {" "}
+            <img
+              src={require("../logo-waruta.png")}
+              className="w-40"
+              alt="waruta-logo"
+            />
+            <p className="text-white">
+              Waruta, a wordle game you have never seen before!{" "}
+            </p>
+            <p className="text-white">
+              Comes with singleplayer and Multiplayer mode,
+            </p>
+            <p className="text-white">
+              and you can now compete make a team to solve
+            </p>
+            <p className="text-white">a wordle game</p>
+            <br />
+            <NavLink to="/multiplayer">
+              <button className="bg-pink-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Multiplayer
+              </button>
+            </NavLink>
+          </div>
+          <div className="image ml-16">
+            <img
+              src={require("../image-people.jpg")}
+              className="rounded-xl opacity-90 shadow-xl"
+              alt="people-discuss"
+            />
+          </div>
+        </div>
       </div>
     </>
   );
