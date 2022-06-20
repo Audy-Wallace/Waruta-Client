@@ -9,7 +9,7 @@ const mockData = [
     color: "white",
     ingredients: "santan",
     taste: "salty",
-    clue: "food",
+    clue: "food"
   },
   {
     name: "test2",
@@ -44,16 +44,16 @@ const food = {
   ingredients: "santan",
   taste: "salty",
   clue: "food",
-}
+};
 
 function MultiPlayerRoom({ socket }) {
   const { roomId } = useParams();
-  const rooms = JSON.parse(localStorage.getItem("rooms"))
-  const [answer, setAnswer] = useState("")
-  const [correct, setCorrect] = useState("")
-  const [gameEnd, setGameEnd] = useState(false)
-  const [remainingGuess, setRemainingGuess] = useState(0)
-  const [message, setMessage] = useState("")
+  const rooms = JSON.parse(localStorage.getItem("rooms"));
+  const [answer, setAnswer] = useState("");
+  const [correct, setCorrect] = useState("");
+  const [gameEnd, setGameEnd] = useState(false);
+  const [remainingGuess, setRemainingGuess] = useState(0);
+  const [message, setMessage] = useState("");
   const [pastAnswers, setPastAnswers] = useState([]);
   const mainKeys = Object.keys(food)
   const [yourTurn, setYourTurn] = useState(false)
@@ -146,12 +146,12 @@ function MultiPlayerRoom({ socket }) {
     if (isCorrect) {
       return {
         border: "1px solid",
-        backgroundColor: "lightgreen"
-      }
+        backgroundColor: "lightgreen",
+      };
     }
     return {
-      border: "1px solid"
-    }
+      border: "1px solid",
+    };
   }
 
   useEffect(() => {
@@ -166,14 +166,14 @@ function MultiPlayerRoom({ socket }) {
       setAnswer(payload.wordGuess)
       setRemainingGuess(payload.remainingGuess)
       if (payload.remainingGuess === 6) {
-        setGameEnd(true)
-        setMessage("The rest of the guesses run out")
+        setGameEnd(true);
+        setMessage("The rest of the guesses run out");
       }
       if (payload.wordGuess !== food.name) {
-        setCorrect(payload.wordGuess + " is incorrect")
+        setCorrect(payload.wordGuess + " is incorrect");
       } else {
-        setCorrect(payload.wordGuess + " is correct")
-        setGameEnd(true)
+        setCorrect(payload.wordGuess + " is correct");
+        setGameEnd(true);
         setIsCorrect(true);
       }
       if (!gameEnd) {
@@ -259,7 +259,7 @@ function MultiPlayerRoom({ socket }) {
         </>
       }
     </>
-  )
+  );
 }
 
-export default MultiPlayerRoom
+export default MultiPlayerRoom;
