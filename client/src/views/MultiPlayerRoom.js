@@ -10,7 +10,7 @@ const mockData = [
     color: "white",
     ingredients: "santan",
     taste: "salty",
-    clue: "food",
+    clue: "food"
   },
   {
     name: "test2",
