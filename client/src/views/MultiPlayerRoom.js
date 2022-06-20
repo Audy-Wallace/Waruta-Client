@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom';
-import Timer from "../components/timer.js";
+import Timer from "../components/Timer.js";
 
 const mockData = [
   {
@@ -66,6 +66,7 @@ function MultiPlayerRoom({ socket }) {
   function handleSubmitAnswer(event) {
     event.preventDefault()
     let inputAnswer = event.target.answer.value
+    console.log(inputAnswer);
     let currentGuess = rooms.remainingGuess
     let tempCurrentuser = ""
     tempCurrentuser = localStorage.getItem("username")
