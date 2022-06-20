@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "./views/LandingPage";
 import MultiPlayerPage from "./views/MultiPlayerPage";
 import MultiPlayerRoom from "./views/MultiPlayerRoom";
-// import Singleplayer from "./views/Singleplayer";
+import Singleplayer from "./views/Singleplayer";
 import { Helmet } from "react-helmet";
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
         ></Route>
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

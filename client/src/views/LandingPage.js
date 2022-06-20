@@ -23,7 +23,7 @@ function LandingPage() {
         </NavLink>
       </div>
     </>
-  );
+  )
 }
 
 export default LandingPage;
