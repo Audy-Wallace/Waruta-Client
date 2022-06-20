@@ -2,18 +2,16 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import Login from "./Login";
 import Signup from "./Signup";
-import { finishOrder, updatePremium } from "../store/actions/orderMidtrans";
+import { finishOrder, updatePremium } from "../stores/actions/midtransAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function NavBar() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   async function snapMidtrans() {
     dispatch(finishOrder())
       .then(async (res) => {
@@ -51,7 +49,7 @@ export default function NavBar() {
         <button
           onClick={() => snapMidtrans()}
           className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
-        >
+        ></button>
         {showModal ? (
           <>
             <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none w-full h-full">
@@ -128,8 +126,10 @@ export default function NavBar() {
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
           </>
         ) : null}
-        <button onClick={() => snapMidtrans()} className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300">
-
+        <button
+          onClick={() => snapMidtrans()}
+          className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
+        >
           Become Premium
         </button>
       </div>
