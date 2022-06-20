@@ -10,27 +10,7 @@ function MultiPlayerPage({ socket }) {
   const [wait, setWait] = useState(true)
   const navigate = useNavigate()
 
-  socket.emit("connecting")
-
-  function connectToSocket(roomId) {
-    socket.emit("joinRoom",
-      {
-        roomId: roomId,
-        wordGuess: "",
-        remainingGuess: 0,
-        pastAnswers: [],
-        currentPlayer: null
-      })
-
-    localStorage.setItem("rooms", JSON.stringify({
-      roomId: roomId,
-      wordGuess: "",
-      remainingGuess: 0,
-      pastAnswers: [],
-      users: [],
-      currentPlayer: null
-    }))
-  }
+  // socket.emit("connecting")
 
   // async function joinRoom(id) {
 
@@ -76,7 +56,22 @@ function MultiPlayerPage({ socket }) {
   function handleClickCreateRoom() {
     let roomId = uuidv4()
     setRoom(roomId)
-    connectToSocket(roomId)
+    socket.emit("joinWaitingRoom",
+      {
+        roomId: roomId,
+        username: localStorage.getItem("username"),
+        wordGuess: "",
+        remainingGuess: 0,
+        pastAnswers: [],
+        currentPlayer: null
+      })
+    localStorage.setItem("rooms", JSON.stringify({
+      roomId: roomId,
+      wordGuess: "",
+      remainingGuess: 0,
+      pastAnswers: [],
+      currentPlayer: null
+    }))
     navigate(`/multiplayer/${roomId}`)
 
   }
@@ -92,8 +87,6 @@ function MultiPlayerPage({ socket }) {
       pastAnswers: [],
       currentPlayer: null
     }))
-    // connectToSocket(roomId)
-    // joinRoom(roomId)
     socket.emit("joinWaitingRoom",
       {
         roomId: roomId,
@@ -103,6 +96,10 @@ function MultiPlayerPage({ socket }) {
         pastAnswers: [],
         currentPlayer: null
       })
+    
+    // connectToSocket(roomId)
+    // joinRoom(roomId)
+    
     navigate(`/multiplayer/${roomId}`)
   }
 

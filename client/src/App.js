@@ -7,6 +7,7 @@ import MultiPlayerPage from "./views/MultiPlayerPage";
 import MultiPlayerRoom from "./views/MultiPlayerRoom";
 import Singleplayer from "./views/Singleplayer";
 import { Helmet } from "react-helmet";
+
 function App() {
 const socket= connectSocket()
 return (
@@ -24,15 +25,6 @@ return (
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/multiplayer"
-          element={<MultiPlayerPage></MultiPlayerPage>}
-        ></Route>
-        <Route
-          path="/multiplayer/:roomId"
-          element={<MultiPlayerRoom></MultiPlayerRoom>}
-        ></Route>
-
         <Route path="/singleplayer" element={<Singleplayer />} />
         <Route path='/multiplayer' element={<MultiPlayerPage socket={socket}></MultiPlayerPage>}></Route>
       <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom socket={socket}></MultiPlayerRoom>}></Route>
