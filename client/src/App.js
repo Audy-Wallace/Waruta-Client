@@ -7,8 +7,12 @@ import MultiPlayerPage from './views/MultiPlayerPage';
 import MultiPlayerRoom from './views/MultiPlayerRoom';
 import NavBar from "./components/NavBar";
 import Singleplayer from "./views/singleplayer";
-function App() {
+import { connectSocket } from "./hooks/connectSocket"
 
+
+function App() {
+  const socket= connectSocket()
+  
   return (
     <div
       id="root"
@@ -20,8 +24,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
-        <Route path='/multiplayer' element={<MultiPlayerPage ></MultiPlayerPage>}></Route>
-      <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom></MultiPlayerRoom>}></Route>
+        <Route path='/multiplayer' element={<MultiPlayerPage socket={socket}></MultiPlayerPage>}></Route>
+      <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom socket={socket}></MultiPlayerRoom>}></Route>
       </Routes>
     </div>
   );
