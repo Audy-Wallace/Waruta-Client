@@ -6,7 +6,7 @@ import Timer from "../components/Timer"
 import Voice from "../components/Voice"
 const Singleplayer = () => {
   const dispatch = useDispatch()
-  const { words, solution } = useSelector((state) => state.singleplayerReducer)
+  const { words, solution } = useSelector((state) => state.words)
   const [answer, setAnswer] = React.useState("")
   const [guesses, setGuesses] = React.useState(6)
   const [pastAnswers, setPastAnswers] = React.useState([])
@@ -26,13 +26,10 @@ const Singleplayer = () => {
   }
 
   function answerVoice(finalTranscript) {
-    // transcript = transcript.slice(0, (transcript.length - 1))
     finalTranscript = finalTranscript.replace('.', '')
     if (finalTranscript == "11") { finalTranscript = "Seblak" }
     setAnswer(finalTranscript)
     setAnswerByVoice(true)
-    // console.log(answer, "<<<<ANSWER")
-    // autoEnter()
   }
 
   React.useEffect(() => {
