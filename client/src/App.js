@@ -1,7 +1,5 @@
 import "./App.css";
 import NavBar from "./components/NavBar";
-import SignupPage from "./views/RegisterPage";
-import LoginPage from "./views/LoginPage";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./views/LandingPage";
 import MultiPlayerPage from "./views/MultiPlayerPage";
@@ -24,8 +22,6 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<SignupPage />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
         <Route
           path="/multiplayer"
