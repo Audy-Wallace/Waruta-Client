@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import Timer from "../components/Timer"
 const Singleplayer = () => {
   const dispatch = useDispatch()
-  const { words, solution } = useSelector((state) => state.singleplayerReducer)
+  const { words, solution } = useSelector((state) => state.words)
   const [answer, setAnswer] = React.useState("")
   const [guesses, setGuesses] = React.useState(6)
   const [pastAnswers, setPastAnswers] = React.useState([])
