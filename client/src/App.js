@@ -9,7 +9,7 @@ import MultiPlayerRoom from "./views/MultiPlayerRoom"
 import Singleplayer from "./views/singleplayer"
 function App() {
   return (
-    <div id="root" className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]">
+    <div className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]">
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />

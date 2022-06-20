@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { useTimer } from "react-timer-hook"
-import { Paper } from "@mui/material"
 export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
   const [scoreTime, setScoreTime] = useState(0)
 
@@ -57,39 +56,27 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
   return (
     <div className="flex w-full justify-center space-x-4">
       {checkDigit(minutes) > 1 && (
-        <Paper
-          elevation={12}
-          className="text-violet-200 text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300"
-        >
+        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(minutes)}</h2>
           <h2 className="text-xs">minutes</h2>
-        </Paper>
+        </div>
       )}
       {checkDigit(minutes) == 1 && (
-        <Paper
-          elevation={12}
-          className="text-violet-200 text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300"
-        >
+        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(minutes)}</h2>
           <h2 className="text-xs">minute</h2>
-        </Paper>
+        </div>
       )}
       {checkDigit(minutes) > 0 && (
-        <Paper
-          elevation={12}
-          className="text-violet-200 text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300"
-        >
+        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(seconds)}</h2>
           <h2 className="text-xs">seconds</h2>
-        </Paper>
+        </div>
       )}
       {checkDigit(minutes) == 0 && (
-        <Paper
-          elevation={12}
-          className="text-violet-200 text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-40 h-40 rounded-full duration-300"
-        >
+        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-40 h-40 rounded-full duration-300">
           <h2 className="text-[80px] font-semibold">{checkDigit(seconds)}</h2>
-        </Paper>
+        </div>
       )}
     </div>
   )
