@@ -3,6 +3,8 @@ import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
+import { useDispatch } from "react-redux";
+import { login } from "../stores/actions/userAction";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -10,6 +12,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Login() {
   const [loginState, setLoginState] = useState(fieldsState);
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
   };
@@ -21,7 +24,7 @@ export default function Login() {
 
   //Handle Login API Integration here
   const authenticateUser = () => {
-    console.log(loginState, "<<<<<<");
+    dispatch(login(loginState));
   };
 
   return (

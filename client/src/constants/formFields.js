@@ -1,13 +1,13 @@
 const loginFields = [
   {
-    labelText: "Email address",
-    labelFor: "email-address",
-    id: "email-address",
-    name: "email",
-    type: "email",
-    autoComplete: "email",
+    labelText: "username",
+    labelFor: "username",
+    id: "username",
+    name: "username",
+    type: "text",
+    autoComplete: "username",
     isRequired: true,
-    placeholder: "Email address",
+    placeholder: "Username",
   },
   {
     labelText: "Password",
@@ -22,6 +22,14 @@ const loginFields = [
 ];
 
 const signupFields = [
+  {
+    labelText: "Image",
+    labelFor: "Image",
+    id: "img",
+    name: "img",
+    type: "file",
+    isRequired: true,
+  },
   {
     labelText: "Username",
     labelFor: "username",
@@ -51,17 +59,7 @@ const signupFields = [
     autoComplete: "current-password",
     isRequired: true,
     placeholder: "Password",
-  },
-  {
-    labelText: "Confirm Password",
-    labelFor: "confirm-password",
-    id: "confirm-password",
-    name: "confirm-password",
-    type: "password",
-    autoComplete: "confirm-password",
-    isRequired: true,
-    placeholder: "Confirm Password",
-  },
+  }
 ];
 
 export { loginFields, signupFields };

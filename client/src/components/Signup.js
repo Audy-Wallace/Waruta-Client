@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { signupFields } from "../constants/formFields";
+import { register } from "../stores/actions/userAction";
 import FormAction from "./FormAction";
-import Header from "./Header";
 import Input from "./Input";
 
 const fields = signupFields;
@@ -10,20 +11,20 @@ let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
-  console.log(fields);
   const [signupState, setSignupState] = useState(fieldsState);
-
+  const dispatch = useDispatch();
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(signupState);
     createAccount();
   };
 
   //handle Signup API Integration here
-  const createAccount = () => {};
+  const createAccount = () => {
+    dispatch(register(signupState));
+  };
 
   return (
     <>
