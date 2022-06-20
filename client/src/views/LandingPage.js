@@ -39,7 +39,7 @@ function LandingPage() {
             <div className="flex">
               <NavLink to="/multiplayer">
                 <button className="bg-pink-700 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-                  Multiplayer
+                  Play Now
                 </button>
               </NavLink>
               <p className="text-white mx-4 pt-2"> OR </p>
