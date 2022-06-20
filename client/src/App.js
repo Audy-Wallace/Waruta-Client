@@ -24,8 +24,15 @@ return (
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/login" element={<LoginPage />} /> */}
-        {/* <Route path="/register" element={<SignupPage />} /> */}
+        <Route
+          path="/multiplayer"
+          element={<MultiPlayerPage></MultiPlayerPage>}
+        ></Route>
+        <Route
+          path="/multiplayer/:roomId"
+          element={<MultiPlayerRoom></MultiPlayerRoom>}
+        ></Route>
+
         <Route path="/singleplayer" element={<Singleplayer />} />
         <Route path='/multiplayer' element={<MultiPlayerPage socket={socket}></MultiPlayerPage>}></Route>
       <Route path='/multiplayer/:roomId' element={<MultiPlayerRoom socket={socket}></MultiPlayerRoom>}></Route>
