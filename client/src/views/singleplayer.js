@@ -3,7 +3,6 @@ import { Dialog, Transition } from "@headlessui/react"
 import { fetchWords } from "../store/actions/singlePlayerActions"
 import { useDispatch, useSelector } from "react-redux"
 import Timer from "../components/timer"
-
 const Singleplayer = () => {
   const dispatch = useDispatch()
   const { words, solution } = useSelector((state) => state.singleplayerReducer)
