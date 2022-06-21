@@ -207,8 +207,8 @@ const Singleplayer = () => {
       setOpen(true);
       jsConfetti.addConfetti({
         confettiRadius: 2,
-        confettiNumber: 50,
-        emojis: [ '🍔', '🥓', '🦐'],
+        confettiNumber: 100,
+        emojis: [ '🍔', '🥓', '🍟', '🍣'],
         emojiSize: 60,
       })
     }
