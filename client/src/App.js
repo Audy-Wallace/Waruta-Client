@@ -10,12 +10,9 @@ import { Helmet } from "react-helmet";
 
 // bug
 function App() {
-  const socket = connectSocket();
+  const socket = connectSocket()
   return (
-    <div
-      id="root"
-      className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]"
-    >
+    <div id="root" className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]">
       <Helmet>
         <script
           type="text/javascript"
@@ -37,7 +34,7 @@ function App() {
         ></Route>
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
