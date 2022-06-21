@@ -186,11 +186,13 @@ export default function NavBar() {
                         />
 
                         <div className="flex flex-col mt-2 items-center">
-                          <label className="text-gray-700 text-lg">Profile Picture</label>
+                          <label className="block mb-2 text-lg font-medium text-gray-900 dark:text-gray-500">
+                            Profile Picture
+                          </label>
                           <input
                             type="file"
                             name="image"
-                            className="h-8 ml-16"
+                            className="block w-full text-sm text-gray-100 bg-gray-400 bg-opacity-90 outline-none border-none rounded border border-gray-300 cursor-pointer "
                             onChange={onChangeRegister}
                           />
                         </div>
