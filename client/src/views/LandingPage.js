@@ -12,8 +12,6 @@ function LandingPage() {
 
   const { leaderboards } = useSelector((state) => state.leaderboards)
 
-  console.log(leaderboards, "ini dia bambang")
-
   return (
     <>
       <div className="grid place-items-center">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useTimer } from "react-timer-hook"
-export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
+export default function Timer({ isCorrect, remainSeconds, setRemainSeconds, setTimeup }) {
   const [scoreTime, setScoreTime] = useState(0)
 
   let time
@@ -43,6 +43,7 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
     }
   }, [isCorrect])
   function expiredTime() {
+    setTimeup(true)
     localStorage.removeItem("time")
     setScoreTime(0)
   }
@@ -54,7 +55,7 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
   }
 
   return (
-    <div className="flex w-full justify-center space-x-4">
+    <div className="flex w-full justify-center space-x-4 mt-6">
       {checkDigit(minutes) > 1 && (
         <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(minutes)}</h2>
