@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid"
 
 function MultiPlayerPage({ socket }) {
   const [room, setRoom] = useState(null)
@@ -56,55 +56,58 @@ function MultiPlayerPage({ socket }) {
   function handleClickCreateRoom() {
     let roomId = uuidv4()
     setRoom(roomId)
-    socket.emit("joinWaitingRoom",
-      {
-        roomId: roomId,
-        username: localStorage.getItem("username"),
-        wordGuess: "",
-        remainingGuess: 0,
-        pastAnswers: [],
-        currentPlayer: null
-      })
-    localStorage.setItem("rooms", JSON.stringify({
+    socket.emit("joinWaitingRoom", {
       roomId: roomId,
+      username: localStorage.getItem("username"),
       wordGuess: "",
       remainingGuess: 0,
       pastAnswers: [],
-      currentPlayer: null
-    }))
+      currentPlayer: null,
+    })
+    localStorage.setItem(
+      "rooms",
+      JSON.stringify({
+        roomId: roomId,
+        wordGuess: "",
+        remainingGuess: 0,
+        pastAnswers: [],
+        currentPlayer: null,
+      })
+    )
     navigate(`/multiplayer/${roomId}`)
-
   }
 
   function handleSubmitRoomId(event) {
     event.preventDefault()
     let roomId = event.target.roomId.value
     setRoom(roomId)
-    localStorage.setItem("rooms", JSON.stringify({
-      roomId: roomId,
-      wordGuess: "",
-      remainingGuess: 0,
-      pastAnswers: [],
-      currentPlayer: null
-    }))
-    socket.emit("joinWaitingRoom",
-      {
+    localStorage.setItem(
+      "rooms",
+      JSON.stringify({
         roomId: roomId,
-        username: localStorage.getItem("username"),
         wordGuess: "",
         remainingGuess: 0,
         pastAnswers: [],
-        currentPlayer: null
+        currentPlayer: null,
       })
-    
+    )
+    socket.emit("joinWaitingRoom", {
+      roomId: roomId,
+      username: localStorage.getItem("username"),
+      wordGuess: "",
+      remainingGuess: 0,
+      pastAnswers: [],
+      currentPlayer: null,
+    })
+
     // connectToSocket(roomId)
     // joinRoom(roomId)
-    
+
     navigate(`/multiplayer/${roomId}`)
   }
 
   function handlePlayGame() {
-    console.log(room);
+    console.log(room)
     // navigate(`/multiplayer/${room}`)
   }
 
@@ -124,10 +127,12 @@ function MultiPlayerPage({ socket }) {
         </p>
       } */}
 
-      {currentUser === 0 &&
+      {currentUser === 0 && (
         <>
           <div>
-            <button type="button" onClick={handleClickCreateRoom}>Create Room</button>
+            <button type="button" onClick={handleClickCreateRoom}>
+              Create Room
+            </button>
           </div>
           <div>
             <form onSubmit={handleSubmitRoomId}>
@@ -136,8 +141,7 @@ function MultiPlayerPage({ socket }) {
             </form>
           </div>
         </>
-
-      }
+      )}
       {/* {currentUser === 1 &&
         <p>Wait another player</p>
       }
