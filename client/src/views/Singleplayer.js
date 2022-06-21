@@ -2,6 +2,7 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { fetchWords } from "../stores/actions/wordAction";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
 import Voice from "../components/Voice";
 import useSound from "use-sound";
@@ -9,6 +10,7 @@ import boopSfx from "../sounds/Applause.mp3";
 import JSConfetti from "js-confetti";
 import { makeLeaderboard } from "../stores/actions/leaderboardAction";
 const Singleplayer = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { words, solution } = useSelector((state) => state.words);
   const [answer, setAnswer] = React.useState("");
@@ -37,9 +39,6 @@ const Singleplayer = () => {
     }
     setAnswer(finalTranscript);
     setAnswerByVoice(true);
-  }
-  function submitAnswer(payload) {
-    dispatch(makeLeaderboard(payload));
   }
   React.useEffect(() => {
     if (answerByVoice) {
@@ -232,7 +231,11 @@ const Singleplayer = () => {
       localStorage.setItem("score", 0);
       setGameDone(true);
     }
-  }, [isCorrect]);
+  }, [
+    isCorrect,
+    localStorage.getItem("user_guesses"),
+    localStorage.getItem("remainingTime"),
+  ]);
   React.useEffect(() => {
     setLocalWords(words);
   }, [words]);
@@ -240,7 +243,6 @@ const Singleplayer = () => {
     setLocalSolution(solution);
   }, [solution]);
   React.useEffect(() => {
-    console.log(gameDone);
     if (localStorage.getItem("access_token") && gameDone) {
       dispatch(
         makeLeaderboard({
@@ -250,17 +252,34 @@ const Singleplayer = () => {
         })
       );
     }
-    if (gameDone) {
-      localStorage.removeItem("user_guesses");
-      localStorage.removeItem("remainingTime");
-      localStorage.removeItem("win");
-      localStorage.removeItem("score");
-      localStorage.removeItem("pastAnswers");
-      localStorage.removeItem("time");
-    }
   }, [gameDone]);
   function close() {
     setOpen(false);
+  }
+  function removeItem() {
+    localStorage.removeItem("index");
+    localStorage.removeItem("score");
+    localStorage.removeItem("user_guesses");
+    localStorage.removeItem("remainingTime");
+    localStorage.removeItem("win");
+    localStorage.removeItem("pastAnswers");
+    localStorage.removeItem("time");
+  }
+  function goBackHome() {
+    return (
+      <button
+        type="button"
+        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        onClick={() => {
+          setTimeup(false);
+          setLose(false);
+          removeItem();
+          navigate("/", { replace: true });
+        }}
+      >
+        Go Back Home
+      </button>
+    );
   }
   return (
     <div className="flex flex-col items-center">
@@ -452,13 +471,7 @@ const Singleplayer = () => {
                 </div>
 
                 <div className="mt-4 w-full flex justify-center">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={close}
-                  >
-                    Got it, thanks!
-                  </button>
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>
@@ -504,13 +517,7 @@ const Singleplayer = () => {
                 {/* //? num of guesses */}
 
                 <div className="mt-4 w-full flex justify-center">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={() => setTimeup(false)}
-                  >
-                    close
-                  </button>
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>
@@ -557,13 +564,7 @@ const Singleplayer = () => {
                 {/* //? num of guesses */}
 
                 <div className="mt-4 w-full flex justify-center">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={() => setLose(false)}
-                  >
-                    close
-                  </button>
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>

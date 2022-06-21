@@ -32,9 +32,7 @@ export default function Timer({
     if (
       isCorrect ||
       localStorage.getItem("win") ||
-      (+localStorage.getItem("user_guesses") !== null &&
-        +localStorage.getItem("user_guesses") === 0) &&
-        +localStorage.getItem("user_guesses") === false
+      localStorage.getItem("score") == 0
     ) {
       pause();
       time = new Date();
@@ -43,7 +41,7 @@ export default function Timer({
       ); // 5 minutes timer
       localStorage.setItem("time", time);
     }
-  }, [isCorrect]);
+  }, [isCorrect, localStorage.getItem("score")]);
   useEffect(() => {
     setTimeLeft();
   }, [minutes, seconds]);
