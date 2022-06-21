@@ -30,9 +30,11 @@ function MultiPlayerPage({ socket }) {
       })
 
     //reset timer
-    localStorage.removeItem("win")
-    localStorage.removeItem("remainingTime")
-    localStorage.removeItem("time")
+    let keysRemove = ["win", "remainingTime", "time"]
+
+    keysRemove.forEach((el) => {
+      localStorage.removeItem(el)
+    })
     navigate(`/multiplayer/${roomId}`)
   }
 
