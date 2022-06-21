@@ -237,8 +237,7 @@ function MultiPlayerRoom({ socket }) {
 
   function callPeer(id) {
     console.log(id, "<<<<<<<")
-    // setisCalled(true)
-    setReceivingCall(true)
+    setisCalled(true)
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -315,7 +314,6 @@ function MultiPlayerRoom({ socket }) {
 
   return (
     <>
-      <h1 className="ml-12 text-white">{JSON.stringify(isCalled)}</h1>
       {wait === false && (
         <>
           <div>
