@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Timer from "../components/Timer";
 import Voice from "../components/Voice";
 import useSound from 'use-sound';
-import boopSfx from '../sounds/Applause.mp3';
+import winSound from '../sounds/Winv2.mp3';
+import failSound from '../sounds/Dung.mp3';
 import JSConfetti from 'js-confetti'
-
+import failGameSound from '../sounds/FailGuess.mp3'
 
 const Singleplayer = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,9 @@ const Singleplayer = () => {
   const [timeup, setTimeup] = React.useState(false);
   const [lose, setLose] = React.useState(false);
   const [answerByVoice, setAnswerByVoice] = React.useState(false);
-  const [play] = useSound(boopSfx);
+  const [playWin] = useSound(winSound);
+  const [playGuessWrong] = useSound(failSound);
+  const [playIncorrectAll] = useSound(failGameSound);
   const jsConfetti = new JSConfetti()
   function answerHandler(e) {
     setAnswer(e.target.value);
@@ -40,6 +43,9 @@ const Singleplayer = () => {
     setAnswerByVoice(true);
   }
 
+  // React.useEffect(() => {
+
+  // }, [])
   React.useEffect(() => {
     if (answerByVoice) {
       autoEnter();
@@ -69,6 +75,9 @@ const Singleplayer = () => {
           if (
             userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
           ) {
+            if (localStorage.getItem('user_guesses') !== '0') {
+              playGuessWrong()
+            }
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
@@ -95,7 +104,10 @@ const Singleplayer = () => {
         if (allCorrect) setIsCorrect(true);
       } else {
         // if the user's answer does not exist do something
-        console.log("food does not exist");
+        if (localStorage.getItem('user_guesses') !== '0') {
+          playGuessWrong()
+        }
+        setWrong(true);
       }
       setAnswer("");
     }
@@ -103,7 +115,9 @@ const Singleplayer = () => {
 
   function onEnter(e) {
     // user can only submit if answer is truthy and guesses are above 0
+
     if (e.key === "Enter" && answer && guesses > 0) {
+
       const remainingGuesses = guesses - 1;
       if (remainingGuesses === 0) setLose(true);
       setGuesses(remainingGuesses);
@@ -123,6 +137,9 @@ const Singleplayer = () => {
           if (
             userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
           ) {
+            if (localStorage.getItem('user_guesses') !== '0') {
+              playGuessWrong()
+            }
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
@@ -149,6 +166,9 @@ const Singleplayer = () => {
         if (allCorrect) setIsCorrect(true);
       } else {
         // if the user's answer does not exist do something
+        if (localStorage.getItem('user_guesses') !== '0') {
+          playGuessWrong()
+        }
         setWrong(true);
       }
       setAnswer("");
@@ -160,7 +180,8 @@ const Singleplayer = () => {
   React.useEffect(() => {
     // If user is correct do something
     if (isCorrect) {
-      play()
+      // playIncorrectAll()
+      playWin()
       localStorage.setItem("win", true);
       localStorage.setItem("remainingTime", remainSeconds);
       const totalGuesses = +localStorage.getItem("user_guesses");
@@ -208,17 +229,26 @@ const Singleplayer = () => {
       jsConfetti.addConfetti({
         confettiRadius: 2,
         confettiNumber: 100,
-        emojis: [ '🍔', '🥓', '🍟', '🍣'],
+        emojis: ['🍔', '🥓', '🍟', '🍣'],
         emojiSize: 60,
       })
     }
-    if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
-      localStorage.setItem("score", 0);
-    }
-    if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
-      localStorage.setItem("score", 0);
-    }
+
+    // CODE BAWAH TANYA AUDI
+    // if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
+    //   // playIncorrectAll()
+    //   localStorage.setItem("score", 0);
+    // }
+    // if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
+    //   // playIncorrectAll()
+    //   localStorage.setItem("score", 0);
+    // }
   }, [isCorrect]);
+  React.useEffect(() => {
+    if (lose) {
+      playIncorrectAll()
+    }
+  }, [lose])
   React.useEffect(() => {
     setLocalWords(words);
   }, [words]);
@@ -391,23 +421,23 @@ const Singleplayer = () => {
                     {Math.floor(
                       (300 - localStorage.getItem("remainingTime")) / 60
                     ) > 0 && (
-                      <p className="text-xl font-semibold">
-                        {Math.floor(
-                          (300 - localStorage.getItem("remainingTime")) / 60
-                        )}
-                        <span className="text-sm">m </span>
-                        {(300 - localStorage.getItem("remainingTime")) % 60}
-                        <span className="text-sm">s</span>
-                      </p>
-                    )}
+                        <p className="text-xl font-semibold">
+                          {Math.floor(
+                            (300 - localStorage.getItem("remainingTime")) / 60
+                          )}
+                          <span className="text-sm">m </span>
+                          {(300 - localStorage.getItem("remainingTime")) % 60}
+                          <span className="text-sm">s</span>
+                        </p>
+                      )}
                     {Math.floor(
                       (300 - localStorage.getItem("remainingTime")) / 60
                     ) === 0 && (
-                      <p className="text-xl font-semibold">
-                        {(300 - localStorage.getItem("remainingTime")) % 60}
-                        <span className="text-sm font-thin">s</span>
-                      </p>
-                    )}
+                        <p className="text-xl font-semibold">
+                          {(300 - localStorage.getItem("remainingTime")) % 60}
+                          <span className="text-sm font-thin">s</span>
+                        </p>
+                      )}
                   </div>
                   {/* //? score */}
                   <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
