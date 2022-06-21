@@ -245,33 +245,33 @@ export default function NavBar() {
                   leaveTo="opacity-0 scale-95"
                 >
                   <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                    <Dialog.Title as="h3" className="text-2xl font-bold leading-6 text-gray-900">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-center text-2xl font-semibold leading-6 text-gray-700"
+                    >
                       Sign In
                     </Dialog.Title>
-                    <div className="mt-2">
-                      <form className="flex flex-col">
-                        <div className="flex flex-col mt-2">
-                          <label>Email</label>
-                          <input
-                            type="text"
-                            name="email"
-                            className="border-[1px] h-8 border-[gray] rounded-lg px-4 py-2"
-                            onChange={onChangeLogin}
-                          />
-                        </div>
-                        <div className="flex flex-col my-2">
-                          <label>Password</label>
-                          <input
-                            type="password"
-                            name="password"
-                            className="border-[1px] h-8 border-[gray] rounded-lg px-4 py-2"
-                            onChange={onChangeLogin}
-                          />
-                        </div>
+                    <div className="mt-6 w-full">
+                      <form className="flex flex-col items-center w-full space-y-5">
+                        <input
+                          type="text"
+                          name="email"
+                          placeholder="email"
+                          className="bg-transparent w-4/5 text-lg text-gray-700 border-b-[2px] focus:border-rose-500 duration-500 h-8 px-4 py-2 outline-none"
+                          onChange={onChangeLogin}
+                        />
+
+                        <input
+                          placeholder="password"
+                          type="password"
+                          name="password"
+                          className="bg-transparent w-4/5 text-lg text-gray-700 border-b-[2px] focus:border-rose-500 duration-500 h-8 px-4 py-2 outline-none"
+                          onChange={onChangeLogin}
+                        />
                         <div className="mt-2">
                           <button
                             type="button"
-                            className="w-full inline-flex justify-center rounded-md border border-transparent bg-violet-100 px-4 py-2 text-sm font-medium text-violet-900 hover:bg-violet-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+                            className="w-full inline-flex justify-center rounded-md border border-transparent bg-rose-500 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-rose-700 duration-300"
                             onClick={(e) => userLogin(e)}
                           >
                             Sign In
