@@ -7,11 +7,10 @@ const MySwal = withReactContent(Swal);
 export const fetchLeaderboard = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios({
+      const data = await axios({
         method: "GET",
         url: `${BASE_URL}/leaderboard`,
       });
-
       dispatch({
         type: GET_LEADERBOARD,
         payload: data,
@@ -29,7 +28,7 @@ export const fetchLeaderboard = () => {
 export const makeLeaderboard = (data) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios({
+      const { data2 } = await axios({
         method: "POST",
         url: `${BASE_URL}/leaderboard`,
         data: {
@@ -39,7 +38,7 @@ export const makeLeaderboard = (data) => {
         },
       });
 
-      return data;
+      return data2;
     } catch (error) {
       MySwal.fire({
         title: "Error",
