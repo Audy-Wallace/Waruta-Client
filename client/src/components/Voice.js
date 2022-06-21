@@ -34,19 +34,22 @@ export default function Voice({ answerVoice }) {
   return (
     <div>
       {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
-      <button
-        className="px-[20px] py-3 text-[30px] font-semibold bg-indigo-600 text-sky-200 rounded-full focus:text-rose-600 focus:bg-white focus:animate-pulse duration-300 shadow-md"
-        onClick={() => SpeechRecognition.startListening({ language: "id" })}
-      >
-        {/* {!listening && 
-                } */}
-        <IonIcon name="mic-outline" />
-        {/* {listening && <IonIcon name='mic-outline' style={{ color: 'red', fontSize: '45px' }} />} */}
-      </button>
-      {/* <button onClick={() => SpeechRecognition.startListening({ language: 'id' })}>Start</button>
-            <button onClick={() => SpeechRecognition.stopListening()}>Stop</button>
-            <button onClick={resetTranscript}>Reset</button> */}
-      {/* <p>Transcript: {transcript}</p> */}
+      {!listening && (
+        <button
+          className="px-[20px] py-3 text-[30px] font-semibold bg-indigo-600 text-sky-200 rounded-full shadow-md"
+          onClick={() => SpeechRecognition.startListening({ language: "id" })}
+        >
+          <IonIcon name="mic-outline" />
+        </button>
+      )}
+      {listening && (
+        <button
+          className="px-[20px] py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-white animate-pulse duration-300 shadow-md"
+          onClick={() => SpeechRecognition.startListening({ language: "id" })}
+        >
+          <IonIcon name="mic-outline" />
+        </button>
+      )}
     </div>
   )
 }

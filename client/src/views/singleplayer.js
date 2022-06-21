@@ -193,10 +193,13 @@ const Singleplayer = () => {
     if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
       localStorage.setItem("score", 0)
     }
-    if (isCorrect === false && +localStorage.getItem("time") == new Date()) {
+    if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
       localStorage.setItem("score", 0)
-      setTimeup(true)
     }
+
+    setTimeout(() => {
+      if (!isCorrect) setTimeup(true)
+    }, 300 * 1000)
   }, [isCorrect])
   React.useEffect(() => {
     setLocalWords(words)
