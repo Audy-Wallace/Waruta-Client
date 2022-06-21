@@ -351,7 +351,7 @@ const Singleplayer = () => {
                     </h2>
                   </div>
                 )}
-                {/* //? num of guesses */}
+                {/* //? num of player guesses */}
                 <div className="my-4 text-center flex justify-evenly w-full">
                   <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
                     <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
