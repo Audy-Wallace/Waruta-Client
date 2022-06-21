@@ -4,6 +4,11 @@ import { fetchWords } from "../stores/actions/wordAction";
 import { useDispatch, useSelector } from "react-redux";
 import Timer from "../components/Timer";
 import Voice from "../components/Voice";
+import useSound from 'use-sound';
+import boopSfx from '../sounds/Applause.mp3';
+import JSConfetti from 'js-confetti'
+
+
 const Singleplayer = () => {
   const dispatch = useDispatch();
   const { words, solution } = useSelector((state) => state.words);
@@ -21,10 +26,11 @@ const Singleplayer = () => {
   const [timeup, setTimeup] = React.useState(false);
   const [lose, setLose] = React.useState(false);
   const [answerByVoice, setAnswerByVoice] = React.useState(false);
+  const [play] = useSound(boopSfx);
+  const jsConfetti = new JSConfetti()
   function answerHandler(e) {
     setAnswer(e.target.value);
   }
-
   function answerVoice(finalTranscript) {
     finalTranscript = finalTranscript.replace(".", "");
     if (finalTranscript == "11") {
@@ -154,6 +160,7 @@ const Singleplayer = () => {
   React.useEffect(() => {
     // If user is correct do something
     if (isCorrect) {
+      play()
       localStorage.setItem("win", true);
       localStorage.setItem("remainingTime", remainSeconds);
       const totalGuesses = +localStorage.getItem("user_guesses");
@@ -198,7 +205,12 @@ const Singleplayer = () => {
       const score = guessScore + timeScore;
       localStorage.setItem("score", score);
       setOpen(true);
-
+      jsConfetti.addConfetti({
+        confettiRadius: 2,
+        confettiNumber: 50,
+        emojis: [ '🍔', '🥓', '🦐'],
+        emojiSize: 60,
+      })
     }
     if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
       localStorage.setItem("score", 0);
