@@ -20,14 +20,16 @@ const Singleplayer = () => {
   const [wrong, setWrong] = React.useState(false)
   const [timeup, setTimeup] = React.useState(false)
   const [lose, setLose] = React.useState(false)
-  const [ answerByVoice, setAnswerByVoice] = React.useState(false);
+  const [answerByVoice, setAnswerByVoice] = React.useState(false)
   function answerHandler(e) {
     setAnswer(e.target.value)
   }
 
   function answerVoice(finalTranscript) {
-    finalTranscript = finalTranscript.replace('.', '')
-    if (finalTranscript == "11") { finalTranscript = "Seblak" }
+    finalTranscript = finalTranscript.replace(".", "")
+    if (finalTranscript == "11") {
+      finalTranscript = "Seblak"
+    }
     setAnswer(finalTranscript)
     setAnswerByVoice(true)
   }
@@ -41,55 +43,51 @@ const Singleplayer = () => {
 
   function autoEnter() {
     if (answer && guesses > 0) {
-      const remainingGuesses = guesses - 1;
+      const remainingGuesses = guesses - 1
       console.log(remainingGuesses, "REMAINING GUESSES")
-      setGuesses(remainingGuesses);
+      setGuesses(remainingGuesses)
       // when the user has guessed the user's remaining guesses is stored in localStorage
       // if user reloads the page, he/she will still have the same number of remaining guesses
-      localStorage.setItem("user_guesses", remainingGuesses);
+      localStorage.setItem("user_guesses", remainingGuesses)
       console.log(answer, "ANSWER")
-      const userGuess = localWords.find(
-        (el) => el.name.toLowerCase() === answer.toLowerCase()
-      );
+      const userGuess = localWords.find((el) => el.name.toLowerCase() === answer.toLowerCase())
       if (userGuess) {
-        const keys = Object.keys(userGuess);
-        const obj = {};
-        let allCorrect = true;
+        const keys = Object.keys(userGuess)
+        const obj = {}
+        let allCorrect = true
         for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
-          if (key === "id") continue;
-          if (
-            userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
-          ) {
+          const key = keys[i]
+          if (key === "id") continue
+          if (userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           if (userGuess[key] !== localSolution[key]) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           obj[key] = {
             value: userGuess[key],
             isCorrect: true,
-          };
+          }
         }
-        const temp = [...pastAnswers, obj];
-        setPastAnswers(temp);
-        localStorage.setItem("pastAnswers", JSON.stringify(temp));
-        if (allCorrect) setIsCorrect(true);
+        const temp = [...pastAnswers, obj]
+        setPastAnswers(temp)
+        localStorage.setItem("pastAnswers", JSON.stringify(temp))
+        if (allCorrect) setIsCorrect(true)
       } else {
         // if the user's answer does not exist do something
-        console.log("food does not exist");
+        console.log("food does not exist")
       }
-      setAnswer("");
+      setAnswer("")
     }
   }
 
@@ -223,7 +221,7 @@ const Singleplayer = () => {
         />
       </div>
       {/*User Input */}
-      <div className="flex w-[100%] justify-center items-center">
+      <div className="flex w-[100%] justify-center items-center space-x-4">
         {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
         the onEnter function) */}
         <input

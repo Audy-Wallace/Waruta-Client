@@ -1,21 +1,19 @@
-import "./App.css";
-import NavBar from "./components/NavBar";
-import { connectSocket } from "./hooks/connectSocket";
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./views/LandingPage";
-import MultiPlayerPage from "./views/MultiPlayerPage";
-import MultiPlayerRoom from "./views/MultiPlayerRoom";
+import "./App.css"
+import NavBar from "./components/NavBar"
+import { connectSocket } from "./hooks/connectSocket"
+import { Routes, Route } from "react-router-dom"
+import LandingPage from "./views/LandingPage"
+import Singleplayer from "./views/Singleplayer"
+import MultiPlayerPage from "./views/MultiPlayerPage"
+import MultiPlayerRoom from "./views/MultiPlayerRoom"
 // import Singleplayer from "./views/Singleplayer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet"
 
 // bug
 function App() {
-  const socket = connectSocket();
+  const socket = connectSocket()
   return (
-    <div
-      id="root"
-      className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]"
-    >
+    <div id="root" className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]">
       <Helmet>
         <script
           type="text/javascript"
@@ -26,7 +24,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/singleplayer" element={<Singleplayer />} /> */}
+        <Route path="/singleplayer" element={<Singleplayer />} />
         <Route
           path="/multiplayer"
           element={<MultiPlayerPage socket={socket}></MultiPlayerPage>}
@@ -37,7 +35,7 @@ function App() {
         ></Route>
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
