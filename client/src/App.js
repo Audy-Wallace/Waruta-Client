@@ -6,7 +6,7 @@ import LandingPage from "./views/LandingPage"
 import Singleplayer from "./views/Singleplayer"
 import MultiPlayerPage from "./views/MultiPlayerPage"
 import MultiPlayerRoom from "./views/MultiPlayerRoom"
-// import Singleplayer from "./views/Singleplayer";
+import Singleplayer from "./views/Singleplayer";
 import { Helmet } from "react-helmet"
 
 // bug
