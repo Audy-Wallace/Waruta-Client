@@ -196,10 +196,6 @@ const Singleplayer = () => {
     if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
       localStorage.setItem("score", 0)
     }
-
-    setTimeout(() => {
-      if (!isCorrect) setTimeup(true)
-    }, 300 * 1000)
   }, [isCorrect])
   React.useEffect(() => {
     setLocalWords(words)
@@ -218,6 +214,7 @@ const Singleplayer = () => {
           isCorrect={isCorrect}
           remainSeconds={remainSeconds}
           setRemainSeconds={setRemainSeconds}
+          setTimeup={setTimeup}
         />
       </div>
       {/*User Input */}
