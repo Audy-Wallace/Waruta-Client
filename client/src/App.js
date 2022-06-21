@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "./views/LandingPage";
 import MultiPlayerPage from "./views/MultiPlayerPage";
 import MultiPlayerRoom from "./views/MultiPlayerRoom";
-// import Singleplayer from "./views/Singleplayer";
+import Singleplayer from "./views/Singleplayer";
 import { Helmet } from "react-helmet";
 
 // bug
@@ -26,7 +26,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/singleplayer" element={<Singleplayer />} /> */}
+        <Route path="/singleplayer" element={<Singleplayer />} />
         <Route
           path="/multiplayer"
           element={<MultiPlayerPage socket={socket}></MultiPlayerPage>}

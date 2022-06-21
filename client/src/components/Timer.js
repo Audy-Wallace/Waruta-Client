@@ -20,20 +20,21 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds }) {
     onExpire: () => expiredTime(),
   })
 
-  useEffect(() => {
-    setRemainSeconds(minutes * 60 + seconds)
-    if (remainSeconds > 240 && remainSeconds <= 300) {
-      setScoreTime(50)
-    } else if (remainSeconds > 180) {
-      setScoreTime(40)
-    } else if (remainSeconds > 120) {
-      setScoreTime(30)
-    } else if (remainSeconds > 60) {
-      setScoreTime(20)
-    } else if (remainSeconds > 1) {
-      setScoreTime(10)
-    }
-  }, [isRunning, seconds, minutes, remainSeconds])
+  // useEffect(() => {
+  //   setRemainSeconds(minutes * 60 + seconds)
+  //   if (remainSeconds > 240 && remainSeconds <= 300) {
+  //     setScoreTime(50)
+  //   } else if (remainSeconds > 180) {
+  //     setScoreTime(40)
+  //   } else if (remainSeconds > 120) {
+  //     setScoreTime(30)
+  //   } else if (remainSeconds > 60) {
+  //     setScoreTime(20)
+  //   } else if (remainSeconds > 1) {
+  //     setScoreTime(10)
+  //   }
+  // }, [isRunning, seconds, minutes, remainSeconds])
+  
   useEffect(() => {
     if (isCorrect || localStorage.getItem("win")) {
       time = new Date()

@@ -191,8 +191,6 @@ function MultiPlayerRoom({ socket }) {
 
   return (
     <>
-
-
       {wait === false &&
         <>
           <div>
