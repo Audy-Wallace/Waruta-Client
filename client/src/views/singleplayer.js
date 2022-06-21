@@ -194,9 +194,11 @@ const Singleplayer = () => {
       } else if (secondsLeft >= 0) {
         timeScore = 10;
       }
+
       const score = guessScore + timeScore;
       localStorage.setItem("score", score);
       setOpen(true);
+
     }
     if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
       localStorage.setItem("score", 0);
