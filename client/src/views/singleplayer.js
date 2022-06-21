@@ -188,6 +188,8 @@ const Singleplayer = () => {
       }
       const score = guessScore + timeScore
       localStorage.setItem("score", score)
+      // localStorage.removeItem("win")
+      // localStorage.removeItem("time")
       setOpen(true)
     }
     if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {

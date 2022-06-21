@@ -1,13 +1,12 @@
-import "./App.css"
-import NavBar from "./components/NavBar"
-import { connectSocket } from "./hooks/connectSocket"
-import { Routes, Route } from "react-router-dom"
-import LandingPage from "./views/LandingPage"
-import Singleplayer from "./views/Singleplayer"
-import MultiPlayerPage from "./views/MultiPlayerPage"
-import MultiPlayerRoom from "./views/MultiPlayerRoom"
+import "./App.css";
+import NavBar from "./components/NavBar";
+import { connectSocket } from "./hooks/connectSocket";
+import { Routes, Route } from "react-router-dom";
+import LandingPage from "./views/LandingPage";
+import MultiPlayerPage from "./views/MultiPlayerPage";
+import MultiPlayerRoom from "./views/MultiPlayerRoom";
 import Singleplayer from "./views/Singleplayer";
-import { Helmet } from "react-helmet"
+import { Helmet } from "react-helmet";
 
 // bug
 function App() {

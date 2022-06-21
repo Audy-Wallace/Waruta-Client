@@ -120,6 +120,11 @@ function MultiPlayerRoom({ socket }) {
             setCorrect(inputAnswer + " is correct")
             setGameEnd(true)
             setIsCorrect(true);
+            let keysRemove = ["time"]
+
+            keysRemove.forEach((el) => {
+              localStorage.removeItem(el)
+            })
           }
 
           payload.pastAnswers = [...payload.pastAnswers, obj]
@@ -176,6 +181,11 @@ function MultiPlayerRoom({ socket }) {
         setCorrect(payload.wordGuess + " is correct");
         setGameEnd(true);
         setIsCorrect(true);
+        let keysRemove = ["time"]
+
+        keysRemove.forEach((el) => {
+          localStorage.removeItem(el)
+        })
       }
       if (!gameEnd) {
         localStorage.setItem("rooms", JSON.stringify({
@@ -191,8 +201,6 @@ function MultiPlayerRoom({ socket }) {
 
   return (
     <>
-
-
       {wait === false &&
         <>
           <div>
