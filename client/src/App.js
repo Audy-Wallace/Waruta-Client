@@ -9,7 +9,7 @@ import MultiPlayerRoom from "./views/MultiPlayerRoom"
 // import Singleplayer from "./views/Singleplayer";
 import { Helmet } from "react-helmet"
 
-// bug
+// fix
 function App() {
   const socket = connectSocket()
   return (
