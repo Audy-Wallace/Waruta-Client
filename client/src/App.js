@@ -9,7 +9,7 @@ import MultiPlayerPage from "./views/MultiPlayerPage";
 import MultiPlayerRoom from "./views/MultiPlayerRoom";
 
 import { Helmet } from "react-helmet";
-import LeaderBoard from "./views/LeaderBoard";
+import Leaderboard from "./views/Leaderboard";
 
 
 
@@ -31,7 +31,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/leaderboard" element={<LeaderBoard />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/singleplayer" element={<Singleplayer />} />
         <Route
           path="/multiplayer"
