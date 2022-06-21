@@ -14,7 +14,6 @@ function LandingPage() {
       <div className="grid place-items-center">
         <div className="outer-container flex flex-row mt-16 ">
           <div className="inner-container">
-            {" "}
             <img
               src={require("../logo-waruta.png")}
               className="w-40"
@@ -32,7 +31,7 @@ function LandingPage() {
             <p className="text-white">Are you ready for the challenge?</p>
             <br />
             <div className="flex flex-col w-full">
-              <NavLink to="/singleplayer">
+              <NavLink to="/singleplayer" replace={true}>
                 <button className="bg-pink-700 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded w-[100%]">
                   Play Now
                 </button>

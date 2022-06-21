@@ -1,60 +1,68 @@
-import React, { useEffect, useState } from "react"
-import { useTimer } from "react-timer-hook"
-export default function Timer({ isCorrect, remainSeconds, setRemainSeconds, setTimeup }) {
-  const [scoreTime, setScoreTime] = useState(0)
+import React, { useEffect, useState } from "react";
+import { useTimer } from "react-timer-hook";
+export default function Timer({
+  isCorrect,
+  remainSeconds,
+  setRemainSeconds,
+  setTimeup,
+}) {
+  const [scoreTime, setScoreTime] = useState(0);
 
-  let time
-  let timeStore
+  let time;
+  let timeStore;
 
   if (localStorage.getItem("time")) {
-    let prevDate = localStorage.getItem("time")
-    timeStore = new Date(prevDate)
+    let prevDate = localStorage.getItem("time");
+    timeStore = new Date(prevDate);
   } else {
-    time = new Date()
-    time.setSeconds(time.getSeconds() + 300) // 5 minutes timer
-    localStorage.setItem("time", time)
+    time = new Date();
+    time.setSeconds(time.getSeconds() + 300); // 5 minutes timer
+    localStorage.setItem("time", time);
   }
 
-  let { seconds, minutes, isRunning, start, pause, resume, restart } = useTimer({
-    expiryTimestamp: timeStore ? timeStore : time,
-    onExpire: () => expiredTime(),
-  })
-
-  // useEffect(() => {
-  //   setRemainSeconds(minutes * 60 + seconds)
-  //   if (remainSeconds > 240 && remainSeconds <= 300) {
-  //     setScoreTime(50)
-  //   } else if (remainSeconds > 180) {
-  //     setScoreTime(40)
-  //   } else if (remainSeconds > 120) {
-  //     setScoreTime(30)
-  //   } else if (remainSeconds > 60) {
-  //     setScoreTime(20)
-  //   } else if (remainSeconds > 1) {
-  //     setScoreTime(10)
-  //   }
-  // }, [isRunning, seconds, minutes, remainSeconds])
-  
-  useEffect(() => {
-    if (isCorrect || localStorage.getItem("win")) {
-      time = new Date()
-      time.setSeconds(time.getSeconds() + +localStorage.getItem("remainingTime")) // 5 minutes timer
-      localStorage.setItem("time", time)
-      pause()
+  let { seconds, minutes, isRunning, start, pause, resume, restart } = useTimer(
+    {
+      expiryTimestamp: timeStore ? timeStore : time,
+      onExpire: () => expiredTime(),
     }
-  }, [isCorrect])
+  );
+
+  useEffect(() => {
+    setTimeLeft();
+    if (
+      isCorrect ||
+      localStorage.getItem("win") ||
+      (+localStorage.getItem("user_guesses") !== null &&
+        +localStorage.getItem("user_guesses") === 0) &&
+        +localStorage.getItem("user_guesses") === false
+    ) {
+      pause();
+      time = new Date();
+      time.setSeconds(
+        time.getSeconds() + +localStorage.getItem("remainingTime")
+      ); // 5 minutes timer
+      localStorage.setItem("time", time);
+    }
+  }, [isCorrect]);
+  useEffect(() => {
+    setTimeLeft();
+  }, [minutes, seconds]);
   function expiredTime() {
-    setTimeup(true)
-    localStorage.removeItem("time")
-    setScoreTime(0)
+    setTimeup(true);
+    localStorage.removeItem("time");
+    setScoreTime(0);
   }
   function checkDigit(menitDetik) {
     if (menitDetik < 10) {
-      return `0${menitDetik}`
+      return `0${menitDetik}`;
     }
-    return menitDetik
+    return menitDetik;
   }
-
+  function setTimeLeft() {
+    const totalSeconds = minutes * 60 + seconds;
+    setRemainSeconds(totalSeconds);
+    localStorage.setItem("remainingTime", totalSeconds);
+  }
   return (
     <div className="flex w-full justify-center space-x-4 mt-6">
       {checkDigit(minutes) > 1 && (
@@ -81,5 +89,5 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds, setT
         </div>
       )}
     </div>
-  )
+  );
 }

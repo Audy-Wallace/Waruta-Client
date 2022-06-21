@@ -36,8 +36,10 @@ export const makeLeaderboard = (data) => {
           guess: data.guess,
           score: data.score,
         },
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        }
       });
-
       return data2;
     } catch (error) {
       MySwal.fire({

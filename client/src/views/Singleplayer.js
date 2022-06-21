@@ -4,11 +4,10 @@ import { fetchWords } from "../stores/actions/wordAction";
 import { useDispatch, useSelector } from "react-redux";
 import Timer from "../components/Timer";
 import Voice from "../components/Voice";
-import useSound from 'use-sound';
-import boopSfx from '../sounds/Applause.mp3';
-import JSConfetti from 'js-confetti'
-
-
+import useSound from "use-sound";
+import boopSfx from "../sounds/Applause.mp3";
+import JSConfetti from "js-confetti";
+import { makeLeaderboard } from "../stores/actions/leaderboardAction";
 const Singleplayer = () => {
   const dispatch = useDispatch();
   const { words, solution } = useSelector((state) => state.words);
@@ -19,15 +18,15 @@ const Singleplayer = () => {
   const [localWords, setLocalWords] = React.useState([]);
   const [localSolution, setLocalSolution] = React.useState("");
   const [remainSeconds, setRemainSeconds] = React.useState(0);
-  const [userScore, setUserScore] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [hint, setHint] = React.useState(false);
   const [wrong, setWrong] = React.useState(false);
   const [timeup, setTimeup] = React.useState(false);
   const [lose, setLose] = React.useState(false);
   const [answerByVoice, setAnswerByVoice] = React.useState(false);
+  const [gameDone, setGameDone] = React.useState(false);
   const [play] = useSound(boopSfx);
-  const jsConfetti = new JSConfetti()
+  const jsConfetti = new JSConfetti();
   function answerHandler(e) {
     setAnswer(e.target.value);
   }
@@ -39,7 +38,9 @@ const Singleplayer = () => {
     setAnswer(finalTranscript);
     setAnswerByVoice(true);
   }
-
+  function submitAnswer(payload) {
+    dispatch(makeLeaderboard(payload));
+  }
   React.useEffect(() => {
     if (answerByVoice) {
       autoEnter();
@@ -160,7 +161,7 @@ const Singleplayer = () => {
   React.useEffect(() => {
     // If user is correct do something
     if (isCorrect) {
-      play()
+      play();
       localStorage.setItem("win", true);
       localStorage.setItem("remainingTime", remainSeconds);
       const totalGuesses = +localStorage.getItem("user_guesses");
@@ -205,23 +206,31 @@ const Singleplayer = () => {
       const score = guessScore + timeScore;
       localStorage.setItem("score", score);
       setOpen(true);
+      setGameDone(true);
       jsConfetti.addConfetti({
         confettiRadius: 2,
-<<<<<<< HEAD
-        confettiNumber: 200,
-        emojis: [ '🍔', '🥓', '🦐'],
-=======
         confettiNumber: 100,
-        emojis: [ '🍔', '🥓', '🍟', '🍣'],
->>>>>>> 757eb1a9083a7ce5db6095fcf047d0cd5ed3f360
+        emojis: ["🍔", "🥓", "🍟", "🍣"],
         emojiSize: 60,
-      })
+      });
     }
-    if (isCorrect === false && +localStorage.getItem("user_guesses") === 0) {
+    if (
+      isCorrect === false &&
+      +localStorage.getItem("user_guesses") === 0 &&
+      localStorage.getItem("user_guesses") !== null
+    ) {
+      localStorage.setItem("win", false);
       localStorage.setItem("score", 0);
+      setGameDone(true);
     }
-    if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
+    if (
+      isCorrect === false &&
+      +localStorage.getItem("remainingTime") === 0 &&
+      !localStorage.getItem("win")
+    ) {
+      localStorage.setItem("win", false);
       localStorage.setItem("score", 0);
+      setGameDone(true);
     }
   }, [isCorrect]);
   React.useEffect(() => {
@@ -230,7 +239,26 @@ const Singleplayer = () => {
   React.useEffect(() => {
     setLocalSolution(solution);
   }, [solution]);
-
+  React.useEffect(() => {
+    console.log(gameDone);
+    if (localStorage.getItem("access_token") && gameDone) {
+      dispatch(
+        makeLeaderboard({
+          score: localStorage.getItem("score"),
+          guess: +localStorage.getItem("user_guesses"),
+          time: 300 - +localStorage.getItem("remainingTime"),
+        })
+      );
+    }
+    if (gameDone) {
+      localStorage.removeItem("user_guesses");
+      localStorage.removeItem("remainingTime");
+      localStorage.removeItem("win");
+      localStorage.removeItem("score");
+      localStorage.removeItem("pastAnswers");
+      localStorage.removeItem("time");
+    }
+  }, [gameDone]);
   function close() {
     setOpen(false);
   }
