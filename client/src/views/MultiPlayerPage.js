@@ -80,31 +80,30 @@ function MultiPlayerPage({ socket }) {
           <button>Join Room</button>
         </form>
       </div> */}
-      <div className="flex justify-center item-center mx-auto my-72 bg-blue-700 h-12 w-fit">
-        <div>
-          <form onSubmit={handleSubmitRoomId}>
-            <input type="text" name="roomId"></input>
+      <div className="flex justify-center items-center mx-auto my-48 bg-yellow-500 w-fit p-6 rounded-xl shadow-2xl">
+          <form onSubmit={handleSubmitRoomId} className="flex flex-col">
+            <input type="text" name="roomId" className="px-6 h-12 text-center rounded placeholder:text-orange-700" placeholder="Room Code"></input>
             <button className="px-6
-                  py-2.5
-                  bg-yellow-600
+            
+                  h-12
+                  bg-orange-500
                   text-white
                   font-medium
-                  text-xs
                   leading-tight
-                  uppercase
                   rounded
                   shadow-md
-                  hover:bg-yellow-700 hover:shadow-lg
-                  focus:bg-yellow-700 focus:shadow-lg focus:outline-none focus:ring-0
-                  active:bg-yellow-800 active:shadow-lg
+                  hover:bg-orange-700 hover:shadow-lg
+                  focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0
+                  active:bg-orange-800 active:shadow-lg
                   transition
                   duration-150
                   ease-in-out
-                  mt-2">
-              Join Room
+                  mt-4
+                ">
+              Create or Join Room
             </button>
           </form>
-        </div>
+      
       </div>
     </>
   )

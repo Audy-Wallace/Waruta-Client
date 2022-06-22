@@ -534,8 +534,8 @@ const Singleplayer = () => {
 
             <div className="fixed inset-0 overflow-y-auto mx-auto w-auto" >
               <div className="flex min-h-full items-center justify-center p-4 text-center" >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all" 
-                style={{backgroundColor: `lightgray`}}
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all"
+                  style={{ backgroundColor: `lightgray` }}
                 >
                   {/* //? solution image */}
                   <div className="w-full flex flex-col" >
@@ -546,10 +546,10 @@ const Singleplayer = () => {
                       • You get <span className="font-bold">eight</span> guesses, try any food you want!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
-                      • <span style={{ color: `green`, fontWeight:'600' }}>Green in any column</span> indicates a match!
+                      • <span style={{ color: `green`, fontWeight: '600' }}>Green in any column</span> indicates a match!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
-                      • <span style={{ color: `red`, fontWeight:'600' }}>Red in any column</span> indicates a mismatch!
+                      • <span style={{ color: `red`, fontWeight: '600' }}>Red in any column</span> indicates a mismatch!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
                       • If you get stuck, try clicking hint button!
