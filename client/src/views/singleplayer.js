@@ -1,12 +1,14 @@
-import React from "react"
-import { Dialog, Transition } from "@headlessui/react"
-import { fetchWords } from "../stores/actions/wordAction"
-import { useDispatch, useSelector } from "react-redux"
-import Timer from "../components/Timer"
-import Voice from "../components/Voice"
+import React from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { fetchWords } from "../stores/actions/wordAction";
+import { useDispatch, useSelector } from "react-redux";
+import Timer from "../components/Timer";
+import Voice from "../components/Voice";
 import useSound from "use-sound";
-import boopSfx from "../sounds/Applause.mp3";
+import winSound from "../sounds/Winv2.mp3";
+import failSound from "../sounds/Dung.mp3";
 import JSConfetti from "js-confetti";
+import failGameSound from "../sounds/FailGuess.mp3";
 import { makeLeaderboard } from "../stores/actions/leaderboardAction";
 import { useNavigate } from "react-router-dom";
 const Singleplayer = () => {
@@ -27,7 +29,9 @@ const Singleplayer = () => {
   const [lose, setLose] = React.useState(false);
   const [answerByVoice, setAnswerByVoice] = React.useState(false);
   const [gameDone, setGameDone] = React.useState(false);
-  const [play] = useSound(boopSfx);
+  const [playWin] = useSound(winSound);
+  const [playGuessWrong] = useSound(failSound);
+  const [playIncorrectAll] = useSound(failGameSound);
   const jsConfetti = new JSConfetti();
   function answerHandler(e) {
     setAnswer(e.target.value);
@@ -69,6 +73,9 @@ const Singleplayer = () => {
           if (
             userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
           ) {
+            if (localStorage.getItem("user_guesses") !== "0") {
+              playGuessWrong();
+            }
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
@@ -95,6 +102,10 @@ const Singleplayer = () => {
         if (allCorrect) setIsCorrect(true);
       } else {
         // if the user's answer does not exist do something
+        if (localStorage.getItem("user_guesses") !== "0") {
+          playGuessWrong();
+        }
+        setWrong(true);
         console.log("food does not exist");
       }
       setAnswer("");
@@ -123,6 +134,9 @@ const Singleplayer = () => {
           if (
             userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
           ) {
+            if (localStorage.getItem("user_guesses") !== "0") {
+              playGuessWrong();
+            }
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
@@ -149,6 +163,9 @@ const Singleplayer = () => {
         if (allCorrect) setIsCorrect(true);
       } else {
         // if the user's answer does not exist do something
+        if (localStorage.getItem('user_guesses') !== '0') {
+          playGuessWrong()
+        }
         setWrong(true);
       }
       setAnswer("");
@@ -160,7 +177,7 @@ const Singleplayer = () => {
   React.useEffect(() => {
     // If user is correct do something
     if (isCorrect) {
-      play();
+      playWin();
       localStorage.setItem("win", true);
       localStorage.setItem("remainingTime", remainSeconds);
       const totalGuesses = +localStorage.getItem("user_guesses");
@@ -256,6 +273,11 @@ const Singleplayer = () => {
   function close() {
     setOpen(false);
   }
+  React.useEffect(() => {
+    if (lose) {
+      playIncorrectAll()
+    }
+  }, [lose])
   function removeItem() {
     localStorage.removeItem("index");
     localStorage.removeItem("score");
@@ -411,7 +433,10 @@ const Singleplayer = () => {
                 {/* //? solution image */}
                 {solution && (
                   <div className="w-full flex flex-col items-center">
-                    <img src={solution.imgUrl} className="h-36 w-36 rounded-lg mb-6 shadow-lg" />
+                    <img
+                      src={solution.imgUrl}
+                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                    />
                     <div className="border-b-2 border-indigo-400 w-full mb-6"></div>
                     <Dialog.Title
                       as="h3"
@@ -437,15 +462,21 @@ const Singleplayer = () => {
                   <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
                     <h1 className="text-xs">Time</h1>
 
-                    {Math.floor((300 - localStorage.getItem("remainingTime")) / 60) > 0 && (
+                    {Math.floor(
+                      (300 - localStorage.getItem("remainingTime")) / 60
+                    ) > 0 && (
                       <p className="text-xl font-semibold">
-                        {Math.floor((300 - localStorage.getItem("remainingTime")) / 60)}
+                        {Math.floor(
+                          (300 - localStorage.getItem("remainingTime")) / 60
+                        )}
                         <span className="text-sm">m </span>
                         {(300 - localStorage.getItem("remainingTime")) % 60}
                         <span className="text-sm">s</span>
                       </p>
                     )}
-                    {Math.floor((300 - localStorage.getItem("remainingTime")) / 60) === 0 && (
+                    {Math.floor(
+                      (300 - localStorage.getItem("remainingTime")) / 60
+                    ) === 0 && (
                       <p className="text-xl font-semibold">
                         {(300 - localStorage.getItem("remainingTime")) % 60}
                         <span className="text-sm font-thin">s</span>
@@ -462,7 +493,7 @@ const Singleplayer = () => {
                 </div>
 
                 <div className="mt-4 w-full flex justify-center">
-                {goBackHome()}
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>
@@ -488,12 +519,18 @@ const Singleplayer = () => {
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
                 {/* //? solution image */}
-                <Dialog.Title as="h1" className="text-3xl text-center mb-4 leading-6 text-rose-600">
+                <Dialog.Title
+                  as="h1"
+                  className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                >
                   Time's up!
                 </Dialog.Title>
                 {solution && (
                   <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
-                    <img src={solution.imgUrl} className="h-36 w-36 rounded-lg mb-6 shadow-lg" />
+                    <img
+                      src={solution.imgUrl}
+                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                    />
                     {/* //? solution name */}
                     <h2>The answer is</h2>
                     <h2 className="text-[30px] ">{solution.name}</h2>
@@ -502,7 +539,7 @@ const Singleplayer = () => {
                 {/* //? num of guesses */}
 
                 <div className="mt-4 w-full flex justify-center">
-                {goBackHome()}
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>
@@ -528,13 +565,19 @@ const Singleplayer = () => {
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                <Dialog.Title as="h1" className="text-3xl text-center mb-4 leading-6 text-rose-600">
+                <Dialog.Title
+                  as="h1"
+                  className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                >
                   Game Over
                 </Dialog.Title>
                 {solution && (
                   <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
                     {/* //? solution image */}
-                    <img src={solution.imgUrl} className="h-36 w-36 rounded-lg mb-6 shadow-lg" />
+                    <img
+                      src={solution.imgUrl}
+                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                    />
                     <h2>The answer is</h2>
                     {/* //? solution name */}
                     <h2 className="text-[30px] ">{solution.name}</h2>
@@ -543,7 +586,7 @@ const Singleplayer = () => {
                 {/* //? num of guesses */}
 
                 <div className="mt-4 w-full flex justify-center">
-                {goBackHome()}
+                  {goBackHome()}
                 </div>
               </Dialog.Panel>
             </div>
@@ -579,25 +622,31 @@ const Singleplayer = () => {
                         </td>
                       )}
                       {el.color.value == solution.color ? (
-                        <td className="bg-emerald-500 bg-opacity-60">{el.color.value}</td>
+                        <td className="bg-emerald-500 bg-opacity-60">
+                          {el.color.value}
+                        </td>
                       ) : (
-                        <td className="bg-rose-500 bg-opacity-60">{el.color.value}</td>
+                        <td className="bg-rose-500 bg-opacity-60">
+                          {el.color.value}
+                        </td>
                       )}
                       {el.taste.value == solution.taste ? (
                         <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
                           {el.taste.value}
                         </td>
                       ) : (
-                        <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">{el.taste.value}</td>
+                        <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">
+                          {el.taste.value}
+                        </td>
                       )}
                     </tr>
-                  )
+                  );
                 })}
             </tbody>
           </table>
         </div>
       )}
     </div>
-  )
-}
-export default Singleplayer
+  );
+};
+export default Singleplayer;
