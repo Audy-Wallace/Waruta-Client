@@ -41,7 +41,7 @@ function LandingPage() {
           <div className="image ml-16">
             <img
               src={require("../waruta.png")}
-              className="rounded-xl opacity-90 shadow-xl"
+              className="w-60 h-60 rounded-xl opacity-90 bg-gradient-to-br from-yellow-500 to-yellow-300 shadow-xl"
               alt="people-discuss"
             />
           </div>

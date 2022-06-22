@@ -91,30 +91,25 @@ export default function NavBar() {
       .catch((err) => console.log(err))
   }
   return (
-    <div className="bg-purple-700 h-16 flex justify-between items-center space-x-2">
-      <div className="container-1">
+    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2">
+      <div className="container-1 flex items-center">
+        <img src={require("../waruta.png")} className="h-20 w-20 ml-2" alt="logo" />
         <button
-          variant="contained"
-          className="text-lg text-rose-200  bg-[#c236e2]  h-16  shadow-sm px-4  hover:text-sky-100 duration-500"
-        >
-          WARUTA
-        </button>
-        <button
-          className="text-lg text-rose-100 px-2 bg-purple-600 border-white border-neutral-400 h-16 hover:bg-transparent duration-300"
+          className="text-lg text-white px-2 border-white h-16 duration-300"
           type="button"
           onClick={() => setShowLeaderboard(true)}
         >
           LeaderBoard
         </button>
         <button
-          className="text-lg text-rose-100  px-2 h-16 bg-purple-600 hover:bg-transparent duration-300"
+          className="text-lg text-white  px-2 h-16 duration-300"
           onClick={() => setIsOpenRegister(true)}
         >
           Sign Up
         </button>
         <button
           onClick={() => snapMidtrans()}
-          className="text-lg text-rose-100 px-2 py-[1px] h-16 bg-purple-600 hover:bg-transparent duration-300"
+          className="text-lg text-white px-2 py-[1px] h-16 duration-300"
         >
           Payment
         </button>
@@ -214,7 +209,7 @@ export default function NavBar() {
           </Dialog>
         </Transition>
         <button
-          className="text-lg text-rose-100 px-2 h-16 py-[1px]  bg-gradient-to-r from-purple-600  hover:bg-transparent duration-300"
+          className="text-lg text-white px-2 h-16 py-[1px] duration-300"
           onClick={() => setIsOpenLogin(true)}
         >
           Sign In
@@ -405,7 +400,7 @@ export default function NavBar() {
       <div className="container-2">
         <button
           onClick={() => snapMidtrans()}
-          className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
+          className="text-lg text-white mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
         >
           Become Premium
         </button>

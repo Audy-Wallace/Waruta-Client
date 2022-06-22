@@ -290,13 +290,13 @@ function MultiPlayerRoom({ socket }) {
 
   let UserVideo
   if (stream) {
-    UserVideo = <video className="w-[330px] h-[220px]" playsInline muted ref={myVideo} autoPlay />
+    UserVideo = <video className="w-[300px] h-[210px]" playsInline muted ref={myVideo} autoPlay />
   }
 
   let PartnerVideo
   if (callAccepted) {
     PartnerVideo = (
-      <video className="w-[330px] h-[220px] bg-zinc-200" playsInline ref={partnerVideo} autoPlay />
+      <video className="w-[300px] h-[210px] " playsInline ref={partnerVideo} autoPlay />
     )
   }
 
@@ -317,11 +317,18 @@ function MultiPlayerRoom({ socket }) {
       {wait === false && (
         <>
           <div>
-            <div className="flex flex-row justify-between">
-              <div className="w-auto h-auto">{PartnerVideo}</div>
+            <div className="flex flex-row justify-between mx-12 mt-4">
               <div className="flex flex-col items-center">
-                <h1 className="text-white text-lg">You</h1>
-                <div className="w-auto h-auto">{UserVideo}</div>
+                <h1 className="text-white py-1 px-2 bg-yellow-300 rounded text-lg ">Player 2</h1>
+                <div className="w-[290px] h-[220px] bg-yellow-200 border-4 border-yellow-500 rounded-lg">
+                  {PartnerVideo}
+                </div>
+              </div>
+              <div className="flex flex-col items-center">
+                <h1 className="text-white py-1 px-2 bg-yellow-300 rounded text-lg">You</h1>
+                <div className="w-[290px] h-[220px] bg-yellow-200 border-4 border-yellow-500 rounded-lg">
+                  {UserVideo}
+                </div>
               </div>
             </div>
             {isCalled ? (

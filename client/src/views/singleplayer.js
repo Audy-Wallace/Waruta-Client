@@ -209,7 +209,7 @@ const Singleplayer = () => {
   }
   return (
     <div className="flex flex-col items-center">
-      <div className="flex justify-center mb-12">
+      <div className="flex justify-center">
         <Timer
           isCorrect={isCorrect}
           remainSeconds={remainSeconds}
@@ -218,7 +218,7 @@ const Singleplayer = () => {
         />
       </div>
       {/*User Input */}
-      <div className="flex w-[100%] justify-center items-center space-x-4">
+      <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 mt-12">
         {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
         the onEnter function) */}
         <input
@@ -226,7 +226,7 @@ const Singleplayer = () => {
           type="text"
           onChange={answerHandler}
           onKeyPress={onEnter}
-          className="bg-transparent border-b-2 outline-none w-[60%] h-12 text-violet-200 text-center text-xl mb-4"
+          className="bg-yellow-400 border-b-2 rounded-lg outline-none w-[60%] h-12 text-yellow-200 placeholder:text-zinc-200 text-center text-xl"
           value={answer}
         />
         <Voice answerVoice={answerVoice}></Voice>
@@ -495,49 +495,51 @@ const Singleplayer = () => {
         </Dialog>
       </Transition>
       {JSON.parse(localStorage.getItem("pastAnswers")) && (
-        <table className="table-fixed w-3/4 text-center mx-auto text-purple-100">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>From</th>
-              <th>Color</th>
-              <th>Flavor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {localStorage.getItem("pastAnswers") &&
-              JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
-                return (
-                  <tr key={`uniquekey${i}`} className="h-16">
-                    {/* if el.isCorrect false show red color */}
-                    {/* if el.isCorrect true show green color */}
-                    <td>{el.name.value}</td>
-                    {el.location.value == solution.location ? (
-                      <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
-                        {el.location.value}
-                      </td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
-                        {el.location.value}
-                      </td>
-                    )}
-                    {el.color.value == solution.color ? (
-                      <td className="bg-emerald-500 bg-opacity-60">{el.color.value}</td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60">{el.color.value}</td>
-                    )}
-                    {el.taste.value == solution.taste ? (
-                      <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
-                        {el.taste.value}
-                      </td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">{el.taste.value}</td>
-                    )}
-                  </tr>
-                )
-              })}
-          </tbody>
-        </table>
+        <div className="bg-black w-4/5 bg-opacity-70 rounded-lg">
+          <table className="table-fixed w-3/4 text-center mx-auto text-white">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>From</th>
+                <th>Color</th>
+                <th>Flavor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {localStorage.getItem("pastAnswers") &&
+                JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
+                  return (
+                    <tr key={`uniquekey${i}`} className="h-16">
+                      {/* if el.isCorrect false show red color */}
+                      {/* if el.isCorrect true show green color */}
+                      <td>{el.name.value}</td>
+                      {el.location.value == solution.location ? (
+                        <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
+                          {el.location.value}
+                        </td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
+                          {el.location.value}
+                        </td>
+                      )}
+                      {el.color.value == solution.color ? (
+                        <td className="bg-emerald-500 bg-opacity-60">{el.color.value}</td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60">{el.color.value}</td>
+                      )}
+                      {el.taste.value == solution.taste ? (
+                        <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
+                          {el.taste.value}
+                        </td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">{el.taste.value}</td>
+                      )}
+                    </tr>
+                  )
+                })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
