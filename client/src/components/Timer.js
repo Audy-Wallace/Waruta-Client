@@ -5,7 +5,7 @@ export default function Timer({
   remainSeconds,
   setRemainSeconds,
   setTimeup,
-  setLose
+  setLose,
 }) {
   const [scoreTime, setScoreTime] = useState(0);
 
@@ -48,7 +48,6 @@ export default function Timer({
   }, [minutes, seconds]);
   function expiredTime() {
     setTimeup(true);
-    // setLose(true)
     localStorage.removeItem("time");
     setScoreTime(0);
   }

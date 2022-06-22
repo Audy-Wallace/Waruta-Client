@@ -9,7 +9,7 @@ import winSound from "../sounds/Winv2.mp3";
 import failSound from "../sounds/Dung.mp3";
 import JSConfetti from "js-confetti";
 import failGameSound from "../sounds/FailGuess.mp3";
-import questionMark from "../question.png"
+import questionMark from "../question.png";
 import { makeLeaderboard } from "../stores/actions/leaderboardAction";
 import { useNavigate } from "react-router-dom";
 const Singleplayer = () => {
@@ -25,7 +25,7 @@ const Singleplayer = () => {
   const [remainSeconds, setRemainSeconds] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [hint, setHint] = React.useState(false);
-  const [openHelp, setOpenHelp] = React.useState(false)
+  const [openHelp, setOpenHelp] = React.useState(false);
   const [wrong, setWrong] = React.useState(false);
   const [timeup, setTimeup] = React.useState(false);
   const [lose, setLose] = React.useState(false);
@@ -164,8 +164,8 @@ const Singleplayer = () => {
         if (allCorrect) setIsCorrect(true);
       } else {
         // if the user's answer does not exist do something
-        if (localStorage.getItem('user_guesses') !== '0') {
-          playGuessWrong()
+        if (localStorage.getItem("user_guesses") !== "0") {
+          playGuessWrong();
         }
         setWrong(true);
       }
@@ -275,13 +275,13 @@ const Singleplayer = () => {
     setOpen(false);
   }
   function closeHelp() {
-    setOpenHelp(false)
+    setOpenHelp(false);
   }
   React.useEffect(() => {
     if (lose) {
-      playIncorrectAll()
+      playIncorrectAll();
     }
-  }, [lose])
+  }, [lose]);
   function removeItem() {
     localStorage.removeItem("index");
     localStorage.removeItem("score");
@@ -309,11 +309,13 @@ const Singleplayer = () => {
   }
   return (
     <>
+
       <div className="absolute top-31 right-2 h-10 w-10 ...">
         <button onClick={() => setOpenHelp(true)}><img
           src={questionMark}
           className="h-12 w-12 rounded-lg mb-6 mt-2 shadow-lg"
         /></button>
+
       </div>
       <div className="flex flex-col items-center overflow-hidden">
         <div className="flex justify-center">
@@ -486,23 +488,23 @@ const Singleplayer = () => {
                       {Math.floor(
                         (300 - localStorage.getItem("remainingTime")) / 60
                       ) > 0 && (
-                          <p className="text-xl font-semibold">
-                            {Math.floor(
-                              (300 - localStorage.getItem("remainingTime")) / 60
-                            )}
-                            <span className="text-sm">m </span>
-                            {(300 - localStorage.getItem("remainingTime")) % 60}
-                            <span className="text-sm">s</span>
-                          </p>
-                        )}
+                        <p className="text-xl font-semibold">
+                          {Math.floor(
+                            (300 - localStorage.getItem("remainingTime")) / 60
+                          )}
+                          <span className="text-sm">m </span>
+                          {(300 - localStorage.getItem("remainingTime")) % 60}
+                          <span className="text-sm">s</span>
+                        </p>
+                      )}
                       {Math.floor(
                         (300 - localStorage.getItem("remainingTime")) / 60
                       ) === 0 && (
-                          <p className="text-xl font-semibold">
-                            {(300 - localStorage.getItem("remainingTime")) % 60}
-                            <span className="text-sm font-thin">s</span>
-                          </p>
-                        )}
+                        <p className="text-xl font-semibold">
+                          {(300 - localStorage.getItem("remainingTime")) % 60}
+                          <span className="text-sm font-thin">s</span>
+                        </p>
+                      )}
                     </div>
                     {/* //? score */}
                     <div className="flex flex-col bg-opacity-80 shadow-xl bg-orange-600 text-white w-20 h-20 rounded-full justify-center">
@@ -537,24 +539,30 @@ const Singleplayer = () => {
           <Dialog as="div" className="relative z-10" onClose={closeHelp}>
             <div className="fixed inset-0 bg-black bg-opacity-25" />
 
+
             <div className="fixed inset-0 overflow-y-auto mx-auto w-auto" >
               <div className="flex min-h-full items-center justify-center p-4 text-center" >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all"
+
                   style={{ backgroundColor: `lightgray` }}
                 >
                   {/* //? solution image */}
-                  <div className="w-full flex flex-col" >
+                  <div className="w-full flex flex-col">
                     <h2 className="text-yellow-700 text-center font-bold font-mono text-lg mt-4">
                       Guess the mystery food!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
+
                       • You get <span className="font-bold">six</span> guesses, try any food you want!
+
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
+
                       • <span style={{ color: `green`, fontWeight: '600' }}>Green in any column</span> indicates a match!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
                       • <span style={{ color: `red`, fontWeight: '600' }}>Red in any column</span> indicates a mismatch!
+
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
                       • If you get stuck, try clicking hint button!
@@ -681,6 +689,7 @@ const Singleplayer = () => {
               </thead>
               <tbody >
                 {localStorage.getItem("pastAnswers") &&
+
                   JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
                     return (
                       <tr key={`uniquekey${i}`} className="h-16 text-lg text-transform: capitalize">

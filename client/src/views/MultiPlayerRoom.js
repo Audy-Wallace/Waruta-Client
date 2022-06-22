@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react"
-import { NavLink, useParams } from 'react-router-dom';
+import { useState, useEffect, Fragment, useRef } from "react"
+import { NavLink, useParams, useNavigate } from 'react-router-dom';
 import { fetchWords } from "../stores/actions/wordAction.js";
 import Timer from "../components/Timer.js";
 import { useDispatch, useSelector } from "react-redux";
-import { CopyToClipboard } from "react-copy-to-clipboard"
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import JSConfetti from "js-confetti";
+import { Dialog, Transition } from "@headlessui/react";
+import { Peer } from "peerjs";
 
 function MultiPlayerRoom({ socket }) {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { words } = useSelector((state) => state.words);
   const { roomId } = useParams();
@@ -24,10 +28,25 @@ function MultiPlayerRoom({ socket }) {
   const [localSolution, setLocalSolution] = useState("");
   const mainKeys = Object.keys(words[0])
   const [copiedRoomId, setCopiedRoomId] = useState("")
+  const jsConfetti = new JSConfetti();
+  const [hint, setHint] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [timeup, setTimeup] = useState(false);
+  const [lose, setLose] = useState(false);
+  const [wrong, setWrong] = useState(false);
+
+  // peer connection
+  const [peer, setPeer] = useState(null);
+  const [peerId, setPeerId] = useState(null);
+  const [peerIds, setPeerIds] = useState([]);
+  const myVideo = useRef();
+  const partnerVideo = useRef();
+
 
   // timer
   const [isCorrect, setIsCorrect] = useState(false);
   const [remainSeconds, setRemainSeconds] = useState(0);
+
 
   function handleSubmitAnswer(event) {
     event.preventDefault()
@@ -82,14 +101,68 @@ function MultiPlayerRoom({ socket }) {
           if (inputAnswer.toLowerCase() !== solution.name.toLowerCase()) {
             currentGuess += 1;
             payload.remainingGuess = currentGuess
-            console.log(currentGuess);
-            setCorrect(inputAnswer + " is incorrect")
+
+            setWrong(true);
           } else {
+            // if answer correct
             currentGuess += 1;
             payload.remainingGuess = currentGuess
-            setCorrect(inputAnswer + " is correct")
             setGameEnd(true)
             setIsCorrect(true);
+
+            // scoring
+            localStorage.setItem("win", true);
+            localStorage.setItem("remainingTime", remainSeconds);
+            let guessScore;
+            switch (payload.remainingGuess) {
+              case 1:
+                guessScore = 60;
+                break;
+              case 2:
+                guessScore = 50;
+                break;
+              case 3:
+                guessScore = 40;
+                break;
+              case 4:
+                guessScore = 30;
+                break;
+              case 5:
+                guessScore = 20;
+                break;
+              default:
+                guessScore = 10;
+                break;
+            }
+
+            let timeScore;
+            const secondsLeft = +localStorage.getItem("remainingTime");
+
+            if (secondsLeft >= 240 && secondsLeft <= 300) {
+              timeScore = 60;
+            } else if (secondsLeft >= 180) {
+              timeScore = 50;
+            } else if (secondsLeft >= 120) {
+              timeScore = 40;
+            } else if (secondsLeft >= 60) {
+              timeScore = 30;
+            } else if (secondsLeft >= 30) {
+              timeScore = 20;
+            } else if (secondsLeft >= 0) {
+              timeScore = 10;
+            }
+
+            const score = guessScore + timeScore;
+            localStorage.setItem("score", score);
+            setOpen(true);
+            // setGameDone(true);
+            jsConfetti.addConfetti({
+              confettiRadius: 2,
+              confettiNumber: 100,
+              emojis: ["🍔", "🥓", "🍟", "🍣"],
+              emojiSize: 60,
+            });
+
           }
 
           payload.pastAnswers = [...payload.pastAnswers, obj]
@@ -107,6 +180,7 @@ function MultiPlayerRoom({ socket }) {
     } else {
       setGameEnd(true)
       setMessage("Game was end.")
+      setLose(true)
     }
 
     setRemainingGuess(currentGuess)
@@ -125,9 +199,67 @@ function MultiPlayerRoom({ socket }) {
     };
   }
 
+  function removeItem() {
+    localStorage.removeItem("index");
+    localStorage.removeItem("score");
+    localStorage.removeItem("user_guesses");
+    localStorage.removeItem("remainingTime");
+    localStorage.removeItem("win");
+    localStorage.removeItem("pastAnswers");
+    localStorage.removeItem("time");
+  }
+
+  function goBackHome() {
+    socket.emit('forceDisconnect');
+    return (
+      <button
+        type="button"
+        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        onClick={() => {
+          setTimeup(false);
+          setLose(false);
+          removeItem();
+          navigate("/", { replace: true });
+        }}
+      >
+        Go Back Home
+      </button>
+    );
+  }
+
+  function close() {
+    setOpen(false);
+  }
+
+  // peer init
+  useEffect(() => {
+    const _peer = new Peer({
+      config: {
+        iceServers: [
+          { url: "stun:stun.l.google.com:19302" },
+          {
+            url: "turn:numb.viagenie.ca",
+            credential: "muazkh",
+            username: "webrtc@live.com",
+          },
+        ],
+      },
+    });
+    setPeer(_peer);
+  }, []);
+
   useEffect(() => {
     socket.on("joinedWaitingRoom", (payload) => {
-     console.log(payload);
+      console.log(payload);
+
+      // const _peerIds = peerIds.concat(payload.peerId);
+      // console.log(
+      //   "🚀 ~ file: Room.js ~ line 39 ~ socket.on ~ _peerIds",
+      //   _peerIds
+      // );
+      // setPeerIds(_peerIds);
+
+      setLocalSolution(words ? words[payload.randomIndex] : "")
       if (payload.totalUser <= 2) {
         setPlay(true)
       }
@@ -142,7 +274,7 @@ function MultiPlayerRoom({ socket }) {
           multiplayerIndex: payload.randomIndex
         }))
         setWait(false)
-
+        setPlay(true)
       } else if (payload > 2) {
         setRoomFull(true)
         setPlay(false)
@@ -157,14 +289,23 @@ function MultiPlayerRoom({ socket }) {
       if (payload.remainingGuess === 6) {
         setGameEnd(true);
         setMessage("The rest of the guesses run out");
+        setLose(true)
       }
 
       if (payload.wordGuess.toLowerCase() !== solution.name.toLowerCase()) {
         setCorrect(payload.wordGuess + " is incorrect");
+        // setWrong(true);
       } else {
         setCorrect(payload.wordGuess + " is correct");
         setGameEnd(true);
         setIsCorrect(true);
+        jsConfetti.addConfetti({
+          confettiRadius: 2,
+          confettiNumber: 100,
+          emojis: ["🍔", "🥓", "🍟", "🍣"],
+          emojiSize: 60,
+        });
+        setOpen(true);
       }
       if (!gameEnd) {
         localStorage.setItem("rooms", JSON.stringify({
@@ -180,6 +321,82 @@ function MultiPlayerRoom({ socket }) {
   }, [socket, isCorrect])
 
   useEffect(() => {
+		if (socket) {
+			socket.on("joinRoom", (id) => {
+				const _peerIds = peerIds.concat(id);
+				console.log(
+					"🚀 ~ file: Room.js ~ line 39 ~ socket.on ~ _peerIds",
+					_peerIds
+				);
+				setPeerIds(_peerIds);
+			});
+		}
+		// eslint-disable-next-line
+	}, [socket]);
+
+  // join room
+  useEffect(() => {
+    if (socket && peerId) {
+      socket.emit("joinRoom", {
+        peerId
+      });
+      console.log(peerId);
+    }
+  }, [socket, peerId]);
+
+  // generate peer id
+  useEffect(() => {
+    if (peer) {
+      peer.on("open", (id) => {
+        setPeerId(id);
+      });
+    }
+    // eslint-disable-next-line
+  }, [peer]);
+
+
+  // do call
+  useEffect(() => {
+    if (peer !== null && peerIds.length > 0 && peerIds[0] !== peerId) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false }) // true
+        .then((stream) => {
+          myVideo.current.srcObject = stream;
+          const call = peer.call(peerIds[0], stream);
+          call.on("stream", (remoteStream) => {
+            partnerVideo.current.srcObject = remoteStream;
+          });
+        })
+        .catch((err) => {
+          console.log("🚀 ~ file: Room.js ~ line 72 ~ useEffect ~ err", err);
+        });
+    }
+    // eslint-disable-next-line
+  }, [peerIds]);
+
+  // answer call
+  useEffect(() => {
+    if (peer) {
+      peer.on("call", (call) => {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            myVideo.current.srcObject = stream;
+            call.answer(stream); // Answer the call with an A/V stream.
+            call.on("stream", (remoteStream) => {
+              partnerVideo.current.srcObject = remoteStream;
+            });
+            call.on("close", () => {
+              partnerVideo.current.srcObject = null;
+            });
+          })
+          .catch((err) => {
+            console.log("🚀 ~ file: Room.js ~ line 91 ~ peer.on ~ err", err);
+          });
+      });
+    }
+  }, [peer]);
+  useEffect(() => {
     dispatch(fetchWords());
   }, [])
 
@@ -190,85 +407,447 @@ function MultiPlayerRoom({ socket }) {
   return (
     <>
 
-      {play === false&&
+
+      
+
+      {/* {play === false &&
         <div>
           <NavLink to="/multiplayer">back</NavLink>
           <p>
             Room Full
           </p>
         </div>
-      }
+      } */}
 
       {play === true &&
         <>
           {wait === false &&
             <>
-              <div>
-                <Timer
-                  isCorrect={isCorrect}
-                  remainSeconds={remainSeconds}
-                  setRemainSeconds={setRemainSeconds}
-                ></Timer>
-                <p>Room Id : {roomId}</p>
-                <label>Answer : {answer}</label>
-                <span id="answer"></span>
-                <h1>{correct}</h1>
+              <pre>Peer Ids: {JSON.stringify(peerIds, null, 2)}</pre>
+      <video
+        style={{
+          width: "300px",
+          height: "300px",
+          backgroundColor: "red",
+        }}
+        playsInline
+        ref={myVideo}
+        autoPlay
+      />
+      
+      <video
+        style={{
+          width: "300px",
+          height: "300px",
+          backgroundColor: "yellow",
+        }}
+        playsInline
+        ref={partnerVideo}
+        autoPlay
+      />
 
 
-                <p>Guess {remainingGuess} of 6</p>
-                <p id="error"></p>
-                <form onSubmit={handleSubmitAnswer}>
-                  <input type={"text"} id="inputChat" name="answer" />
-                  <button type={"submit"} id="sendButton">Send</button>
-                </form>
-                <h1 style={{ border: "1px solid" }}>{message}</h1>
-
-                <div>
-                  <table style={{ border: "1px solie", borderCollapse: "collapse" }}>
-                    <thead>
-                      <tr>
-                        {
-                          mainKeys.map((mainKey, i) => {
-                            return (
-                              <th scope="col" key={i} style={{ border: "1px solid" }}>{mainKey}</th>
-                            )
-                          })
-                        }
-                      </tr>
-
-                    </thead>
-                    <tbody>
-                      {
-                        rooms.pastAnswers.map((item, i) => {
-                          return (
-                            <tr key={i}>
-                              <td style={evaluating(item.id.isCorrect)}>{item.id.value}</td>
-                              <td style={evaluating(item.name.isCorrect)}>{item.name.value}</td>
-                              <td style={evaluating(item.location.isCorrect)}>{item.location.value}</td>
-                              <td style={evaluating(item.color.isCorrect)}>{item.color.value}</td>
-                              <td style={evaluating(item.ingredient.isCorrect)}>{item.ingredient.value}</td>
-                              <td style={evaluating(item.taste.isCorrect)}>{item.taste.value}</td>
-                              <td style={evaluating(item.clue.isCorrect)}>{item.clue.value}</td>
-                            </tr>
-                          )
-                        })
-                      }
-                    </tbody>
-                  </table>
+              <div className="flex flex-col items-center">
+                <div className="flex justify-center">
+                  <Timer
+                    isCorrect={isCorrect}
+                    remainSeconds={remainSeconds}
+                    setRemainSeconds={setRemainSeconds}
+                    setTimeup={setTimeup}
+                    setLose={setLose}
+                  ></Timer>
                 </div>
+                <div className="flex justify-center items-center mx-auto bg-yellow-500 w-fit p-6 rounded-xl shadow-2xl flex-col">
+                  <p>Room Id : {roomId}</p>
+                  <label>Answer : {answer}</label>
+                  <span id="answer"></span>
+                  <h1>{correct}</h1>
+                  <p>Guess {remainingGuess} of 6</p>
+                </div>
+                <p id="error"></p>
+                <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 mt-12">
+                  <form className="flex justify-center items-center gap-2 w-[60%]" onSubmit={handleSubmitAnswer}>
+                    <input className="bg-yellow-400 border-b-2 rounded-lg outline-none w-[90%] h-12 text-black placeholder:text-gray-500 font-medium text-center text-xl" type={"text"} id="inputChat" name="answer" />
+                    <button className="px-6
+            bg-orange-500
+            text-white
+            font-medium
+            leading-tight
+            rounded
+            shadow-md
+            hover:bg-orange-700 hover:shadow-lg
+            focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0
+            active:bg-orange-800 active:shadow-lg
+            transition
+            duration-150
+            ease-in-out
+            my-4
+            w-[10%]
+            h-12
+          "
+                      type={"submit"} id="sendButton">Send</button>
+                  </form>
 
-                <h1>{yourTurn}</h1>
+                </div>
+                <button onClick={() => setHint(true)}>Hint</button>
+                {/* //? hint */}
+                <Transition
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                  appear
+                  show={hint}
+                  as={Fragment}
+                >
+                  <Dialog as="div" className="relative z-10" onClose={close}>
+                    <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+                    <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
+                      <div className="flex min-h-full items-center justify-center p-4 text-center">
+                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                          {/* //? solution image */}
+                          {localSolution && (
+                            <div className="w-full flex flex-col items-center">
+                              {/* //? solution name */}
+                              <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
+                                {localSolution.clue}
+                              </h2>
+                            </div>
+                          )}
+                          {/* //? num of guesses */}
+
+                          <div className="mt-4 w-full flex justify-center">
+                            <button
+                              type="button"
+                              className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                              onClick={() => setHint(false)}
+                            >
+                              close
+                            </button>
+                          </div>
+                        </Dialog.Panel>
+                      </div>
+                    </div>
+                  </Dialog>
+                </Transition>
+                <h1 className="font-bold my-3 bg-rose-600 bg-opacity-80 p-3 rounded-lg text-rose-200">
+                  {yourTurn}
+                  {
+
+                  }
+                </h1>
+
+                {(
+
+                  <div className="bg-black w-[60%] bg-opacity-70 rounded-lg">
+                    <table className="table-fixed w-3/4 text-center mx-auto text-white">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>From</th>
+                          <th>Color</th>
+                          <th>Flavor</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          rooms.pastAnswers.map((el, i) => {
+                            return (
+                              <tr key={`uniquekey${i}`} className="h-16">
+                                {/* if el.isCorrect false show red color */}
+                                {/* if el.isCorrect true show green color */}
+                                <td>{el.name.value}</td>
+                                {el.location.value == localSolution.location ? (
+                                  <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
+                                    {el.location.value}
+                                  </td>
+                                ) : (
+                                  <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
+                                    {el.location.value}
+                                  </td>
+                                )}
+                                {el.color.value == localSolution.color ? (
+                                  <td className="bg-emerald-500 bg-opacity-60">
+                                    {el.color.value}
+                                  </td>
+                                ) : (
+                                  <td className="bg-rose-500 bg-opacity-60">
+                                    {el.color.value}
+                                  </td>
+                                )}
+                                {el.taste.value == localSolution.taste ? (
+                                  <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
+                                    {el.taste.value}
+                                  </td>
+                                ) : (
+                                  <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">
+                                    {el.taste.value}
+                                  </td>
+                                )}
+                              </tr>
+                            );
+                          })}
+
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
               </div>
+
+              {/* //* Win Modal */}
+              <Transition
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                appear
+                show={open}
+                as={Fragment}
+              >
+                <Dialog as="div" className="relative z-10" onClose={close}>
+                  <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+                  <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                        {/* //? solution image */}
+                        {localSolution && (
+                          <div className="w-full flex flex-col items-center">
+                            <img
+                              src={localSolution.imgUrl}
+                              className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                            />
+                            <div className="border-b-2 border-indigo-400 w-full mb-6"></div>
+                            <Dialog.Title
+                              as="h3"
+                              className="text-2xl text-center font-medium leading-6 text-[#6A67CE]"
+                            >
+                              Congrats!
+                            </Dialog.Title>
+                            {/* //? solution name */}
+                            <h2 className="text-violet-700 text-center font-semibold text-xl mt-4">
+                              {localSolution.name}
+                            </h2>
+                          </div>
+                        )}
+                        {/* //? num of player guesses */}
+                        <div className="my-4 text-center flex justify-evenly w-full">
+                          <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
+                            <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
+                            <p className="text-xl text-violet-100 font-semibold">
+                              {rooms.remainingGuess}
+                            </p>
+                          </div>
+                          {/* //? duration */}
+                          <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
+                            <h1 className="text-xs">Time</h1>
+
+                            {Math.floor(
+                              (300 - localStorage.getItem("remainingTime")) / 60
+                            ) > 0 && (
+                                <p className="text-xl font-semibold">
+                                  {Math.floor(
+                                    (300 - localStorage.getItem("remainingTime")) / 60
+                                  )}
+                                  <span className="text-sm">m </span>
+                                  {(300 - localStorage.getItem("remainingTime")) % 60}
+                                  <span className="text-sm">s</span>
+                                </p>
+                              )}
+                            {Math.floor(
+                              (300 - localStorage.getItem("remainingTime")) / 60
+                            ) === 0 && (
+                                <p className="text-xl font-semibold">
+                                  {(300 - localStorage.getItem("remainingTime")) % 60}
+                                  <span className="text-sm font-thin">s</span>
+                                </p>
+                              )}
+                          </div>
+                          {/* //? score */}
+                          <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
+                            <h1 className="text-violet-200 text-xs">Score</h1>
+                            <p className="text-xl text-violet-100 font-semibold">
+                              {localStorage.getItem("score")}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 w-full flex justify-center">
+                          {goBackHome()}
+                        </div>
+                      </Dialog.Panel>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
+
+              {/* //! Modal lose */}
+              <Transition
+                appear
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                show={lose}
+                as={Fragment}
+              >
+                <Dialog as="div" className="relative z-10" onClose={close}>
+                  <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+                  <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                        <Dialog.Title
+                          as="h1"
+                          className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                        >
+                          Game Over
+                        </Dialog.Title>
+                        {localSolution && (
+                          <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                            {/* //? solution image */}
+                            <img
+                              src={localSolution.imgUrl}
+                              className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                            />
+                            <h2>The answer is</h2>
+                            {/* //? solution name */}
+                            <h2 className="text-[30px] ">{localSolution.name}</h2>
+                          </div>
+                        )}
+                        {/* //? num of guesses */}
+
+                        <div className="mt-4 w-full flex justify-center">
+                          {goBackHome()}
+                        </div>
+                      </Dialog.Panel>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
+
+              {/* //? Modal out of time */}
+              <Transition
+                appear
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                show={timeup}
+                as={Fragment}
+              >
+                <Dialog as="div" className="relative z-10" onClose={close}>
+                  <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+                  <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                        {/* //? solution image */}
+                        <Dialog.Title
+                          as="h1"
+                          className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                        >
+                          Time's up!
+                        </Dialog.Title>
+                        {localSolution && (
+                          <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                            <img
+                              src={localSolution.imgUrl}
+                              className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                            />
+                            {/* //? solution name */}
+                            <h2>The answer is</h2>
+                            <h2 className="text-[30px] ">{localSolution.name}</h2>
+                          </div>
+                        )}
+                        {/* //? num of guesses */}
+
+                        <div className="mt-4 w-full flex justify-center">
+                          {goBackHome()}
+                        </div>
+                      </Dialog.Panel>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
+
+              {/* //! word not found */}
+              <Transition
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                appear
+                show={wrong}
+                as={Fragment}
+              >
+                <Dialog as="div" className="relative z-10" onClose={close}>
+                  <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+                  <div className="fixed inset-0 overflow-y-auto mx-auto w-48 ">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                        <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
+                          invalid word
+                        </h2>
+
+                        <div className="mt-4 w-full flex justify-center">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            onClick={() => setWrong(false)}
+                          >
+                            close
+                          </button>
+                        </div>
+                      </Dialog.Panel>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
             </>
           }
 
           {wait === true &&
             <>
-              <p>Room Id : {roomId}</p>
-              <CopyToClipboard text={roomId}>
-                <button>Copy</button>
-              </CopyToClipboard>
-              <p>Waiting another player</p>
+              <div className="flex justify-center items-center mx-auto my-48 bg-yellow-500 w-fit p-6 rounded-xl shadow-2xl flex-col">
+                <p className="text-white font-semibold my-4">Waiting Another Player</p>
+                <p className="text-white font-semibold">Room Code: {roomId}</p>
+
+                <CopyToClipboard text={roomId}>
+                  <button className="px-6
+            h-8
+            bg-orange-500
+            text-white
+            font-medium
+            leading-tight
+            rounded
+            shadow-md
+            hover:bg-orange-700 hover:shadow-lg
+            focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0
+            active:bg-orange-800 active:shadow-lg
+            transition
+            duration-150
+            ease-in-out
+            my-4
+          ">
+
+                    Copy
+                  </button>
+                </CopyToClipboard>
+              </div>
             </>
           }
         </>

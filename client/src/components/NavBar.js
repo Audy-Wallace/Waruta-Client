@@ -1,5 +1,6 @@
 import * as React from "react";
 import readPayload from "../helpers/readPayload";
+import Swal from "sweetalert2";
 import { finishOrder, updatePremium } from "../stores/actions/midtransAction";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +24,8 @@ export default function NavBar() {
   const [loginForm, setLoginForm] = React.useState({
     email: "",
     password: "",
-  })
-  const [alreadyPremium, setAlreadyPremium] = React.useState(false)
+  });
+  const [alreadyPremium, setAlreadyPremium] = React.useState(false);
   function onChangeRegister(e) {
     if (e.target.name === "image") {
       setRegisterForm({
@@ -52,10 +53,15 @@ export default function NavBar() {
           })
         );
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err,
+        })
+      );
     setIsOpenRegister(false);
   }
-  // console.log(alreadyPremium, "PREMIUM")
   async function uploadImage(image) {
     console.log(image);
     const imgData = new FormData();
@@ -72,14 +78,32 @@ export default function NavBar() {
   }
   async function userLogin(e) {
     e.preventDefault();
-    const response = await dispatch(login(loginForm));
-    if (response.access_token) {
-      localStorage.setItem("access_token", response.access_token);
-      if(response.isPremium) {
-        localStorage.setItem("warutapr", 'asdadsa')
-      } 
-      setIsOpenLogin(false);
-      setLocalIsLogin(true);
+    try {
+      if (loginForm.email.length < 1 && loginForm.password.length < 1) {
+        throw new Error("E-mail and password is required");
+      }
+      if (loginForm.password.length < 1) {
+        throw new Error("Password is required");
+      }
+      if (loginForm.email.length < 1) {
+        throw new Error("E-mail is required");
+      }
+      const response = await dispatch(login(loginForm));
+      if (response.access_token) {
+        localStorage.setItem("access_token", response.access_token);
+        if (response.isPremium) {
+          localStorage.setItem("warutapr", "asdadsa");
+        }
+        localStorage.setItem("username", response.email);
+        setIsOpenLogin(false);
+        setLocalIsLogin(true);
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err,
+      });
     }
   }
   async function snapMidtrans() {
@@ -87,9 +111,9 @@ export default function NavBar() {
       .then(async (res) => {
         await window.snap.pay(res.token, {
           onSuccess: async (result) => {
-            dispatch(updatePremium())
-            localStorage.setItem('warutapr', 'asdadsa')
-            navigate("/")
+            dispatch(updatePremium());
+            localStorage.setItem("warutapr", "asdadsa");
+            navigate("/");
           },
           onError: async (err) => {
             console.log(err);
@@ -99,25 +123,72 @@ export default function NavBar() {
       .catch((err) => console.log(err));
   }
   function logout() {
+    console.log("logout jalan");
     localStorage.removeItem("access_token");
-    localStorage.removeItem("warutapr")
+    localStorage.removeItem("warutapr");
     setLocalIsLogin(false);
+    localStorage.clear();
+  }
+  function removeItem() {
+    localStorage.removeItem("index");
+    localStorage.removeItem("score");
+    localStorage.removeItem("user_guesses");
+    localStorage.removeItem("remainingTime");
+    localStorage.removeItem("win");
+    localStorage.removeItem("pastAnswers");
+    localStorage.removeItem("time");
+  }
+  function checkPlay(route) {
+    const isPlay = localStorage.getItem("time");
+    if (isPlay) {
+      Swal.fire({
+        icon: "warning",
+        title: "Are you sure you want to quit?",
+        showDenyButton: true,
+        confirmButtonText: "Yes! I want to leave",
+        denyButtonText: `No! I want to keep playing`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          removeItem();
+          if (route === "logout") {
+            logout();
+            navigate(`/`, { replace: true });
+          } else {
+            navigate(`/${route}`, { replace: true });
+          }
+        }
+      });
+    } else {
+      if (route === "logout") {
+        logout();
+        navigate(`/`, { replace: true });
+      } else {
+        navigate(`/${route}`, { replace: true });
+      }
+    }
   }
   return (
     <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-6">
       <div className="container-1 flex items-center">
-        <img src={require("../waruta.png")} className="h-20 w-20 ml-2" style={{ borderRadius: 50 }} alt="logo" />
+        <img
+          src={require("../waruta.png")}
+          className="h-20 w-20 ml-2"
+          style={{ borderRadius: 50 }}
+          alt="logo"
+        />
         <button
           variant="contained"
           className="text-lg text-white font-medium h-16 shadow-sm px-4 hover:text-sky-200 duration-500"
-          onClick={() => navigate("/", { replace: true })}
+          onClick={() => {
+            checkPlay("");
+          }}
         >
           WARUTA
         </button>
         <button
           className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 hover:bg-transparent duration-300"
           type="button"
-          onClick={() => navigate("/leaderboard", { replace: true })}
+          onClick={() => checkPlay("leaderboard")}
         >
           Leaderboard
         </button>
@@ -137,7 +208,7 @@ export default function NavBar() {
             </button>
           </>
         )}
-        {localIsLogin && localStorage.getItem('warutapr') === 'asdadsa' && (
+        {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
           <button
             className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
             type="button"
@@ -150,8 +221,8 @@ export default function NavBar() {
         {localIsLogin && (
           <>
             <button
-              onClick={() => logout()}
-              className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:text-sky-200 duration-300"
+              onClick={() => checkPlay("logout")}
+              className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
             >
               Logout
             </button>
@@ -173,7 +244,7 @@ export default function NavBar() {
           loginForm={loginForm}
         />
       </div>
-      {localIsLogin && localStorage.getItem('warutapr') !== 'asdadsa' && (
+      {localIsLogin && localStorage.getItem("warutapr") !== "asdadsa" && (
         <>
           <div className="container-2">
             <button
