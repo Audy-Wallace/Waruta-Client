@@ -67,7 +67,7 @@ const LoginForm = ({
                       <div className="mt-2">
                         <button
                           type="button"
-                          className="w-full inline-flex justify-center rounded-md border border-transparent bg-violet-100 px-4 py-2 text-sm font-medium text-violet-900 hover:bg-violet-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+                          className="w-full inline-flex justify-center rounded-md border border-transparent bg-yellow-500 px-4 py-2 text-sm font-medium text-zinc-700 hover:scale-105 duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
                           onClick={(e) => userLogin(e)}
                         >
                           Sign In

@@ -36,7 +36,7 @@ export default function Voice({ answerVoice }) {
       {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
       {!listening && (
         <button
-          className="px-[20px] py-3 text-[30px] font-semibold bg-gray-300 text-yellow-600 rounded-full shadow-md"
+          className="px-[20px] py-3 text-[30px] font-semibold bg-yellow-400 text-black rounded-full shadow-md"
           onClick={() => SpeechRecognition.startListening({ language: "id" })}
         >
           <IonIcon name="mic-outline" />
@@ -51,7 +51,7 @@ export default function Voice({ answerVoice }) {
             <IonIcon name="mic-outline" />
           </button>
           <button
-            className="px-[20px] relative py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-gray-300 duration-300 shadow-md"
+            className="px-[20px] relative py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-white duration-300 shadow-md"
             onClick={() => SpeechRecognition.startListening({ language: "id" })}
           >
             <IonIcon name="mic-outline" />

@@ -104,7 +104,7 @@ export default function NavBar() {
     setLocalIsLogin(false);
   }
   return (
-    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-5">
+    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-6">
       <div className="container-1 flex items-center">
         <img src={require("../waruta.png")} className="h-20 w-20 ml-2" style={{ borderRadius: 50 }} alt="logo" />
         <button
