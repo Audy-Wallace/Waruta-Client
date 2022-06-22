@@ -17,49 +17,45 @@ export default function LeaderBoard() {
   return (
     <>
       {leaderboards.data && (
-        <div className="justify-center items-center flex fixed w-full h-full">
-          <div className="w-1/2 ">
-            <div className="">
-              <div className="">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-transparent dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Profile Pict.
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Username
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Time
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Guess
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Score
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaderboards.data.map((el, index) => {
-                      return <DynamicRow el={el} index={index} key={el.id} />;
-                    })}
-                    <tr className="px-4 py-4 w-full dark:bg-gray-800 dark:text-gray-400">
-                      <td className="py-4"></td>
-                      <td className="py-4"></td>
-                      <td className="py-4"></td>
-                      <td className="py-4"></td>
-                      <td className="py-4"></td>
-                      <td className="py-4"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+        <div className="justify-center items-center flex flex-col fixed w-full mt-24 ">
+          <div className="title  ">
+            <div className="from-orange-500 to-yellow-500 border-2 border-white-900 px-4 pt-4 pb-4 mb-12 rounded-lg bg-gradient-to-b">
+              <h1 className="font-bold text-2xl  text-white outline-4">
+                WARUTA LEADERBOARD
+              </h1>
             </div>
+          </div>
+          <div className="w-1/2 relative overflow-x-auto shadow-md sm:rounded-lg border-2">
+            <table className="w-full text-sm font-border text-left text-white ">
+              <thead className="text-xs text-gray-700 uppercase bg-gradient-to-t from-yellow-500 via-orange-500 to-orange-500  opacity-90 rounded-lg text-gray-400 border-white">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-white text-center outline-4 outline-black"
+                  >
+                    Rank
+                  </th>
+                  <th scope="col" className="text-white text-center"></th>
+                  <th scope="col" className="px-6 py-3 text-white text-center">
+                    Username
+                  </th>
+                  <th scope="col" className="px-6 py-3  text-white text-center">
+                    Time
+                  </th>
+                  <th scope="col" className="px-6 py-3  text-white text-center">
+                    Guess
+                  </th>
+                  <th scope="col" className="px-6 py-3  text-white text-center">
+                    Score
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {leaderboards.data.map((el, index) => {
+                  return <DynamicRow el={el} index={index} key={el.id} />;
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
