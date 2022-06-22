@@ -1,21 +1,19 @@
-import "./App.css";
-import NavBar from "./components/NavBar";
-import { connectSocket } from "./hooks/connectSocket";
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./views/LandingPage";
+import "./App.css"
+import NavBar from "./components/NavBar"
+import { connectSocket } from "./hooks/connectSocket"
+import { Routes, Route } from "react-router-dom"
+import LandingPage from "./views/LandingPage"
 
-import Singleplayer from "./views/Singleplayer";
-import MultiPlayerPage from "./views/MultiPlayerPage";
-import MultiPlayerRoom from "./views/MultiPlayerRoom";
+import Singleplayer from "./views/singleplayer"
+import MultiPlayerPage from "./views/MultiPlayerPage"
+import MultiPlayerRoom from "./views/MultiPlayerRoom"
 
-import { Helmet } from "react-helmet";
-import Leaderboard from "./views/Leaderboard";
-
-
+import { Helmet } from "react-helmet"
+import Leaderboard from "./views/Leaderboard"
 
 // fix
 function App() {
-  const socket = connectSocket();
+  const socket = connectSocket()
   return (
     <div id="root" className="bg-repeat min-h-screen bg-opacity-60 bg-[url('kitchen-pattern.jpg')]">
       <Helmet>
@@ -40,7 +38,7 @@ function App() {
         ></Route>
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

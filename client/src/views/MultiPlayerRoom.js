@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import Timer from "../components/Timer.js"
-import Peer from "simple-peer"
+import { Peer } from "peerjs"
+// import Peer from "simple-peer"
 
 let remoteId
 const mockData = [
@@ -66,20 +67,21 @@ function MultiPlayerRoom({ socket }) {
   const [remainSeconds, setRemainSeconds] = useState(0)
 
   //? Web RTC
-  const [yourID, setYourID] = useState("")
-  const [partnerID, setPartnerID] = useState("")
-  const [users, setUsers] = useState({})
-  const [stream, setStream] = useState()
-  const [receivingCall, setReceivingCall] = useState(false)
-  const [caller, setCaller] = useState("")
-  const [callerSignal, setCallerSignal] = useState()
-  const [callAccepted, setCallAccepted] = useState(false)
-  const [isCalled, setisCalled] = useState(false)
-  const [callerUser, setCallerUser] = useState("")
+  const [connection, setConnection] = useState(null)
+  const [myID, setMyID] = useState(null)
+  const [partnerID, setPartnerID] = useState(null)
+  // const [users, setUsers] = useState({})
+  const [stream, setStream] = useState(null)
+  // const [receivingCall, setReceivingCall] = useState(false)
+  // const [caller, setCaller] = useState("")
+  // const [callerSignal, setCallerSignal] = useState()
+  // const [callAccepted, setCallAccepted] = useState(false)
+  // const [isCalled, setisCalled] = useState(false)
+  // const [callerUser, setCallerUser] = useState("")
 
   const myVideo = useRef()
   const partnerVideo = useRef()
-  const socketVid = useRef()
+  // const socketVid = useRef()
 
   function handleSubmitAnswer(event) {
     event.preventDefault()
@@ -134,7 +136,7 @@ function MultiPlayerRoom({ socket }) {
             payload.remainingGuess = currentGuess
             setCorrect(inputAnswer + " is correct")
             setGameEnd(true)
-            setIsCorrect(true);
+            setIsCorrect(true)
             let keysRemove = ["time"]
 
             keysRemove.forEach((el) => {
@@ -174,43 +176,127 @@ function MultiPlayerRoom({ socket }) {
   }
 
   useEffect(() => {
-    socketVid.current = socket
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
-      setStream(stream)
-      if (myVideo.current) {
-        myVideo.current.srcObject = stream
+    const peer = new Peer({
+      config: {
+        iceServers: [
+          { url: "stun:stun.l.google.com:19302" },
+          {
+            url: "turn:numb.viagenie.ca",
+            credential: "muazkh",
+            username: "webrtc@live.com",
+          },
+        ],
+      },
+    })
+    setConnection(peer)
+  }, [])
+
+  useEffect(() => {
+    if (connection !== null) {
+      connection.on("open", (id) => {
+        setMyID(id)
+        socket.emit("sendId", { id, roomId })
+      })
+    }
+  }, [connection])
+  useEffect(() => {
+    let videoElem = document.getElementById("videoElem")
+    socket.on("sendId", (id) => {
+      if (id !== myID && id !== null) setPartnerID(id)
+
+      if (connection) {
+        connection.on("call", (call) => {
+          navigator.mediaDevices
+            .getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+              console.log("event call ------")
+              call = connection.call(id, stream)
+              call.on("stream", (remoteStream) => {
+                videoElem.srcObject = remoteStream
+              })
+            })
+            .catch(console.log)
+        })
       }
     })
+  }, [])
+
+  useEffect(() => {
+    let call
+    // let partnerElem = document.getElementById("partnerElem")
+    if (connection) {
+      socket.on("initiateCall", (payload) => {
+        console.log(partnerID, "------------------ partner")
+        console.log(payload, "<<<<<<<<<<<<")
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: true })
+          .then((stream) => {
+            call = connection.call(partnerID, stream)
+            // console.log(partnerID, "<<<<< DARI CALL ID")
+            // console.log(stream, "<<<<<<<<<<<<<<<<<< stream")
+            call.answer(stream) // Answer the call with an A/V stream.
+            call.on("stream", (remoteStream) => {
+              if (partnerVideo.current) {
+                partnerVideo.current.srcObject = remoteStream
+              }
+              // partnerElem.srcObject = remoteStream
+              console.log(remoteStream, "<<<<<<< ni remote")
+            })
+            call.on("close", () => {
+              // partnerElem.srcObject = null
+            })
+          })
+          .catch(() => {})
+        // connection.on("call", (call) => {
+      })
+      console.log("masuk answer nya")
+      // })
+    }
+  }, [connection])
+
+  useEffect(() => {
+    // socketVid.current = socket
+    // navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+    //   setStream(stream)
+    //   if (myVideo.current) {
+    //     myVideo.current.srcObject = stream
+    //   }
+    // })
     socket.on("joinedWaitingRoom", (payload) => {
       console.log(socket.id)
 
       if (payload.users === 2) {
         setWait(false)
       }
-
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+        setStream(stream)
+        if (myVideo.current) {
+          myVideo.current.srcObject = stream
+        }
+      })
       console.log(payload)
     })
 
-    socket.on("initiateCall", ({ users }) => {
-      setYourID(users.user1)
-      setPartnerID(users.user2)
-    })
+    // socket.on("initiateCall", ({ users }) => {
+    //   setYourID(users.user1)
+    //   setPartnerID(users.user2)
+    // })
 
-    socketVid.current.on("yourID", (id) => {
-      setYourID(id)
-    })
+    // socketVid.current.on("yourID", (id) => {
+    //   setYourID(id)
+    // })
 
-    socketVid.current.on("allUsers", (users) => {
-      setUsers(users)
-    })
-    socketVid.current.on("hey", (data) => {
-      setisCalled(true)
-      setReceivingCall(true)
-      setCaller(data.from)
-      setCallerSignal(data.signal)
-      setCallerUser(data.callerUsername)
-      // console.log(stream, 'ini isi stream ketika hey dan sebelum accept call')
-    })
+    // socketVid.current.on("allUsers", (users) => {
+    //   setUsers(users)
+    // })
+    // socketVid.current.on("hey", (data) => {
+    //   setisCalled(true)
+    //   setReceivingCall(true)
+    //   setCaller(data.from)
+    //   setCallerSignal(data.signal)
+    //   setCallerUser(data.callerUsername)
+    //   // console.log(stream, 'ini isi stream ketika hey dan sebelum accept call')
+    // })
     socket.on("backAnswer", (payload) => {
       setAnswer(payload.wordGuess)
       setRemainingGuess(payload.remainingGuess)
@@ -221,9 +307,9 @@ function MultiPlayerRoom({ socket }) {
       if (payload.wordGuess !== food.name) {
         setCorrect(payload.wordGuess + " is incorrect")
       } else {
-        setCorrect(payload.wordGuess + " is correct");
-        setGameEnd(true);
-        setIsCorrect(true);
+        setCorrect(payload.wordGuess + " is correct")
+        setGameEnd(true)
+        setIsCorrect(true)
         let keysRemove = ["time"]
 
         keysRemove.forEach((el) => {
@@ -245,58 +331,58 @@ function MultiPlayerRoom({ socket }) {
     })
   }, [socket, setWait])
 
-  function callPeer(id) {
-    console.log(id, "<<<<<<<")
-    setisCalled(true)
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream,
-    })
+  // function callPeer(id) {
+  //   console.log(id, "<<<<<<<")
+  //   setisCalled(true)
+  //   const peer = new Peer({
+  //     initiator: true,
+  //     trickle: false,
+  //     stream: stream,
+  //   })
 
-    peer.on("signal", (data) => {
-      socketVid.current.emit("callUser", {
-        roomid: roomId,
-        userToCall: id,
-        signalData: data,
-        from: yourID,
-      })
-    })
+  //   peer.on("signal", (data) => {
+  //     socketVid.current.emit("callUser", {
+  //       roomid: roomId,
+  //       userToCall: id,
+  //       signalData: data,
+  //       from: yourID,
+  //     })
+  //   })
 
-    peer.on("stream", (stream) => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream
-      }
-    })
+  //   peer.on("stream", (stream) => {
+  //     if (partnerVideo.current) {
+  //       partnerVideo.current.srcObject = stream
+  //     }
+  //   })
 
-    socketVid.current.on("callAccepted", (signal) => {
-      setCallAccepted(true)
-      peer.signal(signal)
-    })
-  }
+  //   socketVid.current.on("callAccepted", (signal) => {
+  //     setCallAccepted(true)
+  //     peer.signal(signal)
+  //   })
+  // }
 
-  function acceptCall() {
-    setReceivingCall(false)
-    setCallAccepted(true)
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
-    })
-    peer.on("signal", (data) => {
-      socketVid.current.emit("acceptCall", {
-        signal: data,
-        roomid: roomId,
-        to: caller,
-      })
-    })
+  // function acceptCall() {
+  //   setReceivingCall(false)
+  //   setCallAccepted(true)
+  //   const peer = new Peer({
+  //     initiator: false,
+  //     trickle: false,
+  //     stream: stream,
+  //   })
+  //   peer.on("signal", (data) => {
+  //     socketVid.current.emit("acceptCall", {
+  //       signal: data,
+  //       roomid: roomId,
+  //       to: caller,
+  //     })
+  //   })
 
-    peer.on("stream", (stream) => {
-      partnerVideo.current.srcObject = stream
-    })
+  //   peer.on("stream", (stream) => {
+  //     partnerVideo.current.srcObject = stream
+  //   })
 
-    peer.signal(callerSignal)
-  }
+  //   peer.signal(callerSignal)
+  // }
 
   let UserVideo
   if (stream) {
@@ -304,29 +390,49 @@ function MultiPlayerRoom({ socket }) {
   }
 
   let PartnerVideo
-  if (callAccepted) {
+  if (stream) {
     PartnerVideo = (
       <video className="w-[300px] h-[210px] " playsInline ref={partnerVideo} autoPlay />
     )
   }
 
-  let incomingCall
-  if (receivingCall) {
-    incomingCall = (
-      <div>
-        <h5>{callerUser} is asking you to open cam</h5>
-        <button onClick={acceptCall} className="p-2 text-white bg-indigo-500 ">
-          Accept
-        </button>
-      </div>
-    )
-  }
+  // let incomingCall
+  // if (receivingCall) {
+  //   incomingCall = (
+  //     <div>
+  //       <h5>{callerUser} is asking you to open cam</h5>
+  //       <button onClick={acceptCall} className="p-2 text-white bg-indigo-500 ">
+  //         Accept
+  //       </button>
+  //     </div>
+  //   )
+  // }
+
+  console.log(myID, "<<<<< my id")
+  console.log(partnerID, "<<<<< PARTNER id")
 
   return (
     <>
-      {wait === false && (
+      {
         <>
           <div>
+            <div className="flex justify-between mx-12">
+              <video
+                id="videoElem"
+                className="h-auto w-auto bg-zinc-700"
+                autoPlay
+                muted
+                playsInline
+              />
+              <video
+                id="partnerElem"
+                className="h-auto w-auto bg-zinc-700"
+                autoPlay
+                muted
+                playsInline
+              />
+            </div>
+            {/* <div id="partnerElem" className="h-auto w-auto bg-zinc-700"></div> */}
             <div className="flex flex-row justify-between mx-12 mt-4">
               <div className="flex flex-col items-center">
                 <h1 className="text-white py-1 px-2 bg-yellow-300 rounded text-lg ">Player 2</h1>
@@ -341,7 +447,7 @@ function MultiPlayerRoom({ socket }) {
                 </div>
               </div>
             </div>
-            {isCalled ? (
+            {/* {isCalled ? (
               <> </>
             ) : (
               <div className="flex flex-row justify-start">
@@ -355,7 +461,7 @@ function MultiPlayerRoom({ socket }) {
                 </div>
               </div>
             )}
-            {incomingCall}
+            {incomingCall} */}
             <Timer
               isCorrect={isCorrect}
               remainSeconds={remainSeconds}
@@ -412,7 +518,7 @@ function MultiPlayerRoom({ socket }) {
             <h1>{yourTurn}</h1>
           </div>
         </>
-      )}
+      }
 
       {wait === true && (
         <>
