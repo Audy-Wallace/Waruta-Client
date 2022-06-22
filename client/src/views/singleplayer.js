@@ -9,6 +9,7 @@ import winSound from "../sounds/Winv2.mp3";
 import failSound from "../sounds/Dung.mp3";
 import JSConfetti from "js-confetti";
 import failGameSound from "../sounds/FailGuess.mp3";
+import questionMark from "../question.png"
 import { makeLeaderboard } from "../stores/actions/leaderboardAction";
 import { useNavigate } from "react-router-dom";
 const Singleplayer = () => {
@@ -24,6 +25,7 @@ const Singleplayer = () => {
   const [remainSeconds, setRemainSeconds] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [hint, setHint] = React.useState(false);
+  const [openHelp, setOpenHelp] = React.useState(false)
   const [wrong, setWrong] = React.useState(false);
   const [timeup, setTimeup] = React.useState(false);
   const [lose, setLose] = React.useState(false);
@@ -55,6 +57,7 @@ const Singleplayer = () => {
     if (answer && guesses > 0) {
       const remainingGuesses = guesses - 1;
       console.log(remainingGuesses, "REMAINING GUESSES");
+      if (remainingGuesses === 0) setLose(true);
       setGuesses(remainingGuesses);
       // when the user has guessed the user's remaining guesses is stored in localStorage
       // if user reloads the page, he/she will still have the same number of remaining guesses
@@ -106,12 +109,10 @@ const Singleplayer = () => {
           playGuessWrong();
         }
         setWrong(true);
-        console.log("food does not exist");
       }
       setAnswer("");
     }
   }
-
   function onEnter(e) {
     // user can only submit if answer is truthy and guesses are above 0
     if (e.key === "Enter" && answer && guesses > 0) {
@@ -273,6 +274,9 @@ const Singleplayer = () => {
   function close() {
     setOpen(false);
   }
+  function closeHelp() {
+    setOpenHelp(false)
+  }
   React.useEffect(() => {
     if (lose) {
       playIncorrectAll()
@@ -304,349 +308,417 @@ const Singleplayer = () => {
     );
   }
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex justify-center">
-        <Timer
-          isCorrect={isCorrect}
-          remainSeconds={remainSeconds}
-          setRemainSeconds={setRemainSeconds}
-          setTimeup={setTimeup}
-        />
+    <>
+      <div class="absolute top-31 right-2 h-10 w-10 ...">
+        <button onClick={() => setOpenHelp(true)}><img
+          src={questionMark}
+          className="h-12 w-12 rounded-lg mb-6 mt-2 shadow-lg"
+        /></button>
       </div>
-      {/*User Input */}
-      <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 mt-12">
-        {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
-        the onEnter function) */}
-        <input
-          placeholder="Answer Here"
-          type="text"
-          onChange={answerHandler}
-          onKeyPress={onEnter}
-          className="bg-yellow-400 border-b-2 rounded-lg outline-none w-[60%] h-12 text-yellow-200 placeholder:text-zinc-200 text-center text-xl"
-          value={answer}
-        />
-        <Voice answerVoice={answerVoice}></Voice>
-      </div>
-      <button
-        onClick={() => setHint(true)}
-        className="py-1 px-2 w-16 bg-indigo-600 rounded-lg text-violet-100 shadow-md"
-      >
-        Hint
-      </button>
-      {/* //? hint */}
-      <Transition
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-        appear
-        show={hint}
-        as={React.Fragment}
-      >
-        <Dialog as="div" className="relative z-10" onClose={close}>
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-
-          <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                {/* //? solution image */}
-                {solution && (
-                  <div className="w-full flex flex-col items-center">
-                    {/* //? solution name */}
-                    <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
-                      {solution.clue}
-                    </h2>
-                  </div>
-                )}
-                {/* //? num of guesses */}
-
-                <div className="mt-4 w-full flex justify-center">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={() => setHint(false)}
-                  >
-                    close
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      {/* //! word not found */}
-      <Transition
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-        appear
-        show={wrong}
-        as={React.Fragment}
-      >
-        <Dialog as="div" className="relative z-10" onClose={close}>
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-
-          <div className="fixed inset-0 overflow-y-auto mx-auto w-48 ">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
-                  invalid word
-                </h2>
-
-                <div className="mt-4 w-full flex justify-center">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={() => setWrong(false)}
-                  >
-                    close
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      {/* //* Win Modal */}
-      <Transition
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-        appear
-        show={open}
-        as={React.Fragment}
-      >
-        <Dialog as="div" className="relative z-10" onClose={close}>
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                {/* //? solution image */}
-                {solution && (
-                  <div className="w-full flex flex-col items-center">
-                    <img
-                      src={solution.imgUrl}
-                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
-                    />
-                    <div className="border-b-2 border-indigo-400 w-full mb-6"></div>
-                    <Dialog.Title
-                      as="h3"
-                      className="text-2xl text-center font-medium leading-6 text-[#6A67CE]"
-                    >
-                      Congrats!
-                    </Dialog.Title>
-                    {/* //? solution name */}
-                    <h2 className="text-violet-700 text-center font-semibold text-xl mt-4">
-                      {solution.name}
-                    </h2>
-                  </div>
-                )}
-                {/* //? num of player guesses */}
-                <div className="my-4 text-center flex justify-evenly w-full">
-                  <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
-                    <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
-                    <p className="text-xl text-violet-100 font-semibold">
-                      {6 - localStorage.getItem("user_guesses")}
-                    </p>
-                  </div>
-                  {/* //? duration */}
-                  <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
-                    <h1 className="text-xs">Time</h1>
-
-                    {Math.floor(
-                      (300 - localStorage.getItem("remainingTime")) / 60
-                    ) > 0 && (
-                      <p className="text-xl font-semibold">
-                        {Math.floor(
-                          (300 - localStorage.getItem("remainingTime")) / 60
-                        )}
-                        <span className="text-sm">m </span>
-                        {(300 - localStorage.getItem("remainingTime")) % 60}
-                        <span className="text-sm">s</span>
-                      </p>
-                    )}
-                    {Math.floor(
-                      (300 - localStorage.getItem("remainingTime")) / 60
-                    ) === 0 && (
-                      <p className="text-xl font-semibold">
-                        {(300 - localStorage.getItem("remainingTime")) % 60}
-                        <span className="text-sm font-thin">s</span>
-                      </p>
-                    )}
-                  </div>
-                  {/* //? score */}
-                  <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
-                    <h1 className="text-violet-200 text-xs">Score</h1>
-                    <p className="text-xl text-violet-100 font-semibold">
-                      {localStorage.getItem("score")}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 w-full flex justify-center">
-                  {goBackHome()}
-                </div>
-              </Dialog.Panel>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      {/* //? Modal out of time */}
-      <Transition
-        appear
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-        show={timeup}
-        as={React.Fragment}
-      >
-        <Dialog as="div" className="relative z-10" onClose={close}>
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                {/* //? solution image */}
-                <Dialog.Title
-                  as="h1"
-                  className="text-3xl text-center mb-4 leading-6 text-rose-600"
-                >
-                  Time's up!
-                </Dialog.Title>
-                {solution && (
-                  <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
-                    <img
-                      src={solution.imgUrl}
-                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
-                    />
-                    {/* //? solution name */}
-                    <h2>The answer is</h2>
-                    <h2 className="text-[30px] ">{solution.name}</h2>
-                  </div>
-                )}
-                {/* //? num of guesses */}
-
-                <div className="mt-4 w-full flex justify-center">
-                  {goBackHome()}
-                </div>
-              </Dialog.Panel>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-
-      {/* //! Modal lose */}
-      <Transition
-        appear
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-        show={lose}
-        as={React.Fragment}
-      >
-        <Dialog as="div" className="relative z-10" onClose={close}>
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
-                <Dialog.Title
-                  as="h1"
-                  className="text-3xl text-center mb-4 leading-6 text-rose-600"
-                >
-                  Game Over
-                </Dialog.Title>
-                {solution && (
-                  <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
-                    {/* //? solution image */}
-                    <img
-                      src={solution.imgUrl}
-                      className="h-36 w-36 rounded-lg mb-6 shadow-lg"
-                    />
-                    <h2>The answer is</h2>
-                    {/* //? solution name */}
-                    <h2 className="text-[30px] ">{solution.name}</h2>
-                  </div>
-                )}
-                {/* //? num of guesses */}
-
-                <div className="mt-4 w-full flex justify-center">
-                  {goBackHome()}
-                </div>
-              </Dialog.Panel>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      {JSON.parse(localStorage.getItem("pastAnswers")) && (
-        <div className="bg-black w-4/5 bg-opacity-70 rounded-lg">
-          <table className="table-fixed w-3/4 text-center mx-auto text-white">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>From</th>
-                <th>Color</th>
-                <th>Flavor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {localStorage.getItem("pastAnswers") &&
-                JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
-                  return (
-                    <tr key={`uniquekey${i}`} className="h-16">
-                      {/* if el.isCorrect false show red color */}
-                      {/* if el.isCorrect true show green color */}
-                      <td>{el.name.value}</td>
-                      {el.location.value == solution.location ? (
-                        <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
-                          {el.location.value}
-                        </td>
-                      ) : (
-                        <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
-                          {el.location.value}
-                        </td>
-                      )}
-                      {el.color.value == solution.color ? (
-                        <td className="bg-emerald-500 bg-opacity-60">
-                          {el.color.value}
-                        </td>
-                      ) : (
-                        <td className="bg-rose-500 bg-opacity-60">
-                          {el.color.value}
-                        </td>
-                      )}
-                      {el.taste.value == solution.taste ? (
-                        <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
-                          {el.taste.value}
-                        </td>
-                      ) : (
-                        <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">
-                          {el.taste.value}
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+      <div className="flex flex-col items-center">
+        <div className="flex justify-center">
+          <Timer
+            isCorrect={isCorrect}
+            remainSeconds={remainSeconds}
+            setRemainSeconds={setRemainSeconds}
+            setTimeup={setTimeup}
+            setLose={setLose}
+          />
         </div>
-      )}
-    </div>
+        {/* <div class="relative h-32 w-32 ...">
+        <div class="absolute top-0 right-0 h-16 w-16 ...">03</div>
+      </div> */}
+        {/*User Input */}
+        <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 mt-12">
+          {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
+        the onEnter function) */}
+          <input
+            placeholder="Answer Here"
+            type="text"
+            onChange={answerHandler}
+            onKeyPress={onEnter}
+            className="bg-yellow-400 border-b-2 rounded-lg outline-none w-[60%] h-12 text-black placeholder:text-gray-500 font-medium text-center text-xl"
+            value={answer}
+          />
+          <Voice answerVoice={answerVoice}></Voice>
+        </div>
+        <button
+          onClick={() => setHint(true)}
+          // style={{backgroundColor: '#06AED5'}}
+          className="py-1 px-2 w-16 bg-orange-500 rounded-lg text-violet-100 shadow-md"
+        >
+          Hint
+        </button>
+        {/* //? hint */}
+        <Transition
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          appear
+          show={hint}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={close}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                  {/* //? solution image */}
+                  {solution && (
+                    <div className="w-full flex flex-col items-center">
+                      {/* //? solution name */}
+                      <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
+                        {solution.clue}
+                      </h2>
+                    </div>
+                  )}
+                  {/* //? num of guesses */}
+
+                  <div className="mt-4 w-full flex justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => setHint(false)}
+                    >
+                      close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        {/* //! word not found */}
+        <Transition
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          appear
+          show={wrong}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={close}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto mx-auto w-48 ">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                  <h2 className="text-violet-700 text-center font-thin font-mono text-base mt-4">
+                    invalid word
+                  </h2>
+
+                  <div className="mt-4 w-full flex justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => setWrong(false)}
+                    >
+                      close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        {/* //* Win Modal */}
+        <Transition
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          appear
+          show={open}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={close}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                  {/* //? solution image */}
+                  {solution && (
+                    <div className="w-full flex flex-col items-center">
+                      <img
+                        src={solution.imgUrl}
+                        className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                      />
+                      <div className="border-b-2 border-indigo-400 w-full mb-6"></div>
+                      <Dialog.Title
+                        as="h3"
+                        className="text-2xl text-center font-medium leading-6 text-[#6A67CE]"
+                      >
+                        Congrats!
+                      </Dialog.Title>
+                      {/* //? solution name */}
+                      <h2 className="text-violet-700 text-center font-semibold text-xl mt-4">
+                        {solution.name}
+                      </h2>
+                    </div>
+                  )}
+                  {/* //? num of player guesses */}
+                  <div className="my-4 text-center flex justify-evenly w-full">
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
+                      <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
+                      <p className="text-xl text-violet-100 font-semibold">
+                        {6 - localStorage.getItem("user_guesses")}
+                      </p>
+                    </div>
+                    {/* //? duration */}
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
+                      <h1 className="text-xs">Time</h1>
+
+                      {Math.floor(
+                        (300 - localStorage.getItem("remainingTime")) / 60
+                      ) > 0 && (
+                          <p className="text-xl font-semibold">
+                            {Math.floor(
+                              (300 - localStorage.getItem("remainingTime")) / 60
+                            )}
+                            <span className="text-sm">m </span>
+                            {(300 - localStorage.getItem("remainingTime")) % 60}
+                            <span className="text-sm">s</span>
+                          </p>
+                        )}
+                      {Math.floor(
+                        (300 - localStorage.getItem("remainingTime")) / 60
+                      ) === 0 && (
+                          <p className="text-xl font-semibold">
+                            {(300 - localStorage.getItem("remainingTime")) % 60}
+                            <span className="text-sm font-thin">s</span>
+                          </p>
+                        )}
+                    </div>
+                    {/* //? score */}
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
+                      <h1 className="text-violet-200 text-xs">Score</h1>
+                      <p className="text-xl text-violet-100 font-semibold">
+                        {localStorage.getItem("score")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 w-full flex justify-center">
+                    {goBackHome()}
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+
+        {/* //? Modal help */}
+        <Transition
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          appear
+          show={openHelp}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={closeHelp}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto mx-auto w-auto" >
+              <div className="flex min-h-full items-center justify-center p-4 text-center" >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all" 
+                style={{backgroundColor: `lightgray`}}
+                >
+                  {/* //? solution image */}
+                  <div className="w-full flex flex-col" >
+                    <h2 className="text-yellow-700 text-center font-bold font-mono text-lg mt-4">
+                      Guess the mystery food!
+                    </h2>
+                    <h2 className="text-black font-thin font-mono text-base mt-4">
+                      • You get <span className="font-bold">eight</span> guesses, try any food you want!
+                    </h2>
+                    <h2 className="text-black font-thin font-mono text-base mt-4">
+                      • <span style={{ color: `green`, fontWeight:'600' }}>Green in any column</span> indicates a match!
+                    </h2>
+                    <h2 className="text-black font-thin font-mono text-base mt-4">
+                      • <span style={{ color: `red`, fontWeight:'600' }}>Red in any column</span> indicates a mismatch!
+                    </h2>
+                    <h2 className="text-black font-thin font-mono text-base mt-4">
+                      • If you get stuck, try clicking hint button!
+                    </h2>
+                  </div>
+                  {/* //? num of guesses */}
+
+                  <div className="mt-4 w-full flex justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-yellow-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => setOpenHelp(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        {/* //? Modal out of time */}
+        <Transition
+          appear
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          show={timeup}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={close}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                  {/* //? solution image */}
+                  <Dialog.Title
+                    as="h1"
+                    className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                  >
+                    Time's up!
+                  </Dialog.Title>
+                  {solution && (
+                    <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                      <img
+                        src={solution.imgUrl}
+                        className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                      />
+                      {/* //? solution name */}
+                      <h2>The answer is</h2>
+                      <h2 className="text-[30px] ">{solution.name}</h2>
+                    </div>
+                  )}
+                  {/* //? num of guesses */}
+
+                  <div className="mt-4 w-full flex justify-center">
+                    {goBackHome()}
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+
+        {/* //! Modal lose */}
+        <Transition
+          appear
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          show={lose}
+          as={React.Fragment}
+        >
+          <Dialog as="div" className="relative z-10" onClose={close}>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h1"
+                    className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                  >
+                    Game Over
+                  </Dialog.Title>
+                  {solution && (
+                    <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                      {/* //? solution image */}
+                      <img
+                        src={solution.imgUrl}
+                        className="h-36 w-36 rounded-lg mb-6 shadow-lg"
+                      />
+                      <h2>The answer is</h2>
+                      {/* //? solution name */}
+                      <h2 className="text-[30px] ">{solution.name}</h2>
+                    </div>
+                  )}
+                  {/* //? num of guesses */}
+
+                  <div className="mt-4 w-full flex justify-center">
+                    {goBackHome()}
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        {JSON.parse(localStorage.getItem("pastAnswers")) && (
+          <div className="bg-black w-4/5 bg-opacity-70 rounded-lg">
+            <table className="table-fixed w-3/4 text-center mx-auto text-white">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>From</th>
+                  <th>Color</th>
+                  <th>Flavor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {localStorage.getItem("pastAnswers") &&
+                  JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
+                    return (
+                      <tr key={`uniquekey${i}`} className="h-16">
+                        {/* if el.isCorrect false show red color */}
+                        {/* if el.isCorrect true show green color */}
+                        <td>{el.name.value}</td>
+                        {el.location.value == solution.location ? (
+                          <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
+                            {el.location.value}
+                          </td>
+                        ) : (
+                          <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
+                            {el.location.value}
+                          </td>
+                        )}
+                        {el.color.value == solution.color ? (
+                          <td className="bg-emerald-500 bg-opacity-60">
+                            {el.color.value}
+                          </td>
+                        ) : (
+                          <td className="bg-rose-500 bg-opacity-60">
+                            {el.color.value}
+                          </td>
+                        )}
+                        {el.taste.value == solution.taste ? (
+                          <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
+                            {el.taste.value}
+                          </td>
+                        ) : (
+                          <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">
+                            {el.taste.value}
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 export default Singleplayer;
