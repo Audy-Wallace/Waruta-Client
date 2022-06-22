@@ -13,14 +13,11 @@ import Leaderboard from "./views/Leaderboard";
 
 
 
-// bug
+// fix
 function App() {
   const socket = connectSocket();
   return (
-    <div
-      id="root"
-      className="bg-repeat min-h-screen bg-gradient-to-br from-[#c236e2] to-[#5719dc]"
-    >
+    <div id="root" className="bg-repeat min-h-screen bg-opacity-60 bg-[url('kitchen-pattern.jpg')]">
       <Helmet>
         <script
           type="text/javascript"

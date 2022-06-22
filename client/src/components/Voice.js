@@ -36,19 +36,27 @@ export default function Voice({ answerVoice }) {
       {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
       {!listening && (
         <button
-          className="px-[20px] py-3 text-[30px] font-semibold bg-indigo-600 text-sky-200 rounded-full shadow-md"
+          className="px-[20px] py-3 text-[30px] font-semibold bg-white text-yellow-400 rounded-full shadow-md"
           onClick={() => SpeechRecognition.startListening({ language: "id" })}
         >
           <IonIcon name="mic-outline" />
         </button>
       )}
       {listening && (
-        <button
-          className="px-[20px] py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-white animate-pulse duration-300 shadow-md"
-          onClick={() => SpeechRecognition.startListening({ language: "id" })}
-        >
-          <IonIcon name="mic-outline" />
-        </button>
+        <div>
+          <button
+            className="-mr-[70px] px-[20px] py-3 text-[30px] font-semibold rounded-full text-sky-500 bg-sky-500 opacity-60 animate-ping duration-300 shadow-md"
+            onClick={() => SpeechRecognition.startListening({ language: "id" })}
+          >
+            <IonIcon name="mic-outline" />
+          </button>
+          <button
+            className="px-[20px] relative py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-white duration-300 shadow-md"
+            onClick={() => SpeechRecognition.startListening({ language: "id" })}
+          >
+            <IonIcon name="mic-outline" />
+          </button>
+        </div>
       )}
     </div>
   )
