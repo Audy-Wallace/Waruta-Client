@@ -128,8 +128,10 @@ export default function NavBar() {
           removeItem();
           if (route === "logout") {
             logout();
+            navigate(`/`, { replace: true });
+          } else {
+            navigate(`/${route}`, { replace: true });
           }
-          navigate(`/${route}`, { replace: true });
         }
       });
     } else {
