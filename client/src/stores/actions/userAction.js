@@ -20,7 +20,7 @@ export const login = (user) => {
     } catch (error) {
       MySwal.fire({
         title: "Error",
-        text: error.message,
+        text: error.response.data.message,
         icon: "error",
       });
     }
@@ -45,7 +45,7 @@ export const register = (user) => {
     } catch (error) {
       MySwal.fire({
         title: "Error",
-        text: error.message,
+        text: error.response.data.message,
         icon: "error",
       });
     }
