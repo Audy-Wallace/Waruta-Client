@@ -539,6 +539,7 @@ const Singleplayer = () => {
           <Dialog as="div" className="relative z-10" onClose={closeHelp}>
             <div className="fixed inset-0 bg-black bg-opacity-25" />
 
+
             <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
                 <Dialog.Panel
@@ -556,6 +557,7 @@ const Singleplayer = () => {
 
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
+
                       •{" "}
                       <span style={{ color: `green`, fontWeight: "600" }}>
                         Green in any column
