@@ -12,7 +12,7 @@ function LandingPage() {
   return (
     <>
       <div className="grid place-items-center">
-        <div className="outer-container flex flex-row mt-16 ">
+        <div className="outer-container flex items-center p-4 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg mt-16 ">
           <div className="inner-container">
             <img
               src={require("../logo-waruta.png")}
@@ -41,7 +41,7 @@ function LandingPage() {
           <div className="image ml-16">
             <img
               src={require("../waruta.png")}
-              className="rounded-xl opacity-90 shadow-xl"
+              className="w-60 h-60 rounded-xl opacity-90 bg-transparent shadow-xl"
               alt="people-discuss"
             />
           </div>

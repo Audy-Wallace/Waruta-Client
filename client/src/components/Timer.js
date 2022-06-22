@@ -62,27 +62,27 @@ export default function Timer({
     localStorage.setItem("remainingTime", totalSeconds);
   }
   return (
-    <div className="flex w-full justify-center space-x-4 mt-6">
+    <div className="flex w-full justify-center items-center h-48 space-x-4 mt-6">
       {checkDigit(minutes) > 1 && (
-        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
+        <div className="text-rose-200 shadow-xl text-center flex flex-col justify-center bg-rose-600 bg-opacity-80 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(minutes)}</h2>
           <h2 className="text-xs">minutes</h2>
         </div>
       )}
       {checkDigit(minutes) == 1 && (
-        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
+        <div className="text-rose-200 shadow-xl text-center flex flex-col justify-center bg-rose-600 bg-opacity-80 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(minutes)}</h2>
           <h2 className="text-xs">minute</h2>
         </div>
       )}
       {checkDigit(minutes) > 0 && (
-        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-20 h-20 rounded-full duration-300">
+        <div className="text-rose-200 shadow-xl text-center flex flex-col justify-center bg-rose-600 bg-opacity-80 w-20 h-20 rounded-full duration-300">
           <h2 className="text-2xl font-semibold">{checkDigit(seconds)}</h2>
           <h2 className="text-xs">seconds</h2>
         </div>
       )}
       {checkDigit(minutes) == 0 && (
-        <div className="text-violet-200 shadow-xl text-center flex flex-col justify-center bg-violet-800 bg-opacity-60 w-40 h-40 rounded-full duration-300">
+        <div className="text-rose-200 shadow-xl text-center flex flex-col justify-center bg-rose-600 bg-opacity-80 w-40 h-40 rounded-full duration-300">
           <h2 className="text-[80px] font-semibold">{checkDigit(seconds)}</h2>
         </div>
       )}
