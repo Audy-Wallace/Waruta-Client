@@ -1,14 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchLeaderboard } from "../stores/actions/leaderboardAction";
-import { useEffect } from "react";
 
 function LandingPage() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchLeaderboard());
-  }, [dispatch]);
-  const { leaderboards } = useSelector((state) => state.leaderboards);
   return (
     <>
       <div className="grid place-items-center">
