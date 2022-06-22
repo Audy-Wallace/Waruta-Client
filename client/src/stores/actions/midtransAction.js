@@ -9,7 +9,7 @@ export function finishOrder() {
     try {
       const { data: response } = await axios.get(`${BASE_URL}/users/midtrans`, {
         headers: {
-          access_token: localStorage.getItem("access_token"),
+          access_token: localStorage.getItem('access_token'),
         },
       });
 
@@ -31,7 +31,7 @@ export function updatePremium() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          access_token: localStorage.getItem("access_token"),
+          access_token: localStorage.getItem('access_token'),
         },
       });
 
