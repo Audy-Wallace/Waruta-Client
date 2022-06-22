@@ -1,5 +1,6 @@
 import * as React from "react";
 import readPayload from "../helpers/readPayload";
+import Swal from "sweetalert2";
 import { finishOrder, updatePremium } from "../stores/actions/midtransAction";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -99,9 +100,45 @@ export default function NavBar() {
       .catch((err) => console.log(err));
   }
   function logout() {
+    console.log("logout jalan");
     localStorage.removeItem("access_token");
     localStorage.removeItem("warutapr");
     setLocalIsLogin(false);
+  }
+  function removeItem() {
+    localStorage.removeItem("index");
+    localStorage.removeItem("score");
+    localStorage.removeItem("user_guesses");
+    localStorage.removeItem("remainingTime");
+    localStorage.removeItem("win");
+    localStorage.removeItem("pastAnswers");
+    localStorage.removeItem("time");
+  }
+  function checkPlay(route) {
+    const isPlay = localStorage.getItem("time");
+    if (isPlay) {
+      Swal.fire({
+        icon: "warning",
+        title: "Are you sure you want to quit?",
+        showDenyButton: true,
+        confirmButtonText: "Yes! I want to leave",
+        denyButtonText: `No! I want to keep playing`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          removeItem();
+          if (route === "logout") {
+            logout();
+          }
+          navigate(`/${route}`, { replace: true });
+        }
+      });
+    } else {
+      if (route === "logout") {
+        navigate(`/`, { replace: true });
+      } else {
+        navigate(`/${route}`, { replace: true });
+      }
+    }
   }
   return (
     <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2">
@@ -115,14 +152,16 @@ export default function NavBar() {
         <button
           variant="contained"
           className="text-lg text-white font-medium h-16 shadow-sm px-4 hover:text-sky-200 duration-500"
-          onClick={() => navigate("/", { replace: true })}
+          onClick={() => {
+            checkPlay("");
+          }}
         >
           WARUTA
         </button>
         <button
           className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 hover:bg-transparent duration-300"
           type="button"
-          onClick={() => navigate("/leaderboard", { replace: true })}
+          onClick={() => checkPlay("leaderboard")}
         >
           Leaderboard
         </button>
@@ -155,7 +194,7 @@ export default function NavBar() {
         {localIsLogin && (
           <>
             <button
-              onClick={() => logout()}
+              onClick={() => checkPlay("logout")}
               className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
             >
               Sign Out

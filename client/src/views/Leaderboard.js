@@ -9,10 +9,6 @@ export default function LeaderBoard() {
     dispatch(fetchLeaderboard());
   }, [dispatch]);
   const { leaderboards } = useSelector((state) => state.leaderboards);
-  console.log(
-    "🚀 ~ file: Leaderboard.js ~ line 11 ~ LeaderBoard ~ leaderboards",
-    leaderboards.data
-  );
 
   return (
     <>
