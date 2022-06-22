@@ -17,7 +17,7 @@ export function fetchWords() {
         ? localStorage.getItem("index")
         : localStorage.setItem("index", random);
 
-      const solution = words[index];
+      const solution = words[+localStorage.getItem("index")];
 
       dispatch({
         type: GET_WORDS,

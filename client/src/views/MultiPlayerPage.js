@@ -10,48 +10,33 @@ function MultiPlayerPage({ socket }) {
   const [wait, setWait] = useState(true)
   const navigate = useNavigate()
 
-  // socket.emit("connecting")
+  function joinWaitingRoom(roomId) {
+    setRoom(roomId)
+    localStorage.setItem("rooms", JSON.stringify({
+      roomId: roomId,
+      wordGuess: "",
+      remainingGuess: 0,
+      pastAnswers: [],
+      currentPlayer: null
+    }))
+    socket.emit("joinWaitingRoom",
+      {
+        roomId: roomId,
+        username: localStorage.getItem("username"),
+        wordGuess: "",
+        remainingGuess: 0,
+        pastAnswers: [],
+        currentPlayer: null
+      })
 
-  // async function joinRoom(id) {
+    //reset timer
+    let keysRemove = ["win", "remainingTime", "time"]
 
-  //   let users = []
-  //   const response = await fetch(`http://localhost:3001/rooms/${id}`)
-
-  //   if (!response.ok) {
-  //     console.log("error");
-  //   } {
-  //     let responseData = await response.json()
-  //     users = responseData.totalUser
-  //   }
-
-  //   if (users < 2) {
-  //     users += 1
-
-  //     fetch(`http://localhost:3001/rooms/${id}`, {
-  //       method: 'put',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         totalUser: users
-  //       })
-  //     })
-
-  //     // socket.emit("totalUser", {
-  //     //   roomId: id,
-  //     //   users
-  //     // })
-  //     socket.emit("joinWaitingRoom", {
-  //       roomId: 0,
-  //       users: 1
-  //     })
-  //     // navigate(`/multiplayer/${id}`)
-
-  //     setStatusRoom(1)
-  //   } else {
-
-  //   }
-  // }
+    keysRemove.forEach((el) => {
+      localStorage.removeItem(el)
+    })
+    navigate(`/multiplayer/${roomId}`)
+  }
 
   function handleClickCreateRoom() {
     let roomId = uuidv4()
@@ -102,6 +87,7 @@ function MultiPlayerPage({ socket }) {
 
     // connectToSocket(roomId)
     // joinRoom(roomId)
+    joinWaitingRoom(roomId)
 
     navigate(`/multiplayer/${roomId}`)
   }
@@ -110,14 +96,6 @@ function MultiPlayerPage({ socket }) {
     console.log(room)
     // navigate(`/multiplayer/${room}`)
   }
-
-  // useEffect(() => {
-  //   socket.on("joinedWaitingRoom", (payload) => {
-  //     // setCurrentUser(payload.users)
-  //     if(payload === 2)
-  //     console.log("Berhasil masuk room");
-  //   })
-  // }, [socket])
 
   return (
     <>

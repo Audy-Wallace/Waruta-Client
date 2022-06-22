@@ -1,26 +1,68 @@
-<table class="table-auto">
-  <thead>
-    <tr>
-      <th>Song</th>
-      <th>Artist</th>
-      <th>Year</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-      <td>Malcolm Lockyer</td>
-      <td>1961</td>
-    </tr>
-    <tr>
-      <td>Witchy Woman</td>
-      <td>The Eagles</td>
-      <td>1972</td>
-    </tr>
-    <tr>
-      <td>Shining Star</td>
-      <td>Earth, Wind, and Fire</td>
-      <td>1975</td>
-    </tr>
-  </tbody>
-</table>;
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchLeaderboard } from "../stores/actions/leaderboardAction";
+import DynamicRow from "../components/DynamicRow";
+
+export default function LeaderBoard() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchLeaderboard());
+  }, [dispatch]);
+  const { leaderboards } = useSelector((state) => state.leaderboards);
+  console.log(
+    "🚀 ~ file: Leaderboard.js ~ line 11 ~ LeaderBoard ~ leaderboards",
+    leaderboards.data
+  );
+
+  return (
+    <>
+      {leaderboards.data && (
+        <div className="justify-center items-center flex fixed w-full h-full">
+          <div className="w-1/2 ">
+            <div className="">
+              <div className="">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-transparent dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        No
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Profile Pict.
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Username
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Time
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Guess
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Score
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboards.data.map((el) => {
+                      return <DynamicRow el={el} key={el.id} />;
+                    })}
+                    <tr className="px-4 py-4 w-full dark:bg-gray-800 dark:text-gray-400">
+                      <td className="py-4"></td>
+                      <td className="py-4"></td>
+                      <td className="py-4"></td>
+                      <td className="py-4"></td>
+                      <td className="py-4"></td>
+                      <td className="py-4"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
