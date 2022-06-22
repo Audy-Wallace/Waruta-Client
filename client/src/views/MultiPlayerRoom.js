@@ -278,3 +278,4 @@ function MultiPlayerRoom({ socket }) {
 }
 
 export default MultiPlayerRoom;
+
