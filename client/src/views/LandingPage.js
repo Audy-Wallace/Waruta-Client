@@ -12,8 +12,8 @@ function LandingPage() {
   return (
     <>
       <div className="grid place-items-center">
-        <div className="outer-container flex items-center p-4 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg mt-16 ">
-          <div className="inner-container">
+        <div className="outer-container flex items-center justify-center p-4 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg my-60 ">
+          <div className="inner-container p-0">
             <img
               src={require("../logo-waruta.png")}
               className="w-40"
