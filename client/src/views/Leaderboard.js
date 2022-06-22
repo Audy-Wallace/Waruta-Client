@@ -45,8 +45,8 @@ export default function LeaderBoard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {leaderboards.data.map((el) => {
-                      return <DynamicRow el={el} key={el.id} />;
+                    {leaderboards.data.map((el, index) => {
+                      return <DynamicRow el={el} index={index} key={el.id} />;
                     })}
                     <tr className="px-4 py-4 w-full dark:bg-gray-800 dark:text-gray-400">
                       <td className="py-4"></td>
