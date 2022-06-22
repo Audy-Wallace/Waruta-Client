@@ -87,7 +87,6 @@ function MultiPlayerPage({ socket }) {
 
     // connectToSocket(roomId)
     // joinRoom(roomId)
-
     navigate(`/multiplayer/${roomId}`);
     joinWaitingRoom(roomId);
   }
