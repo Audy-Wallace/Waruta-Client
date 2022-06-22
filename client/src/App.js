@@ -11,13 +11,14 @@ import MultiPlayerRoom from "./views/MultiPlayerRoom";
 import { Helmet } from "react-helmet";
 import Leaderboard from "./views/Leaderboard";
 
-
-
 // fix
 function App() {
   const socket = connectSocket();
   return (
-    <div id="root" className="bg-repeat min-h-screen bg-opacity-60 bg-[url('kitchen-pattern.jpg')]">
+    <div
+      id="root"
+      className="bg-repeat min-h-screen bg-opacity-60 bg-[url('kitchen-pattern.jpg')]"
+    >
       <Helmet>
         <script
           type="text/javascript"
