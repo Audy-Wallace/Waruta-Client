@@ -25,18 +25,11 @@ function LandingPage() {
             <p className="text-white">a wordle game!</p>
             <br />
             <div className="flex justify-center pb-4">
-              <div>
-                <NavLink to="/singleplayer">
-                  <button className="bg-transparent hover:bg-400 text-sky-400 hover:text-rose-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
-                    Play Now
-                  </button>
-                </NavLink>
-                <NavLink to="/singleplayer">
-                  <button className="bg-rose-600 hover:bg-white text-white hover:text-rose-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
-                    Play Now
-                  </button>
-                </NavLink>
-              </div>
+              <NavLink to="/singleplayer">
+                <button className="bg-rose-600 hover:bg-white text-white hover:text-rose-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
+                  Play Now
+                </button>
+              </NavLink>
               <p className="text-white mx-4 pt-2"> OR </p>
               <NavLink to="/login">
                 <button className="bg-purple-600 hover:bg-white text-white hover:text-purple-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
