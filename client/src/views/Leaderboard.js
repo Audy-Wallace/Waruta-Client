@@ -21,7 +21,7 @@ export default function LeaderBoard() {
               </h1>
             </div>
           </div>
-          <div className="w-1/2 relative overflow-x-auto shadow-md sm:rounded-lg border-2">
+          <div className="w-1/2 h-[50vh] relative overflow-x-auto shadow-md sm:rounded-lg border-2">
             <table className="w-full text-sm font-border text-left text-white ">
               <thead className="text-xs uppercase bg-gradient-to-t from-yellow-500 via-orange-500 to-orange-500  opacity-90 rounded-lg text-gray-400 border-white">
                 <tr>

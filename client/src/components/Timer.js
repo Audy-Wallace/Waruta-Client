@@ -48,7 +48,6 @@ export default function Timer({
   }, [minutes, seconds]);
   function expiredTime() {
     setTimeup(true);
-    setLose(true);
     localStorage.removeItem("time");
     setScoreTime(0);
   }

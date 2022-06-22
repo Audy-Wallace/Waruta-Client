@@ -295,7 +295,7 @@ const Singleplayer = () => {
     return (
       <button
         type="button"
-        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        className="inline-flex justify-center rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:scale-105 duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
         onClick={() => {
           setTimeup(false);
           setLose(false);
@@ -317,7 +317,7 @@ const Singleplayer = () => {
         /></button>
 
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center overflow-hidden">
         <div className="flex justify-center">
           <Timer
             isCorrect={isCorrect}
@@ -338,9 +338,9 @@ const Singleplayer = () => {
         >
           Hint
         </button>
-        
+
         <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 ml-[5rem] mt-2">
-        
+
           {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
         the onEnter function) */}
           <input
@@ -460,29 +460,29 @@ const Singleplayer = () => {
                         src={solution.imgUrl}
                         className="h-36 w-36 rounded-lg mb-6 shadow-lg"
                       />
-                      <div className="border-b-2 border-indigo-400 w-full mb-6"></div>
+                      <div className="border-b-2 border-orange-400 w-full mb-6"></div>
                       <Dialog.Title
                         as="h3"
-                        className="text-2xl text-center font-medium leading-6 text-[#6A67CE]"
+                        className="text-2xl text-center font-medium leading-6 text-orange-400"
                       >
                         Congrats!
                       </Dialog.Title>
                       {/* //? solution name */}
-                      <h2 className="text-violet-700 text-center font-semibold text-xl mt-4">
-                        {solution.name}
+                      <h2 className="text-orange-400 text-center font-semibold text-xl mt-4">
+                        The answer is <span className="font-bold">{solution.name} </span>
                       </h2>
                     </div>
                   )}
                   {/* //? num of player guesses */}
                   <div className="my-4 text-center flex justify-evenly w-full">
-                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
-                      <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-orange-600 text-white  w-20 h-20 rounded-full justify-center">
+                      <h1 className="text-xs">Attempt(s)</h1>
                       <p className="text-xl text-violet-100 font-semibold">
                         {6 - localStorage.getItem("user_guesses")}
                       </p>
                     </div>
                     {/* //? duration */}
-                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-orange-600 text-white w-20 h-20 rounded-full justify-center">
                       <h1 className="text-xs">Time</h1>
 
                       {Math.floor(
@@ -507,9 +507,9 @@ const Singleplayer = () => {
                       )}
                     </div>
                     {/* //? score */}
-                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
-                      <h1 className="text-violet-200 text-xs">Score</h1>
-                      <p className="text-xl text-violet-100 font-semibold">
+                    <div className="flex flex-col bg-opacity-80 shadow-xl bg-orange-600 text-white w-20 h-20 rounded-full justify-center">
+                      <h1 className="text-white text-xs">Score</h1>
+                      <p className="text-xl text-white font-semibold">
                         {localStorage.getItem("score")}
                       </p>
                     </div>
@@ -540,10 +540,10 @@ const Singleplayer = () => {
             <div className="fixed inset-0 bg-black bg-opacity-25" />
 
 
-            <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
-              <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <Dialog.Panel
-                  className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all"
+            <div className="fixed inset-0 overflow-y-auto mx-auto w-auto" >
+              <div className="flex min-h-full items-center justify-center p-4 text-center" >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all"
+
                   style={{ backgroundColor: `lightgray` }}
                 >
                   {/* //? solution image */}
@@ -558,18 +558,11 @@ const Singleplayer = () => {
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
 
-                      •{" "}
-                      <span style={{ color: `green`, fontWeight: "600" }}>
-                        Green in any column
-                      </span>{" "}
-                      indicates a match!
+                      • <span style={{ color: `green`, fontWeight: '600' }}>Green in any column</span> indicates a match!
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
-                      •{" "}
-                      <span style={{ color: `red`, fontWeight: "600" }}>
-                        Red in any column
-                      </span>{" "}
-                      indicates a mismatch!
+                      • <span style={{ color: `red`, fontWeight: '600' }}>Red in any column</span> indicates a mismatch!
+
                     </h2>
                     <h2 className="text-black font-thin font-mono text-base mt-4">
                       • If you get stuck, try clicking hint button!
@@ -605,10 +598,9 @@ const Singleplayer = () => {
         >
           <Dialog as="div" className="relative z-10" onClose={close}>
             <div className="fixed inset-0 bg-black bg-opacity-25" />
-
             <div className="fixed inset-0 overflow-y-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-white rounded-2xl p-6 text-left flex flex-col items-center shadow-xl transition-all">
                   {/* //? solution image */}
                   <Dialog.Title
                     as="h1"
@@ -617,7 +609,7 @@ const Singleplayer = () => {
                     Time's up!
                   </Dialog.Title>
                   {solution && (
-                    <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                    <div className="font-mono w-full flex flex-col text-zinc-700 items-center">
                       <img
                         src={solution.imgUrl}
                         className="h-36 w-36 rounded-lg mb-6 shadow-lg"
@@ -658,12 +650,12 @@ const Singleplayer = () => {
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
                   <Dialog.Title
                     as="h1"
-                    className="text-3xl text-center mb-4 leading-6 text-rose-600"
+                    className="text-[35px]  text-center mb-6 leading-6 text-rose-600"
                   >
                     Game Over
                   </Dialog.Title>
                   {solution && (
-                    <div className="font-mono w-full flex flex-col text-indigo-600 items-center">
+                    <div className="font-mono w-full flex flex-col text-zinc-700 items-center">
                       {/* //? solution image */}
                       <img
                         src={solution.imgUrl}
@@ -671,7 +663,7 @@ const Singleplayer = () => {
                       />
                       <h2>The answer is</h2>
                       {/* //? solution name */}
-                      <h2 className="text-[30px] ">{solution.name}</h2>
+                      <h2 className="text-[30px] font-normal">{solution.name}</h2>
                     </div>
                   )}
                   {/* //? num of guesses */}
@@ -685,8 +677,8 @@ const Singleplayer = () => {
           </Dialog>
         </Transition>
         {JSON.parse(localStorage.getItem("pastAnswers")) && (
-          <div className="bg-black w-[60%] bg-opacity-70 rounded-lg p-[10px]">
-            <table className="mr-[18vh] w-3/4 text-center mx-auto text-white border-separate border-spacing-0.5">
+          <div className="bg-black overflow-y-auto w-[60%] bg-opacity-70 rounded-lg p-[10px]">
+            <table className="mr-[18vh] w-3/4 max-h-[40vh] text-center mx-auto text-white border-separate border-spacing-0.5">
               <thead >
                 <tr>
                   <th>Name</th>

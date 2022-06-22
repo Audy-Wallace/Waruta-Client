@@ -4,7 +4,7 @@ function LandingPage() {
   return (
     <>
       <div className="grid place-items-center">
-        <div className="outer-container flex items-center justify-center p-5 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg my-60 ">
+        <div className="outer-container flex items-center justify-center p-5 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg my-[25vh] ">
           <div className="inner-container p-[15px]">
             <img
               src={require("../logo-waruta.png")}
@@ -26,7 +26,7 @@ function LandingPage() {
             <br />
             <div className="flex flex-col w-full">
               <NavLink to="/singleplayer" replace={true}>
-                <button className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded w-[100%]">
+                <button className="bg-orange-400 hover:scale-105 duration-300 text-zinc-600 font-bold py-2 px-4 rounded w-[100%]">
                   Play Now
                 </button>
               </NavLink>

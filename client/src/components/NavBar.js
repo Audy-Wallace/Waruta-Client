@@ -168,7 +168,7 @@ export default function NavBar() {
     }
   }
   return (
-    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-5">
+    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-6">
       <div className="container-1 flex items-center">
         <img
           src={require("../waruta.png")}
