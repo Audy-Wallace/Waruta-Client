@@ -41,9 +41,9 @@ export default function SignupForm({
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
-                  className="text-2xl font-bold leading-6 text-gray-900"
+                  className="text-2xl font-bold leading-6 text-gray-900 text-center"
                 >
-                  Register
+                  Don't have an account yet? Register
                 </Dialog.Title>
                 <div className="mt-2">
                   <form className="flex flex-col">
@@ -89,7 +89,7 @@ export default function SignupForm({
                     <div className="mt-2">
                       <button
                         type="button"
-                        className="w-full inline-flex justify-center rounded-md border border-transparent bg-violet-100 px-4 py-2 text-sm font-medium text-violet-900 hover:bg-violet-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+                        className="w-full inline-flex justify-center rounded-md border border-transparent bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
                         onClick={(e) => createUser(e)}
                       >
                         Register

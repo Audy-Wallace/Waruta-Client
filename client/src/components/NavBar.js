@@ -53,7 +53,13 @@ export default function NavBar() {
           })
         );
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err,
+        })
+      );
     setIsOpenRegister(false);
   }
   async function uploadImage(image) {
@@ -72,15 +78,32 @@ export default function NavBar() {
   }
   async function userLogin(e) {
     e.preventDefault();
-    const response = await dispatch(login(loginForm));
-    if (response.access_token) {
-      localStorage.setItem("access_token", response.access_token);
-      if (response.isPremium) {
-        localStorage.setItem("warutapr", "asdadsa");
+    try {
+      if (loginForm.email.length < 1 && loginForm.password.length < 1) {
+        throw new Error("E-mail and password is required");
       }
-      localStorage.setItem("username", response.email);
-      setIsOpenLogin(false);
-      setLocalIsLogin(true);
+      if (loginForm.password.length < 1) {
+        throw new Error("Password is required");
+      }
+      if (loginForm.email.length < 1) {
+        throw new Error("E-mail is required");
+      }
+      const response = await dispatch(login(loginForm));
+      if (response.access_token) {
+        localStorage.setItem("access_token", response.access_token);
+        if (response.isPremium) {
+          localStorage.setItem("warutapr", "asdadsa");
+        }
+        localStorage.setItem("username", response.email);
+        setIsOpenLogin(false);
+        setLocalIsLogin(true);
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err,
+      });
     }
   }
   async function snapMidtrans() {
