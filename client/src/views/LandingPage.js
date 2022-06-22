@@ -28,7 +28,9 @@ function LandingPage() {
             <p className="text-white font-medium">
               you can now compete globally or invite a friend to play.
             </p>
-            <p className="text-white font-medium">Are you ready for the challenge?</p>
+            <p className="text-white font-medium">
+              Are you ready for the challenge?
+            </p>
             <br />
             <div className="flex flex-col w-full">
               <NavLink to="/singleplayer" replace={true}>

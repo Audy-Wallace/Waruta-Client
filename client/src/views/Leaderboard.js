@@ -13,7 +13,7 @@ export default function LeaderBoard() {
   return (
     <>
       {leaderboards.data && (
-        <div className="justify-center items-center flex flex-col fixed w-full mt-24 ">
+        <div className="justify-center items-center flex flex-col fixed w-full mt-24 h-96">
           <div className="title  ">
             <div className="from-orange-500 to-yellow-500 border-2 border-white-900 px-4 pt-4 pb-4 mb-12 rounded-lg bg-gradient-to-b">
               <h1 className="font-bold text-2xl  text-white outline-4">
