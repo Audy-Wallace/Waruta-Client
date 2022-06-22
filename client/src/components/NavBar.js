@@ -56,7 +56,6 @@ export default function NavBar() {
       .catch((err) => console.log(err));
     setIsOpenRegister(false);
   }
-  console.log(alreadyPremium, "PREMIUM");
   async function uploadImage(image) {
     console.log(image);
     const imgData = new FormData();
@@ -76,9 +75,10 @@ export default function NavBar() {
     const response = await dispatch(login(loginForm));
     if (response.access_token) {
       localStorage.setItem("access_token", response.access_token);
-      if (response.isPremium) {
-        localStorage.setItem("warutapr", "asdadsa");
-      }
+      if(response.isPremium) {
+        localStorage.setItem("warutapr", 'asdadsa')
+      } 
+      localStorage.setItem("username", response.email);
       setIsOpenLogin(false);
       setLocalIsLogin(true);
     }
@@ -104,6 +104,7 @@ export default function NavBar() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("warutapr");
     setLocalIsLogin(false);
+    localStorage.clear();
   }
   function removeItem() {
     localStorage.removeItem("index");
@@ -143,7 +144,7 @@ export default function NavBar() {
     }
   }
   return (
-    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2">
+    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-5">
       <div className="container-1 flex items-center">
         <img
           src={require("../waruta.png")}
@@ -185,7 +186,7 @@ export default function NavBar() {
         )}
         {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
           <button
-            className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 hover:bg-transparent duration-300"
+            className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
             type="button"
             onClick={() => navigate("/multiplayer", { replace: true })}
           >
@@ -199,7 +200,7 @@ export default function NavBar() {
               onClick={() => checkPlay("logout")}
               className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
             >
-              Sign Out
+              Logout
             </button>
           </>
         )}
@@ -224,7 +225,7 @@ export default function NavBar() {
           <div className="container-2">
             <button
               onClick={() => snapMidtrans()}
-              className="text-lg text-rose-100 mx-2 px-2 py-[1px] rounded-lg bg-[#be50d6] hover:bg-transparent duration-300"
+              className="text-lg text-rose-500 font-bold mx-2 px-2 py-[1px] rounded-lg hover:text-rose-600"
             >
               Unlock Multiplayer
             </button>

@@ -17,7 +17,7 @@ export default function Timer({
     timeStore = new Date(prevDate);
   } else {
     time = new Date();
-    time.setSeconds(time.getSeconds() + 300); // 5 minutes timer
+    time.setSeconds(time.getSeconds() + 10); // 5 minutes timer
     localStorage.setItem("time", time);
   }
 
