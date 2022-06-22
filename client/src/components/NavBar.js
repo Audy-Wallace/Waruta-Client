@@ -78,6 +78,7 @@ export default function NavBar() {
       if(response.isPremium) {
         localStorage.setItem("warutapr", 'asdadsa')
       } 
+      localStorage.setItem("username", response.email);
       setIsOpenLogin(false);
       setLocalIsLogin(true);
     }
@@ -102,6 +103,7 @@ export default function NavBar() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("warutapr")
     setLocalIsLogin(false);
+    localStorage.clear();
   }
   return (
     <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2">
