@@ -4,7 +4,7 @@ import { connectSocket } from "./hooks/connectSocket";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./views/LandingPage";
 
-import Singleplayer from "./views/Singleplayer";
+import Singleplayer from "./views/singleplayer";
 import MultiPlayerPage from "./views/MultiPlayerPage";
 import MultiPlayerRoom from "./views/MultiPlayerRoom";
 
