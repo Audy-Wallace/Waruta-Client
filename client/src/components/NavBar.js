@@ -19,7 +19,7 @@ export default function NavBar() {
     email: "",
     password: "",
     image: "",
-  })
+  });
   const [loginForm, setLoginForm] = React.useState({
     email: "",
     password: "",
@@ -30,17 +30,17 @@ export default function NavBar() {
       setRegisterForm({
         ...registerForm,
         [e.target.name]: e.target.files[0],
-      })
+      });
     } else {
-      setRegisterForm({ ...registerForm, [e.target.name]: e.target.value })
+      setRegisterForm({ ...registerForm, [e.target.name]: e.target.value });
     }
   }
   function createUser(e) {
-    e.preventDefault()
+    e.preventDefault();
     uploadImage(registerForm.image)
       .then((res) => {
-        if (!res.ok) throw new Error("Upload image failed")
-        return res.json()
+        if (!res.ok) throw new Error("Upload image failed");
+        return res.json();
       })
       .then((data) => {
         dispatch(
@@ -50,29 +50,29 @@ export default function NavBar() {
             password: registerForm.password,
             imgUrl: data.url,
           })
-        )
+        );
       })
-      .catch((err) => console.log(err))
-    setIsOpenRegister(false)
+      .catch((err) => console.log(err));
+    setIsOpenRegister(false);
   }
   console.log(alreadyPremium, "PREMIUM")
   async function uploadImage(image) {
-    console.log(image)
-    const imgData = new FormData()
-    imgData.append("file", image)
-    imgData.append("upload_preset", "aelijkxb")
-    imgData.append("cloud_name", "ds6yr7j32")
+    console.log(image);
+    const imgData = new FormData();
+    imgData.append("file", image);
+    imgData.append("upload_preset", "aelijkxb");
+    imgData.append("cloud_name", "ds6yr7j32");
     return fetch("https://api.cloudinary.com/v1_1/ds6yr7j32/image/upload", {
       method: "post",
       body: imgData,
-    })
+    });
   }
   function onChangeLogin(e) {
-    setLoginForm({ ...loginForm, [e.target.name]: e.target.value })
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
   }
   async function userLogin(e) {
-    e.preventDefault()
-    const response = await dispatch(login(loginForm))
+    e.preventDefault();
+    const response = await dispatch(login(loginForm));
     if (response.access_token) {
       localStorage.setItem("access_token", response.access_token);
       if(response.isPremium) {
@@ -92,11 +92,11 @@ export default function NavBar() {
             navigate("/")
           },
           onError: async (err) => {
-            console.log(err)
+            console.log(err);
           },
-        })
+        });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }
   function logout() {
     localStorage.removeItem("access_token");
@@ -185,5 +185,5 @@ export default function NavBar() {
         </>
       )}
     </div>
-  )
+  );
 }
