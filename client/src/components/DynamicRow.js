@@ -1,5 +1,4 @@
 export default function DynamicRow({ el, index }) {
-  console.log(el);
   return (
     <>
       <tr className=" bg-yellow-500 bg-opacity-90 rounded-lg ">
