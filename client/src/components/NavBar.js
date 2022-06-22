@@ -19,27 +19,28 @@ export default function NavBar() {
     email: "",
     password: "",
     image: "",
-  })
+  });
   const [loginForm, setLoginForm] = React.useState({
     email: "",
     password: "",
   })
+  const [alreadyPremium, setAlreadyPremium] = React.useState(false)
   function onChangeRegister(e) {
     if (e.target.name === "image") {
       setRegisterForm({
         ...registerForm,
         [e.target.name]: e.target.files[0],
-      })
+      });
     } else {
-      setRegisterForm({ ...registerForm, [e.target.name]: e.target.value })
+      setRegisterForm({ ...registerForm, [e.target.name]: e.target.value });
     }
   }
   function createUser(e) {
-    e.preventDefault()
+    e.preventDefault();
     uploadImage(registerForm.image)
       .then((res) => {
-        if (!res.ok) throw new Error("Upload image failed")
-        return res.json()
+        if (!res.ok) throw new Error("Upload image failed");
+        return res.json();
       })
       .then((data) => {
         dispatch(
@@ -49,30 +50,34 @@ export default function NavBar() {
             password: registerForm.password,
             imgUrl: data.url,
           })
-        )
+        );
       })
-      .catch((err) => console.log(err))
-    setIsOpenRegister(false)
+      .catch((err) => console.log(err));
+    setIsOpenRegister(false);
   }
+  console.log(alreadyPremium, "PREMIUM")
   async function uploadImage(image) {
-    console.log(image)
-    const imgData = new FormData()
-    imgData.append("file", image)
-    imgData.append("upload_preset", "aelijkxb")
-    imgData.append("cloud_name", "ds6yr7j32")
+    console.log(image);
+    const imgData = new FormData();
+    imgData.append("file", image);
+    imgData.append("upload_preset", "aelijkxb");
+    imgData.append("cloud_name", "ds6yr7j32");
     return fetch("https://api.cloudinary.com/v1_1/ds6yr7j32/image/upload", {
       method: "post",
       body: imgData,
-    })
+    });
   }
   function onChangeLogin(e) {
-    setLoginForm({ ...loginForm, [e.target.name]: e.target.value })
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
   }
   async function userLogin(e) {
-    e.preventDefault()
-    const response = await dispatch(login(loginForm))
+    e.preventDefault();
+    const response = await dispatch(login(loginForm));
     if (response.access_token) {
       localStorage.setItem("access_token", response.access_token);
+      if(response.isPremium) {
+        localStorage.setItem("warutapr", 'asdadsa')
+      } 
       setIsOpenLogin(false);
       setLocalIsLogin(true);
     }
@@ -83,62 +88,75 @@ export default function NavBar() {
         await window.snap.pay(res.token, {
           onSuccess: async (result) => {
             dispatch(updatePremium())
+            localStorage.setItem('warutapr', 'asdadsa')
             navigate("/")
           },
           onError: async (err) => {
-            console.log(err)
+            console.log(err);
           },
-        })
+        });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }
   function logout() {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("warutapr")
     setLocalIsLogin(false);
   }
   return (
     <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2">
       <div className="container-1 flex items-center">
-        <img src={require("../waruta.png")} className="h-20 w-20 ml-2" alt="logo" />
+        <img src={require("../waruta.png")} className="h-20 w-20 ml-2" style={{ borderRadius: 50 }} alt="logo" />
         <button
           variant="contained"
-          className="text-lg text-rose-200  bg-[#c236e2]  h-16  shadow-sm px-4  hover:text-sky-100 duration-500"
+          className="text-lg text-white font-medium h-16 shadow-sm px-4 hover:text-sky-200 duration-500"
         >
           WARUTA
         </button>
         <button
-          className="text-lg text-rose-100 px-2 bg-purple-60 border-neutral-400 h-16 hover:bg-transparent duration-300"
+          className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 hover:bg-transparent duration-300"
           type="button"
           onClick={() => navigate("/leaderboard", { replace: true })}
         >
-          LeaderBoard
+          Leaderboard
         </button>
         {!localIsLogin && (
           <>
             <button
-              className="text-lg text-rose-100  px-2 h-16 bg-purple-600 hover:bg-transparent duration-300"
+              className="text-lg text-white font-medium px-2 h-16  hover:text-sky-200  duration-300"
               onClick={() => setIsOpenRegister(true)}
             >
               Sign Up
             </button>
             <button
-              className="text-lg text-rose-100 px-2 h-16 py-[1px]  bg-gradient-to-r from-purple-600  hover:bg-transparent duration-300"
+              className="text-lg text-white font-medium px-2 h-16 py-[1px]  hover:text-sky-200  duration-300"
               onClick={() => setIsOpenLogin(true)}
             >
               Sign In
             </button>
           </>
         )}
+        {localIsLogin && localStorage.getItem('warutapr') === 'asdadsa' && (
+          <button
+            className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 hover:bg-transparent duration-300"
+            type="button"
+            onClick={() => navigate("/multiplayer", { replace: true })}
+          >
+            Multiplayer
+          </button>
+        )}
+
         {localIsLogin && (
           <>
             <button
               onClick={() => logout()}
-              className="text-lg text-rose-100 px-2 py-[1px] h-16 bg-purple-600 hover:bg-transparent duration-300"
+              className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
             >
               Sign Out
             </button>
           </>
         )}
+
         <SignupForm
           isOpenRegister={isOpenRegister}
           setIsOpenRegister={setIsOpenRegister}
@@ -154,7 +172,7 @@ export default function NavBar() {
           loginForm={loginForm}
         />
       </div>
-      {localIsLogin && (
+      {localIsLogin && localStorage.getItem('warutapr') !== 'asdadsa' && (
         <>
           <div className="container-2">
             <button
@@ -167,5 +185,5 @@ export default function NavBar() {
         </>
       )}
     </div>
-  )
+  );
 }
