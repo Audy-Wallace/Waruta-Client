@@ -75,9 +75,9 @@ export default function NavBar() {
     const response = await dispatch(login(loginForm));
     if (response.access_token) {
       localStorage.setItem("access_token", response.access_token);
-      if(response.isPremium) {
-        localStorage.setItem("warutapr", 'asdadsa')
-      } 
+      if (response.isPremium) {
+        localStorage.setItem("warutapr", "asdadsa");
+      }
       localStorage.setItem("username", response.email);
       setIsOpenLogin(false);
       setLocalIsLogin(true);
@@ -137,6 +137,7 @@ export default function NavBar() {
       });
     } else {
       if (route === "logout") {
+        logout();
         navigate(`/`, { replace: true });
       } else {
         navigate(`/${route}`, { replace: true });
