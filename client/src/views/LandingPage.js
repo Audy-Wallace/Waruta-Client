@@ -15,7 +15,7 @@ function LandingPage() {
   return (
     <>
       <div className="grid place-items-center">
-        <div className="outer-container flex flex-row mt-16 ">
+        <div className="outer-container flex items-center p-4 bg-gradient-to-br from-yellow-400 to-yellow-800 rounded-lg shadow-lg mt-16 ">
           <div className="inner-container">
             {" "}
             <img src={require("../logo-waruta.png")} className="w-40" alt="waruta-logo" />
@@ -24,15 +24,15 @@ function LandingPage() {
             <p className="text-white">and you can now compete or make a team to solve</p>
             <p className="text-white">a wordle game!</p>
             <br />
-            <div className="flex">
-              <NavLink to="/multiplayer">
-                <button className="bg-pink-700 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+            <div className="flex justify-center pb-4">
+              <NavLink to="/singleplayer">
+                <button className="bg-rose-600 hover:bg-white text-white hover:text-rose-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
                   Play Now
                 </button>
               </NavLink>
               <p className="text-white mx-4 pt-2"> OR </p>
               <NavLink to="/login">
-                <button className="bg-pink-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                <button className="bg-purple-600 hover:bg-white text-white hover:text-purple-600 hover:scale-105 duration-500 font-bold py-2 px-4 rounded shadow-lg">
                   Login
                 </button>
               </NavLink>
@@ -41,7 +41,7 @@ function LandingPage() {
           <div className="image ml-16">
             <img
               src={require("../waruta.png")}
-              className="w-60 h-60 rounded-xl opacity-90 bg-gradient-to-br from-yellow-500 to-yellow-300 shadow-xl"
+              className="w-60 h-60 rounded-xl opacity-90 bg-transparent shadow-xl"
               alt="people-discuss"
             />
           </div>
