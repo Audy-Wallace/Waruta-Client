@@ -134,7 +134,12 @@ function MultiPlayerRoom({ socket }) {
             payload.remainingGuess = currentGuess
             setCorrect(inputAnswer + " is correct")
             setGameEnd(true)
-            setIsCorrect(true)
+            setIsCorrect(true);
+            let keysRemove = ["time"]
+
+            keysRemove.forEach((el) => {
+              localStorage.removeItem(el)
+            })
           }
 
           payload.pastAnswers = [...payload.pastAnswers, obj]
@@ -216,9 +221,14 @@ function MultiPlayerRoom({ socket }) {
       if (payload.wordGuess !== food.name) {
         setCorrect(payload.wordGuess + " is incorrect")
       } else {
-        setCorrect(payload.wordGuess + " is correct")
-        setGameEnd(true)
-        setIsCorrect(true)
+        setCorrect(payload.wordGuess + " is correct");
+        setGameEnd(true);
+        setIsCorrect(true);
+        let keysRemove = ["time"]
+
+        keysRemove.forEach((el) => {
+          localStorage.removeItem(el)
+        })
       }
       if (!gameEnd) {
         localStorage.setItem(
