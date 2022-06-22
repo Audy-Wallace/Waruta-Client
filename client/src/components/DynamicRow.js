@@ -1,5 +1,4 @@
 export default function DynamicRow({ el }) {
-  console.log(el);
   return (
     <tr className="border-b dark:bg-purple-800 dark:border-gray-700">
       <td className="px-6 py-4">{el.id}</td>
