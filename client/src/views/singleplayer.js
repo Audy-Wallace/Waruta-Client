@@ -20,14 +20,16 @@ const Singleplayer = () => {
   const [wrong, setWrong] = React.useState(false)
   const [timeup, setTimeup] = React.useState(false)
   const [lose, setLose] = React.useState(false)
-  const [ answerByVoice, setAnswerByVoice] = React.useState(false);
+  const [answerByVoice, setAnswerByVoice] = React.useState(false)
   function answerHandler(e) {
     setAnswer(e.target.value)
   }
 
   function answerVoice(finalTranscript) {
-    finalTranscript = finalTranscript.replace('.', '')
-    if (finalTranscript == "11") { finalTranscript = "Seblak" }
+    finalTranscript = finalTranscript.replace(".", "")
+    if (finalTranscript == "11") {
+      finalTranscript = "Seblak"
+    }
     setAnswer(finalTranscript)
     setAnswerByVoice(true)
   }
@@ -41,55 +43,51 @@ const Singleplayer = () => {
 
   function autoEnter() {
     if (answer && guesses > 0) {
-      const remainingGuesses = guesses - 1;
+      const remainingGuesses = guesses - 1
       console.log(remainingGuesses, "REMAINING GUESSES")
-      setGuesses(remainingGuesses);
+      setGuesses(remainingGuesses)
       // when the user has guessed the user's remaining guesses is stored in localStorage
       // if user reloads the page, he/she will still have the same number of remaining guesses
-      localStorage.setItem("user_guesses", remainingGuesses);
+      localStorage.setItem("user_guesses", remainingGuesses)
       console.log(answer, "ANSWER")
-      const userGuess = localWords.find(
-        (el) => el.name.toLowerCase() === answer.toLowerCase()
-      );
+      const userGuess = localWords.find((el) => el.name.toLowerCase() === answer.toLowerCase())
       if (userGuess) {
-        const keys = Object.keys(userGuess);
-        const obj = {};
-        let allCorrect = true;
+        const keys = Object.keys(userGuess)
+        const obj = {}
+        let allCorrect = true
         for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
-          if (key === "id") continue;
-          if (
-            userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()
-          ) {
+          const key = keys[i]
+          if (key === "id") continue
+          if (userGuess.name.toLowerCase() !== localSolution.name.toLowerCase()) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           if (userGuess[key] !== localSolution[key]) {
             obj[key] = {
               value: userGuess[key],
               isCorrect: false,
-            };
-            allCorrect = false;
-            continue;
+            }
+            allCorrect = false
+            continue
           }
           obj[key] = {
             value: userGuess[key],
             isCorrect: true,
-          };
+          }
         }
-        const temp = [...pastAnswers, obj];
-        setPastAnswers(temp);
-        localStorage.setItem("pastAnswers", JSON.stringify(temp));
-        if (allCorrect) setIsCorrect(true);
+        const temp = [...pastAnswers, obj]
+        setPastAnswers(temp)
+        localStorage.setItem("pastAnswers", JSON.stringify(temp))
+        if (allCorrect) setIsCorrect(true)
       } else {
         // if the user's answer does not exist do something
-        console.log("food does not exist");
+        console.log("food does not exist")
       }
-      setAnswer("");
+      setAnswer("")
     }
   }
 
@@ -198,10 +196,6 @@ const Singleplayer = () => {
     if (isCorrect === false && +localStorage.getItem("remainingTime") === 0) {
       localStorage.setItem("score", 0)
     }
-
-    setTimeout(() => {
-      if (!isCorrect) setTimeup(true)
-    }, 300 * 1000)
   }, [isCorrect])
   React.useEffect(() => {
     setLocalWords(words)
@@ -215,15 +209,16 @@ const Singleplayer = () => {
   }
   return (
     <div className="flex flex-col items-center">
-      <div className="flex justify-center mb-12">
+      <div className="flex justify-center">
         <Timer
           isCorrect={isCorrect}
           remainSeconds={remainSeconds}
           setRemainSeconds={setRemainSeconds}
+          setTimeup={setTimeup}
         />
       </div>
       {/*User Input */}
-      <div className="flex w-[100%] justify-center items-center">
+      <div className="flex w-[100%] justify-center items-center space-x-4 mb-4 mt-12">
         {/* User can only submit when answer is truthy User can submit using the Enter key (handled by
         the onEnter function) */}
         <input
@@ -231,7 +226,7 @@ const Singleplayer = () => {
           type="text"
           onChange={answerHandler}
           onKeyPress={onEnter}
-          className="bg-transparent border-b-2 outline-none w-[60%] h-12 text-violet-200 text-center text-xl mb-4"
+          className="bg-yellow-400 border-b-2 rounded-lg outline-none w-[60%] h-12 text-yellow-200 placeholder:text-zinc-200 text-center text-xl"
           value={answer}
         />
         <Voice answerVoice={answerVoice}></Voice>
@@ -356,7 +351,7 @@ const Singleplayer = () => {
                     </h2>
                   </div>
                 )}
-                {/* //? num of guesses */}
+                {/* //? num of player guesses */}
                 <div className="my-4 text-center flex justify-evenly w-full">
                   <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
                     <h1 className="text-violet-200 text-xs">Attempt(s)</h1>
@@ -500,49 +495,51 @@ const Singleplayer = () => {
         </Dialog>
       </Transition>
       {JSON.parse(localStorage.getItem("pastAnswers")) && (
-        <table className="table-fixed w-3/4 text-center mx-auto text-purple-100">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>From</th>
-              <th>Color</th>
-              <th>Flavor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {localStorage.getItem("pastAnswers") &&
-              JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
-                return (
-                  <tr key={`uniquekey${i}`} className="h-16">
-                    {/* if el.isCorrect false show red color */}
-                    {/* if el.isCorrect true show green color */}
-                    <td>{el.name.value}</td>
-                    {el.location.value == solution.location ? (
-                      <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
-                        {el.location.value}
-                      </td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
-                        {el.location.value}
-                      </td>
-                    )}
-                    {el.color.value == solution.color ? (
-                      <td className="bg-emerald-500 bg-opacity-60">{el.color.value}</td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60">{el.color.value}</td>
-                    )}
-                    {el.taste.value == solution.taste ? (
-                      <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
-                        {el.taste.value}
-                      </td>
-                    ) : (
-                      <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">{el.taste.value}</td>
-                    )}
-                  </tr>
-                )
-              })}
-          </tbody>
-        </table>
+        <div className="bg-black w-4/5 bg-opacity-70 rounded-lg">
+          <table className="table-fixed w-3/4 text-center mx-auto text-white">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>From</th>
+                <th>Color</th>
+                <th>Flavor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {localStorage.getItem("pastAnswers") &&
+                JSON.parse(localStorage.getItem("pastAnswers")).map((el, i) => {
+                  return (
+                    <tr key={`uniquekey${i}`} className="h-16">
+                      {/* if el.isCorrect false show red color */}
+                      {/* if el.isCorrect true show green color */}
+                      <td>{el.name.value}</td>
+                      {el.location.value == solution.location ? (
+                        <td className="bg-emerald-500 bg-opacity-60 rounded-l-lg">
+                          {el.location.value}
+                        </td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60 rounded-l-lg">
+                          {el.location.value}
+                        </td>
+                      )}
+                      {el.color.value == solution.color ? (
+                        <td className="bg-emerald-500 bg-opacity-60">{el.color.value}</td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60">{el.color.value}</td>
+                      )}
+                      {el.taste.value == solution.taste ? (
+                        <td className="bg-emerald-500 bg-opacity-60 rounded-r-lg">
+                          {el.taste.value}
+                        </td>
+                      ) : (
+                        <td className="bg-rose-500 bg-opacity-60 rounded-r-lg">{el.taste.value}</td>
+                      )}
+                    </tr>
+                  )
+                })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

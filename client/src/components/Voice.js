@@ -1,47 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { IonIcon } from "react-ion-icon";
+import React, { useEffect, useState } from "react"
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
+import { IonIcon } from "react-ion-icon"
 export default function Voice({ answerVoice }) {
-    const [mulai, setMulai] = useState(false)
-    const [speech, setSpeech] = useState('');
+  const [mulai, setMulai] = useState(false)
+  const [speech, setSpeech] = useState("")
 
-    const commands = [
-        {
-            command: 'Mulai',
-            callback: () => setMulai(true)
-        },
-        {
-            command: 'clear',
-            callback: ({ resetTranscript }) => resetTranscript()
-        }
-    ]
-    const {
-        transcript,
-        listening,
-        finalTranscript,
-        resetTranscript,
-        browserSupportsSpeechRecognition
-    } = useSpeechRecognition(commands);
+  const commands = [
+    {
+      command: "Mulai",
+      callback: () => setMulai(true),
+    },
+    {
+      command: "clear",
+      callback: ({ resetTranscript }) => resetTranscript(),
+    },
+  ]
+  const {
+    transcript,
+    listening,
+    finalTranscript,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition(commands)
 
-    React.useEffect(() => {
-        answerVoice(finalTranscript)
-    }, [finalTranscript])
+  React.useEffect(() => {
+    answerVoice(finalTranscript)
+  }, [finalTranscript])
 
-    if (!browserSupportsSpeechRecognition) {
-        return <span>Browser doesn't support speech recognition.</span>;
-    }
-    
-    return (
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>
+  }
+
+  return (
+    <div>
+      {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
+      {!listening && (
+        <button
+          className="px-[20px] py-3 text-[30px] font-semibold bg-white text-yellow-400 rounded-full shadow-md"
+          onClick={() => SpeechRecognition.startListening({ language: "id" })}
+        >
+          <IonIcon name="mic-outline" />
+        </button>
+      )}
+      {listening && (
         <div>
-            {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
-            <button onClick={() => SpeechRecognition.startListening({ language: 'id' })}>
-                {!listening && <IonIcon name='mic-outline' style={{ color: 'black', fontSize: '45px' }} />}
-                {listening && <IonIcon name='mic-outline' style={{ color: 'red', fontSize: '45px' }} />}
-            </button>
-            {/* <button onClick={() => SpeechRecognition.startListening({ language: 'id' })}>Start</button>
-            <button onClick={() => SpeechRecognition.stopListening()}>Stop</button>
-            <button onClick={resetTranscript}>Reset</button> */}
-            {/* <p>Transcript: {transcript}</p> */}
+          <button
+            className="-mr-[70px] px-[20px] py-3 text-[30px] font-semibold rounded-full text-sky-500 bg-sky-500 opacity-60 animate-ping duration-300 shadow-md"
+            onClick={() => SpeechRecognition.startListening({ language: "id" })}
+          >
+            <IonIcon name="mic-outline" />
+          </button>
+          <button
+            className="px-[20px] relative py-3 text-[30px] font-semibold rounded-full text-rose-600 bg-white duration-300 shadow-md"
+            onClick={() => SpeechRecognition.startListening({ language: "id" })}
+          >
+            <IonIcon name="mic-outline" />
+          </button>
         </div>
-    );
+      )}
+    </div>
+  )
 }
