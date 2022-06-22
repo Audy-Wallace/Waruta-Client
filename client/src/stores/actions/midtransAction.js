@@ -9,8 +9,7 @@ export function finishOrder() {
     try {
       const { data: response } = await axios.get(`${BASE_URL}/users/midtrans`, {
         headers: {
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU1NjMzNzQwfQ.tsBIzjBtSoA2x9DHDXZ7kqDqjP-RXizp9XlopB5Eiuw",
+          access_token: localStorage.getItem("access_token"),
         },
       });
 
@@ -32,8 +31,7 @@ export function updatePremium() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU1NjMzNzQwfQ.tsBIzjBtSoA2x9DHDXZ7kqDqjP-RXizp9XlopB5Eiu",
+          access_token: localStorage.getItem("access_token"),
         },
       });
 
