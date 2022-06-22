@@ -23,8 +23,8 @@ export default function NavBar() {
   const [loginForm, setLoginForm] = React.useState({
     email: "",
     password: "",
-  })
-  const [alreadyPremium, setAlreadyPremium] = React.useState(false)
+  });
+  const [alreadyPremium, setAlreadyPremium] = React.useState(false);
   function onChangeRegister(e) {
     if (e.target.name === "image") {
       setRegisterForm({
@@ -55,7 +55,6 @@ export default function NavBar() {
       .catch((err) => console.log(err));
     setIsOpenRegister(false);
   }
-  // console.log(alreadyPremium, "PREMIUM")
   async function uploadImage(image) {
     console.log(image);
     const imgData = new FormData();
@@ -78,6 +77,7 @@ export default function NavBar() {
       if(response.isPremium) {
         localStorage.setItem("warutapr", 'asdadsa')
       } 
+      localStorage.setItem("username", response.email);
       setIsOpenLogin(false);
       setLocalIsLogin(true);
     }
@@ -87,9 +87,9 @@ export default function NavBar() {
       .then(async (res) => {
         await window.snap.pay(res.token, {
           onSuccess: async (result) => {
-            dispatch(updatePremium())
-            localStorage.setItem('warutapr', 'asdadsa')
-            navigate("/")
+            dispatch(updatePremium());
+            localStorage.setItem("warutapr", "asdadsa");
+            navigate("/");
           },
           onError: async (err) => {
             console.log(err);
@@ -100,13 +100,19 @@ export default function NavBar() {
   }
   function logout() {
     localStorage.removeItem("access_token");
-    localStorage.removeItem("warutapr")
+    localStorage.removeItem("warutapr");
     setLocalIsLogin(false);
+    localStorage.clear();
   }
   return (
     <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-5">
       <div className="container-1 flex items-center">
-        <img src={require("../waruta.png")} className="h-20 w-20 ml-2" style={{ borderRadius: 50 }} alt="logo" />
+        <img
+          src={require("../waruta.png")}
+          className="h-20 w-20 ml-2"
+          style={{ borderRadius: 50 }}
+          alt="logo"
+        />
         <button
           variant="contained"
           className="text-lg text-white font-medium h-16 shadow-sm px-4 hover:text-sky-200 duration-500"
@@ -137,7 +143,7 @@ export default function NavBar() {
             </button>
           </>
         )}
-        {localIsLogin && localStorage.getItem('warutapr') === 'asdadsa' && (
+        {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
           <button
             className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
             type="button"
@@ -173,7 +179,7 @@ export default function NavBar() {
           loginForm={loginForm}
         />
       </div>
-      {localIsLogin && localStorage.getItem('warutapr') !== 'asdadsa' && (
+      {localIsLogin && localStorage.getItem("warutapr") !== "asdadsa" && (
         <>
           <div className="container-2">
             <button
