@@ -3,7 +3,8 @@ import { NavLink, useParams } from 'react-router-dom';
 import { fetchWords } from "../stores/actions/wordAction.js";
 import Timer from "../components/Timer.js";
 import { useDispatch, useSelector } from "react-redux";
-import { CopyToClipboard } from "react-copy-to-clipboard"
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import JSConfetti from "js-confetti";
 
 function MultiPlayerRoom({ socket }) {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function MultiPlayerRoom({ socket }) {
   const [localSolution, setLocalSolution] = useState("");
   const mainKeys = Object.keys(words[0])
   const [copiedRoomId, setCopiedRoomId] = useState("")
+  const jsConfetti = new JSConfetti();
 
   // timer
   const [isCorrect, setIsCorrect] = useState(false);
@@ -85,11 +87,66 @@ function MultiPlayerRoom({ socket }) {
             console.log(currentGuess);
             setCorrect(inputAnswer + " is incorrect")
           } else {
+            // if answer correct
             currentGuess += 1;
             payload.remainingGuess = currentGuess
             setCorrect(inputAnswer + " is correct")
             setGameEnd(true)
             setIsCorrect(true);
+
+            // scoring
+            localStorage.setItem("win", true);
+            localStorage.setItem("remainingTime", remainSeconds);
+            let guessScore;
+            switch (payload.remainingGuess) {
+              case 1:
+                guessScore = 60;
+                break;
+              case 2:
+                guessScore = 50;
+                break;
+              case 3:
+                guessScore = 40;
+                break;
+              case 4:
+                guessScore = 30;
+                break;
+              case 5:
+                guessScore = 20;
+                break;
+              default:
+                guessScore = 10;
+                break;
+            }
+
+            let timeScore;
+            const secondsLeft = +localStorage.getItem("remainingTime");
+
+            if (secondsLeft >= 240 && secondsLeft <= 300) {
+              timeScore = 60;
+            } else if (secondsLeft >= 180) {
+              timeScore = 50;
+            } else if (secondsLeft >= 120) {
+              timeScore = 40;
+            } else if (secondsLeft >= 60) {
+              timeScore = 30;
+            } else if (secondsLeft >= 30) {
+              timeScore = 20;
+            } else if (secondsLeft >= 0) {
+              timeScore = 10;
+            }
+
+            const score = guessScore + timeScore;
+            localStorage.setItem("score", score);
+            // setOpen(true);
+            // setGameDone(true);
+            jsConfetti.addConfetti({
+              confettiRadius: 2,
+              confettiNumber: 100,
+              emojis: ["🍔", "🥓", "🍟", "🍣"],
+              emojiSize: 60,
+            });
+
           }
 
           payload.pastAnswers = [...payload.pastAnswers, obj]
@@ -127,7 +184,7 @@ function MultiPlayerRoom({ socket }) {
 
   useEffect(() => {
     socket.on("joinedWaitingRoom", (payload) => {
-     console.log(payload);
+      console.log(payload);
       if (payload.totalUser <= 2) {
         setPlay(true)
       }
@@ -190,7 +247,7 @@ function MultiPlayerRoom({ socket }) {
   return (
     <>
 
-      {play === false&&
+      {play === false &&
         <div>
           <NavLink to="/multiplayer">back</NavLink>
           <p>
