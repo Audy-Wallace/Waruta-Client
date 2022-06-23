@@ -542,7 +542,7 @@ function MultiPlayerRoom({ socket }) {
                         <tr>
                           <th>Name</th>
                           <th>From</th>
-                          <th>ClocalSolutionolor</th>
+                          <th>Color</th>
                           <th>Flavor</th>
                         </tr>
                       </thead>
