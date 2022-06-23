@@ -353,7 +353,7 @@ const Singleplayer = () => {
 
             <div className="fixed inset-0 overflow-y-auto mx-auto w-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center ">
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-gray-200 rounded-2xl bg-white p-6 text-left flex flex-col items-center shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-gray-100 rounded-2xl p-6 text-left flex flex-col items-center shadow-xl transition-all">
                   {/* //? solution image */}
                   {solution && (
                     <div className="w-full flex flex-col items-center ">
