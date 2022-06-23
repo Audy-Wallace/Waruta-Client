@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import JSConfetti from "js-confetti"
 import { Dialog, Transition } from "@headlessui/react"
-import { Peer } from "peerjs"
+import { Peer } from "peerjs";
 
 function MultiPlayerRoom({ socket }) {
   const navigate = useNavigate()
@@ -34,6 +34,7 @@ function MultiPlayerRoom({ socket }) {
   const [timeup, setTimeup] = useState(false)
   const [lose, setLose] = useState(false)
   const [wrong, setWrong] = useState(false)
+  const [result, setResult] = useState({})
 
   // peer connection
   const [peer, setPeer] = useState(null)
@@ -155,15 +156,17 @@ function MultiPlayerRoom({ socket }) {
               emojis: ["🍔", "🥓", "🍟", "🍣"],
               emojiSize: 60,
             })
+            payload.score = score
+            payload.remainingTime = secondsLeft
           }
 
           payload.pastAnswers = [...payload.pastAnswers, obj]
-
           localStorage.setItem("rooms", JSON.stringify(payload))
 
           socket.emit("hitAnswer", payload)
         } else {
-          setMessage(inputAnswer + " does not exist")
+          // setMessage(inputAnswer + " does not exist")
+          setWrong(true)
         }
       }
       //
@@ -199,16 +202,29 @@ function MultiPlayerRoom({ socket }) {
     localStorage.removeItem("time")
   }
 
+  function stopStreamedVideo() {
+    const stream = myVideo.current.srcObject
+    const tracks = stream.getTracks()
+
+    tracks.forEach(function (track) {
+      track.stop()
+    })
+
+    myVideo.current.srcObject = null
+    partnerVideo.current.srcObject = null
+  }
+
   function goBackHome() {
-    socket.emit("forceDisconnect")
     return (
       <button
-        type="button"
-        onClick={() => {
+      type="button"
+      onClick={() => {
+          setPeer(null)
           setTimeup(false)
           setLose(false)
           removeItem()
           navigate("/", { replace: true })
+          stopStreamedVideo()
         }}
       >
         Go Back Home
@@ -240,13 +256,6 @@ function MultiPlayerRoom({ socket }) {
   useEffect(() => {
     socket.on("joinedWaitingRoom", (payload) => {
       console.log(payload)
-
-      // const _peerIds = peerIds.concat(payload.peerId);
-      // console.log(
-      //   "🚀 ~ file: Room.js ~ line 39 ~ socket.on ~ _peerIds",
-      //   _peerIds
-      // );
-      // setPeerIds(_peerIds);
 
       setLocalSolution(words ? words[payload.randomIndex] : "")
       if (payload.totalUser <= 2) {
@@ -288,6 +297,8 @@ function MultiPlayerRoom({ socket }) {
         setCorrect(payload.wordGuess + " is incorrect")
         // setWrong(true);
       } else {
+        console.log(payload, ">>>>>>>>>>>>>>>>");
+        // to other user if true answer
         setCorrect(payload.wordGuess + " is correct")
         setGameEnd(true)
         setIsCorrect(true)
@@ -298,6 +309,10 @@ function MultiPlayerRoom({ socket }) {
           emojiSize: 60,
         })
         setOpen(true)
+        setResult({
+          score: payload.score,
+          remainingTime: payload.remainingTime
+        })
       }
       if (!gameEnd) {
         localStorage.setItem(
@@ -331,6 +346,7 @@ function MultiPlayerRoom({ socket }) {
     if (socket && peerId) {
       socket.emit("joinRoom", {
         peerId,
+        roomId: roomId
       })
       console.log(peerId)
     }
@@ -456,6 +472,7 @@ function MultiPlayerRoom({ socket }) {
                     onSubmit={handleSubmitAnswer}
                   >
                     <input
+                      autoComplete="off"
                       className="bg-yellow-400 border-b-4 border-yellow-400 focus:border-orange-500 duration-300 rounded-lg outline-none w-[90%] h-12 text-black placeholder:text-gray-500 font-medium text-center text-xl"
                       type={"text"}
                       id="inputChat"
@@ -525,7 +542,7 @@ function MultiPlayerRoom({ socket }) {
                         <tr>
                           <th>Name</th>
                           <th>From</th>
-                          <th>Color</th>
+                          <th>ClocalSolutionolor</th>
                           <th>Flavor</th>
                         </tr>
                       </thead>
@@ -618,18 +635,18 @@ function MultiPlayerRoom({ socket }) {
                           <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 text-violet-100 w-20 h-20 rounded-full justify-center">
                             <h1 className="text-xs">Time</h1>
 
-                            {Math.floor((300 - localStorage.getItem("remainingTime")) / 60) > 0 && (
+                            {Math.floor((300 - result.remainingTime) / 60) > 0 && (
                               <p className="text-xl font-semibold">
-                                {Math.floor((300 - localStorage.getItem("remainingTime")) / 60)}
+                                {Math.floor((300 - result.remainingTime) / 60)}
                                 <span className="text-sm">m </span>
-                                {(300 - localStorage.getItem("remainingTime")) % 60}
+                                {(300 - result.remainingTime) % 60}
                                 <span className="text-sm">s</span>
                               </p>
                             )}
-                            {Math.floor((300 - localStorage.getItem("remainingTime")) / 60) ===
+                            {Math.floor((300 - result.remainingTime) / 60) ===
                               0 && (
                               <p className="text-xl font-semibold">
-                                {(300 - localStorage.getItem("remainingTime")) % 60}
+                                {(300 - result.remainingTime) % 60}
                                 <span className="text-sm font-thin">s</span>
                               </p>
                             )}
@@ -638,7 +655,7 @@ function MultiPlayerRoom({ socket }) {
                           <div className="flex flex-col bg-opacity-80 shadow-xl bg-violet-700 w-20 h-20 rounded-full justify-center">
                             <h1 className="text-violet-200 text-xs">Score</h1>
                             <p className="text-xl text-violet-100 font-semibold">
-                              {localStorage.getItem("score")}
+                              {result.score}
                             </p>
                           </div>
                         </div>
