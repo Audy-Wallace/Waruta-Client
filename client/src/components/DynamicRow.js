@@ -7,7 +7,7 @@ export default function DynamicRow({ el, index }) {
           {" "}
           <img
             src={el.User.imgUrl}
-            className="w-12 items-center h-auto shadow-lg "
+            className="w-12 h-12 object-cover items-center shadow-lg "
             alt=""
           />
         </td>
