@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { fetchWords } from "../stores/actions/wordAction.js";
 import { useDispatch, useSelector } from "react-redux";
 
-function MultiPlayerPage({ socket }) {
+function MultiPlayerPage({socket}) {
   const { words } = useSelector((state) => state.words);
   const dispatch = useDispatch();
   const [room, setRoom] = useState(null)
@@ -70,19 +70,9 @@ function MultiPlayerPage({ socket }) {
 
   return (
     <>
-      {/* <div></div>
-      <div>
-        <button type="button" onClick={handleClickCreateRoom}>Create Room</button>
-      </div>
-      <div>
-        <form onSubmit={handleSubmitRoomId}>
-          <input type="text" name="roomId"></input>
-          <button>Join Room</button>
-        </form>
-      </div> */}
       <div className="flex justify-center items-center mx-auto my-48 bg-yellow-500 w-fit p-6 rounded-xl shadow-2xl">
           <form onSubmit={handleSubmitRoomId} className="flex flex-col">
-            <input type="text" name="roomId" className="px-6 h-12 text-center rounded placeholder:text-orange-700" placeholder="Room Code"></input>
+            <input autoComplete="off" type="text" name="roomId" className="px-6 h-12 text-center rounded placeholder:text-orange-700" placeholder="Room Code"></input>
             <button className="px-6
             
                   h-12

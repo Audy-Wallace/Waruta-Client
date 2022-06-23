@@ -40,7 +40,8 @@ function App() {
           path="/multiplayer"
           element={
             <IsPremiumCheck>
-              <MultiPlayerPage socket={socket}></MultiPlayerPage>
+              <MultiPlayerPage socket={socket}></MultiPlayerPage> 
+              {/* socket={socket} */}
             </IsPremiumCheck>
           }
         ></Route>
