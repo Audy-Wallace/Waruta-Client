@@ -5,7 +5,7 @@ import Peer from "simple-peer"
 const SocketContext = createContext()
 
 function connectSocket() {
-  const socket = io.connect("http://localhost:3000/")
+  const socket = io.connect("https://api-waruta.herokuapp.com/")
   return socket
 }
 
