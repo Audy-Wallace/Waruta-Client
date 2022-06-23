@@ -198,7 +198,7 @@ export default function NavBar() {
         >
           <div className="flex flex-col items-center ">
             <img src={require("../Leaderboard2.png")}
-              className="h-[35px] w-[35px] mt-[2px]"
+              className="h-[35px] w-[35px] mt-[0.2rem]"
               // style={{ borderRadius: 50 }}
               alt="logo">
             </img>
@@ -235,7 +235,7 @@ export default function NavBar() {
                 // style={{ borderRadius: 50 }}
                 alt="logo">
               </img>
-              <label className="ml-[3px] -mt-[3px] cursor-pointer">Multiplayer</label>
+              <label className="ml-[3px] -mt-[0.13rem] cursor-pointer">Multiplayer</label>
             </div>
           </button>
 
