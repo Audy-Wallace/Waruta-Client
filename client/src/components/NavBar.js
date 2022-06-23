@@ -161,6 +161,7 @@ export default function NavBar() {
     } else {
       if (route === "logout") {
         logout();
+        console.log('test')
         navigate(`/`, { replace: true });
       } else {
         navigate(`/${route}`, { replace: true });
@@ -168,17 +169,22 @@ export default function NavBar() {
     }
   }
   return (
-    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-6">
+    <div className="bg-gradient-to-bl from-[#F7EA00] to-[#E48900] h-16 flex justify-between items-center space-x-2 py-[25px]">
       <div className="container-1 flex items-center">
-        <img
-          src={require("../waruta.png")}
-          className="h-20 w-20 ml-2"
-          style={{ borderRadius: 50 }}
-          alt="logo"
-        />
+        <button onClick={() => {
+          checkPlay("");
+        }}>
+
+          <img
+            src={require("../waruta-navbar-v2.png")}
+            className="h-[70px] w-[70px] ml-2 mt-[5px]"
+            style={{ borderRadius: 50 }}
+            alt="logo"
+          />
+        </button>
         <button
           variant="contained"
-          className="text-lg text-white font-medium h-16 shadow-sm px-4 hover:text-sky-200 duration-500"
+          className="text-lg text-white font-medium h-16 shadow-sm px-4 -ml-[10px] hover:text-sky-200 duration-500"
           onClick={() => {
             checkPlay("");
           }}
@@ -190,7 +196,14 @@ export default function NavBar() {
           type="button"
           onClick={() => checkPlay("leaderboard")}
         >
-          Leaderboard
+          <div className="flex flex-col items-center ">
+            <img src={require("../Leaderboard2.png")}
+              className="h-[35px] w-[35px] mt-[2px]"
+              // style={{ borderRadius: 50 }}
+              alt="logo">
+            </img>
+            <label className="ml-[3px] cursor-pointer">Leaderboard</label>
+          </div>
         </button>
         {!localIsLogin && (
           <>
@@ -208,26 +221,55 @@ export default function NavBar() {
             </button>
           </>
         )}
+
         {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
+
           <button
             className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
             type="button"
             onClick={() => navigate("/multiplayer", { replace: true })}
           >
-            Multiplayer
+            <div className="flex flex-col justify-center items-center" >
+              <img src={require("../multiplayer.png")}
+                className="h-[40px] w-[40px] "
+                // style={{ borderRadius: 50 }}
+                alt="logo">
+              </img>
+              <label className="ml-[3px] -mt-[3px] cursor-pointer">Multiplayer</label>
+            </div>
           </button>
-        )}
 
-        {localIsLogin && (
-          <>
-            <button
-              onClick={() => checkPlay("logout")}
-              className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
-            >
-              Logout
-            </button>
-          </>
         )}
+        {/* {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
+          <button
+            className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
+            type="button"
+            onClick={() => navigate("/multiplayer", { replace: true })}
+          >
+            <img src={require("../multiplayer2.png")}
+              className="h-[40px] w-[40px] ml-2"
+              // style={{ borderRadius: 50 }}
+              alt="logo">
+            </img>
+          </button>
+        )} */}
+
+        {/* <div>
+          {localIsLogin && (
+            <>
+              <button
+                onClick={() => checkPlay("logout")}
+                className="text-lg text-white font-medium px-2 py-[1px] h-16  hover:bg-transparent duration-300"
+              >
+                <img src={require("../logout-2.png")}
+                  className="h-[40px] w-[40px] ml-2"
+                  // style={{ borderRadius: 50 }}
+                  alt="logo">
+                </img>
+              </button>
+            </>
+          )}
+        </div> */}
 
         <SignupForm
           isOpenRegister={isOpenRegister}
@@ -244,18 +286,66 @@ export default function NavBar() {
           loginForm={loginForm}
         />
       </div>
-      {localIsLogin && localStorage.getItem("warutapr") !== "asdadsa" && (
-        <>
-          <div className="container-2">
+      <>
+
+        {localIsLogin && localStorage.getItem("warutapr") !== "asdadsa" && (
+          <div className="flex flex-col items-center justify-center">
             <button
               onClick={() => snapMidtrans()}
-              className="text-lg text-rose-500 font-bold mx-2 px-2 py-[1px] rounded-lg hover:text-rose-600"
+              className="text-lg text-white font-medium mx-2 my-10 px-2 py-[2px] rounded-lg hover:text-sky-200 "
             >
-              Unlock Multiplayer
+              <img src={require("../unlock2.png")}
+                className="h-[35px] w-[35px] mt-[3px]"
+                // style={{ borderRadius: 50 }}
+                alt="logo">
+              </img>
+              <label className="-ml-[3.4rem] cursor-pointer">Unlock Multiplayer</label>
             </button>
           </div>
-        </>
-      )}
+        )}
+
+        {/* {localIsLogin && localStorage.getItem("warutapr") === "asdadsa" && (
+
+          <button
+            className="text-lg text-white font-medium px-2 border-neutral-400 hover:text-sky-200 h-16 duration-300"
+            type="button"
+            onClick={() => navigate("/multiplayer", { replace: true })}
+          >
+            <div className="flex flex-col justify-center items-center" >
+              <button
+                onClick={() => checkPlay("logout")}
+                className="text-lg text-white font-medium px-2 py-[2px] hover:bg-transparent duration-300"
+              >
+                <img src={require("../logout.jpg")}
+                  className="h-[20px] w-[20px] ml-2"
+                  // style={{ borderRadius: 50 }}
+                  alt="logo">
+                </img>
+                <label>Logout</label>
+              </button>
+            </div>
+          </button>
+        )} */}
+
+        <div className="container-2">
+          {localIsLogin && (
+            <>
+              <div className="flex flex-col">
+                <button
+                  onClick={() => checkPlay("logout")}
+                  className="text-lg text-zinc-700 mt-[5px] font-medium px-4 py-[2px] hover:bg-transparent duration-300"
+                >
+                  <img src={require("../logout-2.png")}
+                    className="h-[35px] w-[35px] ml-2"
+                    // style={{ borderRadius: 50 }}
+                    alt="logo">
+                  </img>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </>
     </div>
   );
 }
