@@ -11,7 +11,7 @@ export default function Timer({ isCorrect, remainSeconds, setRemainSeconds, setT
     timeStore = new Date(prevDate)
   } else {
     time = new Date()
-    time.setSeconds(time.getSeconds() + 3000) // 5 minutes timer
+    time.setSeconds(time.getSeconds() + 300) // 5 minutes timer
     localStorage.setItem("time", time)
   }
 
