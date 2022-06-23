@@ -42,6 +42,9 @@ const Singleplayer = () => {
     finalTranscript = finalTranscript.replace(".", "")
     if (finalTranscript == "11") {
       finalTranscript = "Seblak"
+    } 
+    if (finalTranscript == 'Mie instant') {
+      finalTranscript = 'Mie instan'
     }
     setAnswer(finalTranscript)
     setAnswerByVoice(true)
